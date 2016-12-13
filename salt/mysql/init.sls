@@ -15,17 +15,6 @@ maria:
     - require:
       - service: maria
 
-firewalld:
-  firewalld.present:
-    - name: public
-    - ports:
-      - 3306/tcp
-    - require:
-      - service: maria
-  service.running:
-    - watch:
-      - firewalld: firewalld
-
 add_port_3306:
   module.run:
     - name: firewalld.add_port
