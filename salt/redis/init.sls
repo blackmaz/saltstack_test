@@ -8,18 +8,6 @@ redis:
     - watch: 
       - pkg: redis
 
-firewalld_redis:
-  firewalld.present:
-    - name: public
-    - ports:
-      - 6379/tcp
-    - require:
-      - service: redis
-  service.running:
-    - name: firewalld
-    - watch:
-      - firewalld: firewalld_redis
-      
  add_port_6379:
    module.run:
      - name: firewalld.add_port
