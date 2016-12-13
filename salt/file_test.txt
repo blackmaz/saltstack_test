@@ -1,0 +1,16 @@
+AAAAA
+BBBBB
+CCCCC
+{{ custom_var }}
+
+# START managed zone 42 -DO-NOT-EDIT-
+
+# END managed zone 42 --
+
+
+# aaaaa
+
+abcd = {{ other_var }}
+
+The quick brown fox{% for atext in accumulator['file_add_line'] %}{{ atext }}{% endfor %}
+
