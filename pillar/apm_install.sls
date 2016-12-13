@@ -1,6 +1,6 @@
 db_server:
-  host_name: vm13.chossvm
-  ip_address: 192.168.10.93
+  host_name: vm03.chossvm
+  ip_address: 192.168.10.83
   root_password: 1q2w3e4r5t
   client_ip:
     - 192.168.10.84
