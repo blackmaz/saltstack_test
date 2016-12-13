@@ -1,4 +1,4 @@
 firs_test:
-  pkg.install:
+  pkg.installed:
     - name: git
     
