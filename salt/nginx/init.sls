@@ -12,7 +12,7 @@ add_service_http:
     - name: firewalld.add_service
     - zone: public
     - service: http
-    - require:      
+    - require:
       - service: nginx
       
 add_port_8080:

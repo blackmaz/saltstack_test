@@ -20,7 +20,7 @@ add_port_3306:
     - name: firewalld.add_port
     - zone: public
     - port: 3306/tcp
-    - require:      
+    - require:
       - service: maria
 
 reload_firewall_rule:
