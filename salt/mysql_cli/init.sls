@@ -4,7 +4,7 @@ selinux_setsebool_mysql:
     - name: selinux.setsebool
     - boolean: httpd_can_network_connect_db
     - value: On
-    - persist: TrueA
+    - persist: True
 {% endif %}
 
 /usr/share/nginx/html/mariatest.php:
