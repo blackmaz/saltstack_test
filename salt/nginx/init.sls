@@ -23,7 +23,7 @@ add_port_8080:
     - require:
       - service: nginx
 
-reload_firewall_rule:
+reload_firewall_rule_nginx:
   module.run:
     - name: firewalld.reload_rules
     - require:

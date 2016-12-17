@@ -19,7 +19,7 @@ add_port_9000:
     - require:
       - service: php
 
-reload_firewall_rule:
+reload_firewall_rule_php:
   module.run:
     - name: firewalld.reload_rules
     - require:
@@ -36,6 +36,11 @@ reload_firewall_rule:
     - source: salt://php/nginx_default.conf
     - require:
       - pkg: php
+
+/opt/remi/php56/root/etc/php-fpm.d/www.conf:
+  file.comment:
+    - regex: ^listen.allowed_clients = 127.0.0.1
+    - char: ;
 
 nginx_restart:
   service.running:
