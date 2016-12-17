@@ -1,3 +1,4 @@
+{% if salt['grains.get']('selinux:enabled') == 'False' %}
 grains_test:
   cmd.run:
     {% if salt['grains.get']('selinux:enabled') == 'True' %}
@@ -5,3 +6,4 @@ grains_test:
     {% else %}
     - name : ps -ef 
     {% endif %}
+{% endif %}

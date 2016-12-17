@@ -14,11 +14,13 @@ nginx_service:
     - watch:
       - pkg: redis_cli
 
+{% if salt['grains.get']('selinux:enabled') == 'True' %}
 selinux_redis_port:
   cmd.run:
     - name: semanage port -m -t http_port_t -p tcp 6379
     - require:
       - pkg: redis_cli
+{% endif %}
 
 /usr/share/nginx/html/redistest.php:
   file.managed:
