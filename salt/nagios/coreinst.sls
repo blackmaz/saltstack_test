@@ -61,9 +61,14 @@ copy_eventhandlers:
     - group: nagios
 
 nagios_service_running:
+  cmd.run:
+    - name: "systemctl enable nagios"
   service.running:
     - name: nagios
-    - enable: True
+
+httpd_service_restart:
+  cmd.run:
+    - name: "systemctl restart httpd"
 
 httpd_passwd:
   webutil.user_exists:

@@ -16,6 +16,7 @@ install_nagios_nrpe:
         cd /root/nagios/nrpe-2.15
         ./configure 
         make all
+        make install
         make install-daemon
     - cwd: /root/nagios/nrpe-2.15
     - unless: test -f /usr/local/nagios/etc/nrpe.cfg
@@ -34,7 +35,7 @@ install_nagios_nrpe:
       - "cfg_file=/usr/local/nagios/etc/hosts.cfg"
       - "cfg_file=/usr/local/nagios/etc/services.cfg"
 
-/usr/local/nagios/etc/objects/commangds.cfg:
+/usr/local/nagios/etc/objects/commands.cfg:
   file.append:
     - text: |
         ##########################################################################

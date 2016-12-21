@@ -17,7 +17,7 @@ register 		0 		; DONT REGISTER THIS - ITS A TEMPLATE
 ## Default
 define host{
 use 		linux-box 		; Inherit default values from a template
-host_name 	tecmint 		; The name we're giving to this server
-alias 		CentOS 6 		; A longer name for the server
-address 	5.175.142.66 		; IP address of Remote Linux host
+host_name 	vm05.chossvm 		; The name we're giving to this server
+alias 		vm05 			; A longer name for the server
+address 	192.168.10.85 		; IP address of Remote Linux host
 }
