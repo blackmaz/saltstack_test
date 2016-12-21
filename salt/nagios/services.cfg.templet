@@ -1,0 +1,34 @@
+define service{
+use 			generic-service
+host_name 		tecmint
+service_description 	CPU Load
+check_command 		check_nrpe!check_load
+}
+
+define service{
+use 			generic-service
+host_name 		tecmint
+service_description 	Total Processes
+check_command 		check_nrpe!check_total_procs
+}
+
+define service{
+use 			generic-service
+host_name 		tecmint
+service_description 	Current Users
+check_command 		check_nrpe!check_users
+}
+
+define service{
+use 			generic-service
+host_name 		tecmint
+service_description 	SSH Monitoring
+check_command 		check_nrpe!check_ssh
+}
+
+define service{
+use 			generic-service
+host_name 		tecmint
+service_description 	FTP Monitoring
+check_command 		check_nrpe!check_ftp
+}
