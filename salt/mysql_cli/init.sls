@@ -1,4 +1,4 @@
-{% if salt['grains.get']('selnux:enabled') == 'True' %}
+{% if salt['grains.get']('selnux:enabled') == True %}
 selinux_setsebool_mysql:
   module.run:
     - name: selinux.setsebool

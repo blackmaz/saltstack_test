@@ -14,7 +14,7 @@ nginx_service:
     - watch:
       - pkg: redis_cli
 
-{% if salt['grains.get']('selinux:enabled') == 'True' %}
+{% if salt['grains.get']('selinux:enabled') == True %}
 selinux_redis_port:
   cmd.run:
     - name: semanage port -m -t http_port_t -p tcp 6379

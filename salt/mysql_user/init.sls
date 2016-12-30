@@ -26,7 +26,7 @@ pandamall_database:
 pandamall_grant_webserver:
   mysql_user.present:
     - name: {{ pillar['application']['db_user'] }}
-    - host: %
+    - host: '%'
     - password: {{ pillar['application']['db_user_password'] }}
     - use:
       - mysql_database: {{ pillar['application']['database_name'] }}
@@ -36,8 +36,8 @@ pandamall_grant_webserver:
   mysql_grants.present:
     - grant: all privileges
     - database: {{ pillar['application']['database_name'] }}.*
-    - user:  {{ pillar['application']['db_user'] }}
-    - host: %
+    - user: {{ pillar['application']['db_user'] }}
+    - host: '%'
     - use:
       - mysql_database: {{ pillar['application']['database_name'] }}
     - require:

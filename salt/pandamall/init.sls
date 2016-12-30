@@ -28,7 +28,7 @@ fpm_restart_panda:
       - pkg: php_gd
       - file: /etc/nginx/conf.d/pandamall.com.conf
 
-{% if salt['grains.get']('selinux:enabled') == 'True' %}
+{% if salt['grains.get']('selinux:enabled') == True %}
 selinux_http_context:
   cmd.run:
     - name: chcon -R -t httpd_sys_content_t /www_root
