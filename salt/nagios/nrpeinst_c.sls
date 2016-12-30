@@ -1,4 +1,4 @@
-nrpe_pre_install:
+nrpe_nrpe_install:
   pkg.installed:
     - pkgs:
       - xinetd

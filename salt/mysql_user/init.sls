@@ -23,11 +23,10 @@ pandamall_database:
     - require:
       - mysql_user: pandamall_database
 
-{% for client_ip in salt['pillar.get']('db_server:client_ip', {}) %} 
-pandamall_grant_{{client_ip}}:
+pandamall_grant_webserver:
   mysql_user.present:
     - name: {{ pillar['application']['db_user'] }}
-    - host: {{client_ip}}
+    - host: %
     - password: {{ pillar['application']['db_user_password'] }}
     - use:
       - mysql_database: {{ pillar['application']['database_name'] }}
@@ -38,9 +37,8 @@ pandamall_grant_{{client_ip}}:
     - grant: all privileges
     - database: {{ pillar['application']['database_name'] }}.*
     - user:  {{ pillar['application']['db_user'] }}
-    - host: {{client_ip}}
+    - host: %
     - use:
       - mysql_database: {{ pillar['application']['database_name'] }}
     - require:
       - mysql_user: pandamall_database
-{% endfor %}

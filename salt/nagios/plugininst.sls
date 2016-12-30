@@ -1,4 +1,4 @@
-nagios_pre_install:
+nagios_plugin_install:
   pkg.installed:
     - pkgs:
       - gcc

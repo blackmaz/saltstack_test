@@ -1,4 +1,4 @@
-nagios_pre_install:
+nagios_core_install:
   pkg.installed:
     - pkgs:
       - gcc
@@ -15,24 +15,30 @@ create_working_dir:
     - name: /root/nagios
     - user: root
     - group: root
+    - require:
+      - pkg: nagios_core_install
 
 download_naigos_core:
   archive.extracted:
     - name: /root/nagios
     - source: http://prdownloads.sourceforge.net/sourceforge/nagios/nagios-4.2.4.tar.gz
     - skip_verify: True
+    - require: 
+      - file: create_working_dir
 
-group_create:
+nagcmd_create:
   group.present:
     - name: nagcmd
 
-user_create:
+nagios_create:
   user.present:
     - name: nagios
     - groups:
       - nagcmd
+    - require:
+      - group: nagcmd_create
 
-user_mod:
+apache_mod:
   user.present:
     - name: apache
     - groups:
