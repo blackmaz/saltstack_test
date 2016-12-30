@@ -7,8 +7,3 @@ selinux_setsebool_mysql:
     - persist: True
 {% endif %}
 
-/usr/share/nginx/html/mariatest.php:
-  file.managed:
-    - source: salt://mysql_cli/mariatest.php
-    - template: jinja
-
