@@ -1,4 +1,6 @@
 base:
+  '*':
+    - common
   'vm03.chossvm':
     - mysql
     - mysql_user
