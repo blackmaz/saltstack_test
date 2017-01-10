@@ -4,9 +4,8 @@
 
 {%- if java.source_url is defined %}
 
-  {%- set tarball_file = java.prefix + '/' + java.source_url.split('/') | last %}
   {%- set salt_dir = '/root/saltstack_test/salt' %}
-  {%- set tarball_temp_file = salt_dir + '/sun-java/files/' + java.source_url.split('/') | last %}
+  {%- set tarball_file = salt_dir + '/sun-java/files/' + java.source_url.split('/') | last %}
 
 java-install-dir:
   file.directory:
@@ -18,8 +17,8 @@ java-install-dir:
 
 download-jdk-tarball:
   cmd.run:
-    - name: curl {{ java.dl_opts }} -o '{{ tarball_temp_file }}' '{{ java.source_url }}'
-    - unless: test -d {{ java.java_real_home }} || test -f {{ tarball_temp_file }}
+    - name: curl {{ java.dl_opts }} -o '{{ tarball_file }}' '{{ java.source_url }}'
+    - unless: test -d {{ java.java_real_home }} || test -f {{ tarball_file }}
     - require:
       - file: java-install-dir
 unpack-jdk-tarball:
