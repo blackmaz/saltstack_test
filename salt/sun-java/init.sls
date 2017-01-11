@@ -21,6 +21,7 @@ download-jdk-tarball:
     - unless: test -d {{ java.java_real_home }} || test -f {{ tarball_file }}
     - require:
       - file: java-install-dir
+
 unpack-jdk-tarball:
   archive.extracted:
     - name: {{ java.prefix }}
@@ -35,6 +36,7 @@ unpack-jdk-tarball:
     - if_missing: {{ java.java_real_home }}
     - onchanges:
       - cmd: download-jdk-tarball
+
 create-java-home:
   alternatives.install:
     - name: java-home
@@ -43,6 +45,7 @@ create-java-home:
     - priority: 30
     - require:
       - archive: unpack-jdk-tarball
+
 remove-jdk-tarball:
   file.absent:
     - name: {{ tarball_file }}
