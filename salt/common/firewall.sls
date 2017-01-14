@@ -10,7 +10,7 @@ firewall-add-port-{{port}}:
     - require:
       - {{require}}
   {% endif %}
-firewall-reload:
+firewall-reload-{{port}}:
   module.run:
     - name: firewalld.reload_rules
     - require:
