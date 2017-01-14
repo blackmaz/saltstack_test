@@ -3,9 +3,10 @@ php_gd:
     - name: php56-php-gd
   
 /www_root:
-  file.recurse:
-    - source: salt://pandamall/application
-    - include_empty: True
+  archive.extracted:
+    - name: /www_root
+    - source: salt://pandamall/pandamall.tar.gz
+    - skip_verify: True
     - require:
       - pkg: php_gd
 
@@ -13,7 +14,7 @@ php_gd:
   file.managed:
     - source: salt://pandamall/pandamall.com.conf
     - require:
-      - file: /www_root
+      - archive: /www_root
 
 nginx_restart_panda:
   service.running:
@@ -31,15 +32,15 @@ fpm_restart_panda:
 {% if salt['grains.get']('selinux:enabled') == True %}
 selinux_http_context:
   cmd.run:
-    - name: chcon -R -t httpd_sys_content_t /www_root
+    - name: chcon -R -t httpd_sys_content_t /www_root/pandamall
     - require:
-      - file: /www_root
+      - archive: /www_root
 
 selinux_data_context:
   cmd.run:
-    - name: chcon -R -t public_content_rw_t /www_root/data
+    - name: chcon -R -t public_content_rw_t /www_root/pandamall/data
     - require:
-      - file: /www_root
+      - archive: /www_root
 
 selinux_data_haw:
   module.run:
@@ -60,8 +61,8 @@ selinux_data_hssaw:
       - cmd: selinux_data_context
 {% endif %}
 
-/www_root/data:
+/www_root/pandamall/data:
   file.directory:
     - mode: 777
     - require:
-      - file: /www_root
+      - archive: /www_root
