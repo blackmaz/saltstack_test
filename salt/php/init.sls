@@ -1,3 +1,5 @@
+{% import 'common/firewall.sls' as firewall with context %}
+
 php:
   pkg.installed:
     - pkgs:
@@ -11,20 +13,8 @@ php:
     - watch:
       - pkg: php
 
-add_port_9000:
-  module.run:
-    - name: firewalld.add_port
-    - zone: public
-    - port: 9000/tcp
-    - require:
-      - service: php
+{{ firewall.firewall_open('9000', require='service: php') }}
 
-reload_firewall_rule_php:
-  module.run:
-    - name: firewalld.reload_rules
-    - require:
-      - module: add_port_9000
-      
 /usr/share/nginx/html/info.php:
   file.managed:
     - source: salt://php/info.php

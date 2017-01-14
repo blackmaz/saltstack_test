@@ -1,3 +1,5 @@
+{% import 'common/firewall.sls' as firewall with context %}
+
 nrpe_nrpe_install:
   pkg.installed:
     - pkgs:
@@ -44,14 +46,5 @@ restart_xinetd:
     - name: xinetd
     - enable: True
 
-add_port_nrpe:
-  module.run:
-    - name: firewalld.add_port
-    - zone: public
-    - port: 5666/tcp
-
-firewall_reload:
-  module.run:
-    - name: firewalld.reload_rules
-
+{{ firewall.firewall_open('5666') }}
 

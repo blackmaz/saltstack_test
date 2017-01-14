@@ -1,3 +1,5 @@
+{% import 'common/firewall.sls' as firewall with context %}
+
 nagios_pre_install:
   pkg.installed:
     - pkgs:
@@ -5,19 +7,7 @@ nagios_pre_install:
       - httpd
       - php
 
-add_service_http:
-  module.run:
-    - name: firewalld.add_service
-    - zone: public
-    - service: http
-    - require:
-      - pkg: nagios_pre_install
-
-reload_rules:
-  module.run:
-    - name: firewalld.reload_rules
-    - require:
-      - module: add_service_http
+{{ firewall.firewall_open('80', require='pkg: nagios_pre_install') }}
 
 httpd_service_running:
   service.running:

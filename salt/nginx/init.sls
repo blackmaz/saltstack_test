@@ -1,3 +1,5 @@
+{% import 'common/firewall.sls' as firewall with context %}
+
 nginx:
   pkg.installed:
     - name: nginx
@@ -6,26 +8,7 @@ nginx:
     - enable: True
     - watch:
       - pkg: nginx
-      
-add_service_http:
-  module.run:
-    - name: firewalld.add_service
-    - zone: public
-    - service: http
-    - require:
-      - service: nginx
-      
-add_port_8080:
-  module.run:
-    - name: firewalld.add_port
-    - zone: public
-    - port: 8080/tcp
-    - require:
-      - service: nginx
 
-reload_firewall_rule_nginx:
-  module.run:
-    - name: firewalld.reload_rules
-    - require:
-      - module: add_service_http
-
+{{ firewall.firewall_open('80', require='service: nginx') }}
+{{ firewall.firewall_open('8080', require='service: nginx') }}
+      
