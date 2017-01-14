@@ -6,16 +6,16 @@ reg_salt_master:
     - ip: {{ salt_master_ip }}
 
 install_curl:
-  pkg.install:
+  pkg.installed:
     - name: curl
     - require:
-      - file: reg_salt_master
+      - host: reg_salt_master
 
 install_pyyaml:
   pip.removed:
     - name: PyYAML
     - require:
-      - file: reg_salt_master
+      - host: reg_salt_master
       
 salt_minion:
   cmd.run:
