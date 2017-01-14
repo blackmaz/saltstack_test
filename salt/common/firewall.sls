@@ -3,7 +3,7 @@
 {%- if grains['os'] == 'CentOS' -%}
 firewall-add-port-{{port}}:
   module.run:
-    - name: firewall.add_port
+    - name: firewalld.add_port
     - zone: public
     - port: {{port}}/{{prot}}
 firewall-reload:
