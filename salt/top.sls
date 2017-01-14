@@ -1,6 +1,6 @@
 base:
   '*':
-    - common
+    - common.repo
   'vm03.chossvm':
     - mysql
     - mysql_user
