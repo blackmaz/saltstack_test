@@ -1,11 +1,22 @@
 {% set salt_master_ip = salt['pillar.get']('salt_master:ip_address')  %}
 
+reg_salt_master:
+  host.present:
+    - name: salt
+    - ip: {{ salt_master_ip }}
+
+install_curl:
+  pkg.install:
+    - name: curl
+    - require:
+      - file: reg_salt_master
+
 install_pyyaml:
   pip.removed:
     - name: PyYAML
     - require:
       - file: reg_salt_master
-
+      
 salt_minion:
   cmd.run:
     - name: |
@@ -13,10 +24,5 @@ salt_minion:
         sh install_salt.sh -P
     - unless: test -x /usr/bin/salt-minion
     - require:
-      - file: reg_salt_master
-
-reg_salt_master:
-  file.append:
-    - name: /etc/hosts
-    - text: {{ salt_master_ip }}  salt
-
+      - pkg: install_curl
+      
