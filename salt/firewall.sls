@@ -6,10 +6,23 @@ firewall-add-port-{{port}}:
     - name: firewall.add_port
     - zone: public
     - port: {{port}}/{{prot}}
+firewall-reload:
+  module.run:
+    - name: firewalld.reload_rules
+    - require:
+      - module: firewall-add-port-{{port}}
 {%- elif grains['os'] == 'Ubuntu' -%}
-python-virtualenv:
-  cmd.run:
-    - name: python-{{ pkg }}
+iptables-add-port-{{port}}:
+  iptables.append:
+    - table: filter
+    - chain: INPUT
+    - jump: ACCEPT
+    - match: state
+    - connstate: NEW
+    - dport: {{port}}
+    - proto: {{prot}}
+    - sport: 1025:65535
+    - save: True
 {%- endif -%}
 {%- endmacro %}
 
