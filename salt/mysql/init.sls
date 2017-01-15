@@ -1,5 +1,4 @@
 {% import 'common/firewall.sls' as firewall with context %}
-{% set mysql_root_pwd = pillar['db_server']['root_password'] %}
 {% set mysql = salt['grains.filter_by'] ({
   'Ubuntu': {
     'server': 'mysql-server',
@@ -27,11 +26,6 @@ mysql:
     - enable: True
     - watch:
       - pkg: mysql
-  mysql_user.present:
-    - name: root
-    - password: {{ mysql_root_pwd }}
-    - require:
-      - service: mysql
 
 {{ firewall.firewall_open('3306', require='service: mysql') }}
 

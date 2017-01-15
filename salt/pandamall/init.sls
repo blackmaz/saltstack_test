@@ -1,15 +1,20 @@
 {% set gd = salt['grains.filter_by'] ({
   'Ubuntu': {
-    'lib': 'php-gd'
+    'lib': 'php-gd',
+    'repository': ''
   },
   'CentOS': {
-    'lib': 'php56-php-gd'
+    'lib': 'php-gd',
+    'repository': 'remi-php70,remi'
   },
   'default': 'Ubuntu',
 }, grain='os') %}
 
 php_gd:
   pkg.installed:
+{% if gd.repository != '' %}
+    - enablerepo: {{ gd.repository }}
+{% endif %}
     - name: {{ gd.lib }}
   
 /www_root:
