@@ -1,9 +1,18 @@
 {% import 'common/firewall.sls' as firewall with context %}
+{% set redis = salt['grains.filter_by'] ({
+  'Ubuntu': {
+    'server': 'redis-server'
+  },
+  'CentOS': {
+    'server': 'redis'
+  },
+  'default': 'Ubuntu',
+}, grain='os') %}
 
 redis:
   pkg.installed:
     - pkgs:
-      - redis
+      - {{ redis.server }}
   service.running:
     - name: redis
     - enable: True

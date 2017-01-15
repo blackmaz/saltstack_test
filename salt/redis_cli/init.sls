@@ -1,12 +1,22 @@
+{% set redis = salt['grains.filter_by'] ({
+  'Ubuntu': {
+    'client': 'php-redis'
+  },
+  'CentOS': {
+    'client': 'php56-php-pecl-redis'
+  },
+  'default': 'Ubuntu',
+}, grain='os') %}
+
 redis_cli:
   pkg.installed:
-    - name: php56-php-pecl-redis
+    - name: {{ redis.client }}
 
-php_fpm:
-  service.running:
-    - name: php56-php-fpm
-    - watch: 
-      - pkg: redis_cli
+#php_fpm:
+#  service.running:
+#    - name: php56-php-fpm
+#    - watch: 
+#      - pkg: redis_cli
 
 nginx_service:
   service.running:

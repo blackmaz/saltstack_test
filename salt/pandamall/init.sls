@@ -1,6 +1,16 @@
+{% set gd = salt['grains.filter_by'] ({
+  'Ubuntu': {
+    'lib': 'php-gd'
+  },
+  'CentOS': {
+    'lib': 'php56-php-gd'
+  },
+  'default': 'Ubuntu',
+}, grain='os') %}
+
 php_gd:
   pkg.installed:
-    - name: php56-php-gd
+    - name: {{ gd.lib }}
   
 /www_root:
   archive.extracted:
@@ -22,12 +32,12 @@ nginx_restart_panda:
     - watch:
       - file: /etc/nginx/conf.d/pandamall.com.conf
 
-fpm_restart_panda:
-  service.running:
-    - name: php56-php-fpm
-    - watch:
-      - pkg: php_gd
-      - file: /etc/nginx/conf.d/pandamall.com.conf
+#fpm_restart_panda:
+#  service.running:
+#    - name: php56-php-fpm
+#    - watch:
+#      - pkg: php_gd
+#      - file: /etc/nginx/conf.d/pandamall.com.conf
 
 {% if salt['grains.get']('selinux:enabled') == True %}
 selinux_http_context:

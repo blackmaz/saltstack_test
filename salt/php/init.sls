@@ -1,14 +1,30 @@
 {% import 'common/firewall.sls' as firewall with context %}
+{% set php = salt['grains.filter_by'] ({
+  'Ubuntu': {
+    'php': 'php',
+    'fpm': 'php-fpm',
+    'mysql': 'php-mysqlnd',
+    'service': 'php7.0-fpm',
+    'cfg': '/etc/php/7.0/fpm/pool.d/www.conf'
+  },
+  'CentOS': {
+    'php': 'php56',
+    'fpm': 'php56-php-fpm',
+    'mysql': 'php56-php-mysqlnd',
+    'service': 'php56-php-fpm',
+    'cfg': '/opt/remi/php56/root/etc/php-fpm.d/www.conf'
+  },
+  'default': 'Ubuntu',
+}, grain='os') %}
 
 php:
   pkg.installed:
     - pkgs:
-      - php56
-      - php56-php-fpm
-      - php56-php-mysqlnd
-
+      - {{ php.php }}
+      - {{ php.fpm }}
+      - {{ php.mysql }}
   service.running:
-    - name: php56-php-fpm
+    - name: {{ php.service }}
     - enable: True
     - watch:
       - pkg: php
@@ -27,7 +43,7 @@ php:
     - require:
       - pkg: php
 
-/opt/remi/php56/root/etc/php-fpm.d/www.conf:
+{{ php.cfg }}:
   file.comment:
     - regex: ^listen.allowed_clients = 127.0.0.1
     - char: ;
