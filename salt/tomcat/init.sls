@@ -1,26 +1,40 @@
-{%- from 'tomcat/settings.sls' import tomcat with context %}
+{%- set salt_home = '/root/saltstack_test/salt' %}
+{%- set salt_tomcat_filedir = salt_home + '/tomcat/files' %}
+{%- set tomcat_home = '/app/tomcat' %}
+{%- set tomcat_version = 'apache-tomcat-8.5.9' %}
+{%- set tomcat_tar = tomcat_version + '.tar.gz' %}
+{%- set tomcat_downloadurl = 'http://mirror.navercorp.com/apache/tomcat/tomcat-8/v8.5.9/bin/' + tomcat_tar %}
+{%- set tomcat_downloadhash = '3c800e7affdf93bf4dbcf44bd852904449b786f6' %}
 
-download-tomcat-tarball:
+download-tomcat-tar:
   cmd.run:
-    - name: curl -s -L -o '/root/saltstack_test/salt/tomcat/files/apache-tomcat-8.5.9.tar.gz' 'http://mirror.navercorp.com/apache/tomcat/tomcat-8/v8.5.9/bin/apache-tomcat-8.5.9.tar.gz'
-    - unless: test -f '/root/saltstack_test/salt/tomcat/files/apache-tomcat-8.5.9.tar.gz'
-    - require:
-      - file: tomcat-install-dir
+    - name: curl -s -L -o {{ salt_tomcat_filedir }}/{{ tomcat_tar }} {{ tomcat_downloadurl }}
+    - unless: test -f {{ salt_tomcat_filedir }}/{{ tomcat_tar }}
 
-unpack-tomcat-tarball:
+unpack-tomcat-tar:
   archive.extracted:
-    - name: {{ tomcat.install_dir }}
-    - source: salt://tomcat/files/apache-tomcat-8.5.9.tar.gz
+    - name: {{ tomcat_home }}
+    - source:  salt://tomcat/files/{{ tomcat_tar }}
+    - source_hash: sha1={{ tomcat_downloadhash }}
     - archive_format: tar
-    - tar_options: zxvf
-    - onchanges:
-      - cmd: download-tomcat-tarball
+    - tar_option: zxvf
 
-/app/tomcat/apache-tomcat-8.5.9/conf/context.xml:
-  file.managed:
-    - source: salt://tomcat/files/context.xml
-    - user: root
-    - group: root
-    - mode: '640'
-    - template: jinja
+#remove-tomcat-tar:
+#  file.absent:
+#    - name: {{ salt_tomcat_filedir }}/{{ tomcat_tar }}
 
+{{ tomcat_home }}/apache-tomcat-8.5.9/conf/server.xml:
+    file.managed:
+        - source: salt://tomcat/conf/_server.xml
+        - user: root
+        - group: root
+        - mode: '640'
+        - template: jinja
+
+{{ tomcat_home }}/apache-tomcat-8.5.9/conf/catalina.sh:
+    file.managed:
+        - source: salt://tomcat/conf/_catalina.sh
+        - user: root
+        - group: root
+        - mode: '640'
+        - template: jinja
