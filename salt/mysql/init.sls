@@ -1,23 +1,33 @@
 {% import 'common/firewall.sls' as firewall with context %}
+{% set mysql = salt['grains.filter_by'] ({
+  'Ubuntu': {
+    'server': 'mysql-server',
+    'client': 'mysql-client',
+    'python': 'python-mysqldb',
+    'service': 'mysql'
+  },
+  'CentOS': {
+    'server': 'mariadb-server',
+    'client': 'mariadb',
+    'python': 'MySQL-python',
+    'service': 'mariadb'
+  },
+  'default': 'Ubuntu',
+}, grain='os') %}
 
-maria:
+mysql:
   pkg.installed:
     - pkgs:
-      - mariadb
-      - mariadb-server
-      - MySQL-python
+      - {{ mysql.server }}
+      - {{ mysql.client }}
+      - {{ mysql.python }}
   service.running:
-    - name: mariadb
+    - name: {{ mysql.service }}
     - enable: True
     - watch:
-      - pkg: maria
-  mysql_user.present:
-    - name: root
-    - password: {{ pillar['db_server']['root_password'] }}
-    - require:
-      - service: maria
+      - pkg: mysql
 
-{{ firewall.firewall_open('3306', require='service: maria') }}
+{{ firewall.firewall_open('3306', require='service: mysql') }}
 
 #add_port_3306:
 #  module.run:
