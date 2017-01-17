@@ -41,7 +41,7 @@ remove-tomcat-tar:
         - source: salt://tomcat/conf/_catalina.sh
         - user: root
         - group: root
-        - mode: '640'
+        - mode: '740'
         - template: jinja
         - context:
             java_opts: "-server -Xms512m -Xmx512m -XX:PermSize=128m -XX:MaxPermSize=128m -XX:+DisableExplicitGC"
