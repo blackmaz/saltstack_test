@@ -66,8 +66,9 @@
          APR (HTTP/AJP) Connector: /docs/apr.html
          Define a non-SSL/TLS HTTP/1.1 Connector on port 8080
     -->
-    <Connector port="18080" protocol="HTTP/1.1"
+    <Connector port="{{ server_port }}" protocol="HTTP/1.1"
                connectionTimeout="20000"
+               {% if max_threads %} maxThreads = "{{ max_threads }}" {% endif %}
                redirectPort="8443" />
     <!-- A "Connector" using the shared thread pool-->
     <!--

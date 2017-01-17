@@ -239,6 +239,9 @@ if [ -z "$JSSE_OPTS" ] ; then
   JSSE_OPTS="-Djdk.tls.ephemeralDHKeySize=2048"
 fi
 JAVA_OPTS="$JAVA_OPTS $JSSE_OPTS"
+{% if java_opts %}
+JAVA_OPTS="{{ java_opts }}"
+{% endif %}
 
 # Register custom URL handlers
 # Do this here so custom URL handles (specifically 'war:...') can be used in the security policy
