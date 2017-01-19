@@ -14,7 +14,6 @@
 })
 %}
 
-
 apache:
   pkg.installed:
     - name: {{ apache.server }}
