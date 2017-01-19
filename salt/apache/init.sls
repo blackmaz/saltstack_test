@@ -1,3 +1,4 @@
+{% import 'common/firewall.sls' as firewall with context %}
 {%- set salt_home = '/root/saltstack_test/salt' %}
 {%- set salt_apachefiledir = salt_home + '/apache/files' %}
 {%- set apache = salt['grains.filter_by']({
@@ -20,3 +21,7 @@ apache:
   service.running:
     - name: {{ apache.service }}
     - enable: True
+    - watch:
+      - pkg: apache
+
+{{ firewall.firewall_open('80', require='service: apache') }}
