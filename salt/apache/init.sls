@@ -5,12 +5,14 @@
     'Debian': {
         'server': 'apache2',
         'service': 'apache2',
-        'configfile': '/etc/apache2/apache2.conf',
+        'configdir': '/etc/apache2',
+        'configfile': 'apache2.conf',
     },
     'RedHat': {
         'server': 'httpd',
         'service': 'httpd',
-        'configfile': '/etc/httpd/conf/httpd.conf',
+        'configdir': '/etc/httpd/conf',
+        'configfile': 'httpd.conf',
     },
 })
 %}
@@ -23,5 +25,15 @@ apache:
     - enable: True
     - watch:
       - pkg: apache
+
+{{ apache.configdir }}/{{ apache.configfile }}:
+  file.managed:
+    - source: salt://apache/conf/{{ apache.configfile }}
+    - user: root
+    - group: root
+    - mode: '640'
+    - template: jinja
+    - defaults:
+      listen_port: 80
 
 {{ firewall.firewall_open('80', require='service: apache') }}
