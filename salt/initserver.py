@@ -11,7 +11,7 @@ for host in r.keys():
     if ret[host]['stdout'] == 'DISTRIB_ID=Ubuntu\n':
       ret = s.cmd(host,'sudo apt-get -y install python', raw_shell=True,ssh_priv=ssh_key,ssh_identities_only=True)
 
-r = s.cmd('*','test.ping')
+r = s.cmd('*','test.ping',ssh_priv=ssh_key,ssh_identities_only=True)
 for host in r.keys():
   if r[host]['retcode'] == 0:
     ret = s.cmd(host,'state.apply',['salt_minion'],ssh_priv=ssh_key,ssh_identities_only=True)
