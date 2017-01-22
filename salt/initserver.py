@@ -23,4 +23,5 @@ w = salt.wheel.WheelClient(o)
 
 m = w.cmd('key.list',['all'])
 if len(m['minions_pre']) > 0:
-  w.cmd('key.accept',m['minions_pre'])
+  for host in m['minions_pre']:
+    w.cmd('key.accept',[host])
