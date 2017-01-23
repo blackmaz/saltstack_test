@@ -7,7 +7,7 @@ download-tomcat-tar:
 
 unpack-tomcat-tar:
   archive.extracted:
-    - name: {{ tomcat.tomcat_home }}
+    - name: {{ tomcat.tomcat_insthome }}
     - source:  salt://tomcat/files/{{ tomcat.tomcat_tar }}
     - source_hash: sha1={{ tomcat.downloadhash }}
     - archive_format: tar
@@ -17,7 +17,7 @@ remove-tomcat-tar:
   file.absent:
     - name: {{ tomcat.salt_tomcat_filedir }}/{{ tomcat.tomcat_tar }}
 
-{{ tomcat.tomcat_home }}/apache-tomcat-8.5.9/conf/server.xml:
+{{ tomcat.tomcat_home }}/conf/server.xml:
     file.managed:
         - source: salt://tomcat/conf/_server.xml
         - user: root
@@ -30,7 +30,7 @@ remove-tomcat-tar:
         - context:
             max_threads: 100
 
-{{ tomcat.tomcat_home }}/apache-tomcat-8.5.9/bin/catalina.sh:
+{{ tomcat.tomcat_home }}/bin/catalina.sh:
     file.managed:
         - source: salt://tomcat/conf/_catalina.sh
         - user: root
