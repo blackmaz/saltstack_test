@@ -7,12 +7,14 @@
         'service': 'apache2',
         'configdir': '/etc/apache2',
         'configfile': 'apache2.conf',
+        'configsitefile': '000-default.conf',
     },
     'RedHat': {
         'server': 'httpd',
         'service': 'httpd',
         'configdir': '/etc/httpd/conf',
         'configfile': 'httpd.conf',
+        'configsitefile': '000-default.conf',
     },
 })
 %}
@@ -26,6 +28,10 @@ apache:
     - watch:
       - pkg: apache
 
+install-proxy-module:
+  cmd.run:
+    - name: a2enmod proxy;a2enmod proxy_http;
+
 {{ apache.configdir }}/{{ apache.configfile }}:
   file.managed:
     - source: salt://apache/conf/{{ apache.configfile }}
@@ -35,5 +41,13 @@ apache:
     - template: jinja
     - defaults:
       listen_port: 80
+
+{{ apache.configdir }}/sites-available/{{ apache.configsitefile }}:
+  file.managed:
+    - source: salt://apache/conf/_{{ apache.configsitefile }}
+    - user: root
+    - group: root
+    - mode: '640'
+    - template: jinja
 
 {{ firewall.firewall_open('80', require='service: apache') }}
