@@ -46,6 +46,6 @@ update-jdk-config:
   cmd.run:
     - name: sh /etc/profile.d/java.sh
 
-#remove-jdk-tarball:
-#  file.absent:
-#    - name: {{ tarball_file }}
+remove-jdk-tarball:
+  file.absent:
+    - name: {{ tarball_file }}
