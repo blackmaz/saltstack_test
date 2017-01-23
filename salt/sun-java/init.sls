@@ -42,7 +42,8 @@ set-jdk-config:
     - context:
       java_home: {{ java_home }}
 
-update-jdk-config
+update-jdk-config:
+  cmd.run:
     - name: sh /etc/profile.d/java.sh
 
 #remove-jdk-tarball:
