@@ -1,11 +1,12 @@
 base:
   '*':
     - base.repo
-  'vm93':
+  'vm83,vm93':
+    - match: list
     - mysql
     - mysql.root_user
     - mysql_user
-  'vm94,vm95':
+  'vm84,vm94':
     - match: list
     - nginx
     - php
