@@ -9,3 +9,9 @@ install_remi_repo:
     - require:
       - pkg: install_epel
 {%- endif %}
+
+{%- if salt['grains.get']('selinux:enabled') == True %}
+install_policycoreutils:
+  pkg.installed:
+    - name: policycoreutils-python
+{%- endif %}

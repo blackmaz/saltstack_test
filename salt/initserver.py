@@ -1,7 +1,7 @@
 import salt.client.ssh.client
 
 #ssh_key='/home/ubuntu/aws/test_key_pair'
-ssh_key='/home/shungsic/.ssh/id_rsa'
+ssh_key='/home/sungsic/.ssh/id_rsa'
 
 s = salt.client.ssh.client.SSHClient()
 r = s.cmd('*','test.ping',ssh_priv=ssh_key,ssh_identities_only=True)
@@ -15,6 +15,7 @@ r = s.cmd('*','test.ping',ssh_priv=ssh_key,ssh_identities_only=True)
 for host in r.keys():
   if r[host]['retcode'] == 0:
     ret = s.cmd(host,'state.apply',['salt_minion'],ssh_priv=ssh_key,ssh_identities_only=True)
+    print ret
 
 import salt.config
 import salt.wheel

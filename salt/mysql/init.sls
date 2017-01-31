@@ -4,13 +4,15 @@
     'server': 'mysql-server',
     'client': 'mysql-client',
     'python': 'python-mysqldb',
-    'service': 'mysql'
+    'service': 'mysql',
+    'cfg': '/etc/mysql/mysql.conf.d/mysqld.cnf'
   },
   'CentOS': {
     'server': 'mariadb-server',
     'client': 'mariadb',
     'python': 'MySQL-python',
-    'service': 'mariadb'
+    'service': 'mariadb',
+    'cfg': '/etc/my.cnf.d/server.cnf'
   },
   'default': 'Ubuntu',
 }, grain='os') %}
@@ -28,6 +30,10 @@ mysql:
       - pkg: mysql
 
 {{ firewall.firewall_open('3306', require='service: mysql') }}
+
+{{ mysql.cfg }}:
+  file.comment:
+    - regex: ^bind-address
 
 #add_port_3306:
 #  module.run:

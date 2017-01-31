@@ -25,7 +25,7 @@ php_gd:
     - require:
       - pkg: php_gd
 
-/etc/nginx/conf.d/pandamall.com.conf:
+/etc/nginx/sites-available/default:
   file.managed:
     - source: salt://pandamall/pandamall.com.conf
     - require:
@@ -35,7 +35,7 @@ nginx_restart_panda:
   service.running:
     - name: nginx
     - watch:
-      - file: /etc/nginx/conf.d/pandamall.com.conf
+      - file: /etc/nginx/sites-available/default
 
 #fpm_restart_panda:
 #  service.running:

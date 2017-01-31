@@ -18,6 +18,7 @@
   },
   'default': 'Ubuntu',
 }, grain='os') %}
+{% set os = grains['os'] %}
 
 php:
   pkg.installed:
@@ -33,6 +34,7 @@ php:
     - enable: True
     - watch:
       - pkg: php
+      - file: {{ php.cfg }}
 
 {{ firewall.firewall_open('9000', require='service: php') }}
 
@@ -51,9 +53,16 @@ php:
 #      - pkg: php
 
 {{ php.cfg }}:
-  file.comment:
-    - regex: ^listen.allowed_clients = 127.0.0.1
-    - char: ;
+  file.managed:
+    - source: salt://php/www.conf.{{ os }} 
+    - template: jinja
+    - context:
+        listen_addr: listen = 127.0.0.1:9000
+        listen_allowed_client: ;listen.allowed_clients = 127.0.0.1
+
+#  file.comment:
+#    - regex: ^listen.allowed_clients = 127.0.0.1
+#    - char: ;
 
 #nginx_restart:
 #  service.running:
