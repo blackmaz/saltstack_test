@@ -1,3 +1,4 @@
+# 한글을 입력해도 돌아가는지 확인
 {%- set db_pwd  = pillar['db_server']['root_password'] %}
 {%- set db_name = pillar['application']['database_name'] %}
 {%- set db_usr  = pillar['application']['db_user'] %}
