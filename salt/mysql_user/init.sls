@@ -1,44 +1,49 @@
-pandamall_database:
+{%- set db_pwd  = pillar['db_server']['root_password'] %}
+{%- set db_name = pillar['application']['database_name'] %}
+{%- set db_usr  = pillar['application']['db_user'] %}
+{%- set db_usr_pwd = pillar['application']['db_user_password'] %}
+
+create_{{ db_name }}:
   mysql_database.present:
-    - name: {{ pillar['application']['database_name'] }}
+    - name: {{ db_name }}
     - connection_user: root
-    - connection_pass: {{pillar['db_server']['root_password']}}
+    - connection_pass: {{ db_pwd }}
     - connection_host: localhost
     - connection_charset: utf8
   mysql_user.present:
-    - name: {{ pillar['application']['db_user'] }}
+    - name: {{ db_usr }}
     - host: localhost
-    - password: {{ pillar['application']['db_user_password'] }}
+    - password: {{ db_usr_pwd }}
     - use:
-      - mysql_database: {{ pillar['application']['database_name'] }}
+      - mysql_database: {{ db_name }}
     - require:
-      - mysql_database: pandamall_database
+      - mysql_database: create_{{ db_name }} 
   mysql_grants.present:
     - grant: all privileges
-    - database: {{ pillar['application']['database_name'] }}.*
-    - user: {{ pillar['application']['db_user'] }}
+    - database: {{ db_name }}.*
+    - user: {{ db_usr }}
     - host: localhost
     - use:
-      - mysql_database: {{ pillar['application']['database_name'] }}
+      - mysql_database: {{ db_name }}
     - require:
-      - mysql_user: pandamall_database
+      - mysql_user: create_{{ db_name }}
 
-pandamall_grant_webserver:
+grant_{{ db_name }}:
   mysql_user.present:
-    - name: {{ pillar['application']['db_user'] }}
+    - name: {{ db_usr }}
     - host: '%'
-    - password: {{ pillar['application']['db_user_password'] }}
+    - password: {{ db_usr_pwd }}
     - use:
-      - mysql_database: {{ pillar['application']['database_name'] }}
+      - mysql_database: {{ db_name }}
     - require:
-      - mysql_user: pandamall_database
+      - mysql_user: create_{{ db_name }}
 
   mysql_grants.present:
     - grant: all privileges
-    - database: {{ pillar['application']['database_name'] }}.*
-    - user: {{ pillar['application']['db_user'] }}
+    - database: {{ db_name }}.*
+    - user: {{ db_usr }}
     - host: '%'
     - use:
-      - mysql_database: {{ pillar['application']['database_name'] }}
+      - mysql_database: {{ db_name }}
     - require:
-      - mysql_user: pandamall_database
+      - mysql_user: create_{{ db_name }}

@@ -15,7 +15,6 @@ r = s.cmd('*','test.ping',ssh_priv=ssh_key,ssh_identities_only=True)
 for host in r.keys():
   if r[host]['retcode'] == 0:
     ret = s.cmd(host,'state.apply',['salt_minion'],ssh_priv=ssh_key,ssh_identities_only=True)
-    print ret
 
 import salt.config
 import salt.wheel
