@@ -91,3 +91,4 @@ ENV/
 # tarball binary 
 .tar
 .tar.gz
+/.project
