@@ -1,7 +1,7 @@
 {% set p  = salt['pillar.get']('java', {}) %}
 {% set g  = salt['grains.get']('java', {}) %}
 
-{%- set salt_home = '/root/saltstack_test/salt' %}
+{%- set salt_home = '/srv/salt' %}
 {%- set salt_tomcat_filedir = salt_home + '/tomcat/files' %}
 {%- set java_home = '/opt/java/jdk1.8.0_111' %}
 {%- set tomcat_home = '/app/tomcat' %}

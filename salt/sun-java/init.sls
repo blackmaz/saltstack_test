@@ -1,4 +1,4 @@
-{%- set salt_home = '/root/saltstack_test/salt' %}
+{%- set salt_home = '/srv/salt' %}
 {%- set salt_sunjava_filedir = salt_home + '/sun-java/files' %}
 {%- set java_tar = 'jdk-8u111-linux-x64.tar.gz' %}
 {%- set java_downloadurl = 'http://download.oracle.com/otn-pub/java/jdk/8u111-b14/jdk-8u111-linux-x64.tar.gz' %}

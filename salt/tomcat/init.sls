@@ -39,8 +39,6 @@ remove-tomcat-tar:
         - template: jinja
         - context:
             java_opts: {{ tomcat.java_opts }}
-<<<<<<< HEAD
-=======
 
 {{ tomcat.tomcat_home }}/conf/tomcat-users.xml:
     file.managed:
@@ -57,4 +55,3 @@ startup-tomcat:
     - name: {{ tomcat.tomcat_home }}/bin/startup.sh
     - unless: test -n `ps -ef | grep java | awk '{print $2}'`
 
->>>>>>> 653c76582ecbde694a15a5fbf120ce784aaaba2e
