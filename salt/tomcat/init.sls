@@ -39,3 +39,22 @@ remove-tomcat-tar:
         - template: jinja
         - context:
             java_opts: {{ tomcat.java_opts }}
+<<<<<<< HEAD
+=======
+
+{{ tomcat.tomcat_home }}/conf/tomcat-users.xml:
+    file.managed:
+        - source: salt://tomcat/conf/_tomcat-users.xml
+        - user: root
+        - group: root
+        - mode: '640'
+        - template: jinja
+
+startup-tomcat:
+  cmd.run:
+    - env: 
+      - JAVA_HOME: "{{ tomcat.java_home }}"
+    - name: {{ tomcat.tomcat_home }}/bin/startup.sh
+    - unless: test -n `ps -ef | grep java | awk '{print $2}'`
+
+>>>>>>> 653c76582ecbde694a15a5fbf120ce784aaaba2e

@@ -62,4 +62,12 @@ install-proxy-module:
 
 {% endif %}
 
+<<<<<<< HEAD
+=======
+{{ apache.service }}:
+  service.running:
+    - reload: True
+
+
+>>>>>>> 653c76582ecbde694a15a5fbf120ce784aaaba2e
 {{ firewall.firewall_open('80', require='service: apache') }}
