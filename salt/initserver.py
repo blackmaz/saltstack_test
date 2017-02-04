@@ -5,16 +5,22 @@ ssh_key='/home/sungsic/.ssh/id_rsa'
 
 s = salt.client.ssh.client.SSHClient()
 r = s.cmd('*','test.ping',ssh_priv=ssh_key,ssh_identities_only=True)
+hosts = []
 for host in r.keys():
   if r[host]['retcode'] == 10:
     ret = s.cmd(host, 'sudo cat /etc/*release|grep DISTRIB_ID',raw_shell=True,ssh_priv=ssh_key,ssh_identities_only=True)
     if ret[host]['stdout'] == 'DISTRIB_ID=Ubuntu\n':
-      ret = s.cmd(host,'sudo apt-get -y install python', raw_shell=True,ssh_priv=ssh_key,ssh_identities_only=True)
+      hosts.append(host)
 
+ret = s.cmd(hosts,'sudo apt-get -y install python',expr_form='list',  raw_shell=True,ssh_priv=ssh_key,ssh_identities_only=True)
+
+hosts = []
 r = s.cmd('*','test.ping',ssh_priv=ssh_key,ssh_identities_only=True)
 for host in r.keys():
   if r[host]['retcode'] == 0:
-    ret = s.cmd(host,'state.apply',['salt_minion'],ssh_priv=ssh_key,ssh_identities_only=True)
+    hosts.append(host)
+
+ret = s.cmd(hosts,'state.apply',['salt_minion'],expr_form='list', ssh_priv=ssh_key,ssh_identities_only=True)
 
 import salt.config
 import salt.wheel
