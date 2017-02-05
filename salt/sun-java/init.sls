@@ -1,9 +1,8 @@
 {%- set salt_home = '/srv/salt' %}
-{%- set salt_sunjava_filedir = salt_home + '/sun-java/files' %}
 {%- set java_tar = 'jdk-8u111-linux-x64.tar.gz' %}
-{%- set java_downloadurl = 'http://download.oracle.com/otn-pub/java/jdk/8u111-b14/jdk-8u111-linux-x64.tar.gz' %}
+{%- set java_downloadurl = 'http://download.oracle.com/otn-pub/java/jdk/8u111-b14/'+java_tar %}
 {%- set java_downloadhash  = '187eda2235f812ddb35c352b5f9aa6c5b184d611c2c9d0393afb8031d8198974' %}
-{%- set tarball_file = salt_sunjava_filedir + '/' + java_tar %}
+{%- set tarball_file = '/tmp/' + java_tar %}
 {%- set java_insthome = '/opt/java' %}
 {%- set java_version = 'jdk1.8.0_111' %}
 {%- set java_home = java_insthome+'/' + java_version  %}
@@ -26,7 +25,7 @@ download-jdk-tarball:
 unpack-jdk-tarball:
   archive.extracted:
     - name: {{ java_insthome }}
-    - source: salt://sun-java/files/{{ java_tar }}
+    - source: file://{{ tarball_file }}
     - archive_format: tar
     - tar_option: zxvf
     - if_missing: {{ java_home }}
@@ -46,6 +45,6 @@ update-jdk-config:
   cmd.run:
     - name: sh /etc/profile.d/java.sh
 
-remove-jdk-tarball:
-  file.absent:
-    - name: {{ tarball_file }}
+#remove-jdk-tarball:
+#  file.absent:
+#    - name: {{ tarball_file }}
