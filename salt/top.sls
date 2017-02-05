@@ -4,12 +4,13 @@ base:
   'vm83,vm93':
     - match: list
     - mysql
-#    - mysql.root_user
-    - mysql_user.petclinic
+    - mysql_user
   'vm84,vm94':
     - match: list
-    - sun-java
-    - tomcat
-    - tomcat.deploy
-    - apache
+    - nginx
+    - php
+    - redis
+    - redis_cli
+    - mysql_cli
+    - pandamall
 
