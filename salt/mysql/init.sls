@@ -16,6 +16,7 @@
   },
   'default': 'Ubuntu',
 }, grain='os') %}
+{% set mysql_root_pwd = pillar['db_server']['root_password'] %}
 
 mysql:
   pkg.installed:
@@ -23,28 +24,25 @@ mysql:
       - {{ mysql.server }}
       - {{ mysql.client }}
       - {{ mysql.python }}
+{% if grains['os'] == 'Ubuntu'%}
+  file.comment:
+    - name: {{ mysql.cfg }}
+    - regex: ^bind-address
+{% endif %}
   service.running:
     - name: {{ mysql.service }}
     - enable: True
     - watch:
       - pkg: mysql
+{% if grains['os'] == 'Ubuntu'%}
+      - file: mysql
+{% endif %}
 
 {{ firewall.firewall_open('3306', require='service: mysql') }}
 
-{{ mysql.cfg }}:
-  file.comment:
-    - regex: ^bind-address
-
-#add_port_3306:
-#  module.run:
-#    - name: firewalld.add_port
-#    - zone: public
-#    - port: 3306/tcp
-#    - require:
-#      - service: maria
-#
-#reload_firewall_rule:
-#  module.run:
-#    - name: firewalld.reload_rules
-#    - require:
-#      - module: add_port_3306
+mysql_root_password:
+  cmd.run:
+    - name: mysqladmin --user root password '{{ mysql_root_pwd|replace("'", "'\"'\"'") }}'
+    - unless: mysql --user root --password='{{ mysql_root_pwd|replace("'", "'\"'\"'") }}' --execute="SELECT 1;"
+    - require:
+      - service: mysql
