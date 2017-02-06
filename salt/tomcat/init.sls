@@ -2,20 +2,20 @@
 
 download-tomcat-tar:
   cmd.run:
-    - name: curl -s -L -o {{ tomcat.salt_tomcat_filedir }}/{{ tomcat.tomcat_tar }} {{ tomcat.downloadurl }}
-    - unless: test -f {{ tomcat.salt_tomcat_filedir }}/{{ tomcat.tomcat_tar }}
+    - name: curl -s -L -o '/tmp/'{{ tomcat.tomcat_tar }} {{ tomcat.downloadurl }}
+    - unless: test -f '/tmp/'{{ tomcat.tomcat_tar }}
 
 unpack-tomcat-tar:
   archive.extracted:
     - name: {{ tomcat.tomcat_insthome }}
-    - source:  salt://tomcat/files/{{ tomcat.tomcat_tar }}
+    - source:  file:///tmp/{{ tomcat.tomcat_tar }}
     - source_hash: sha1={{ tomcat.downloadhash }}
     - archive_format: tar
     - tar_option: zxvf
 
-remove-tomcat-tar:
-  file.absent:
-    - name: {{ tomcat.salt_tomcat_filedir }}/{{ tomcat.tomcat_tar }}
+#remove-tomcat-tar:
+#  file.absent:
+#    - name: {{ tomcat.salt_tomcat_filedir }}/{{ tomcat.tomcat_tar }}
 
 {{ tomcat.tomcat_home }}/conf/server.xml:
     file.managed:
@@ -39,14 +39,6 @@ remove-tomcat-tar:
         - template: jinja
         - context:
             java_opts: {{ tomcat.java_opts }}
-
-{{ tomcat.tomcat_home }}/conf/tomcat-users.xml:
-    file.managed:
-        - source: salt://tomcat/conf/_tomcat-users.xml
-        - user: root
-        - group: root
-        - mode: '640'
-        - template: jinja
 
 startup-tomcat:
   cmd.run:
