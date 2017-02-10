@@ -1,9 +1,9 @@
-{%- set tomcat_home = '/www/nest/tomcat7' %}
+{%- set tomcat_home = '/www/nest_dev/tomcat7' %}
 {%- set service_ip = '192.168.10.10' %}
 {%- set deploy_tar = 'webapps_ozr.zip' %}
 {%- set deploy_downloadurl = 'https://www.dropbox.com/s/y257ychikv0gwz1/webapps_ozr.zip?dl=0' %}
 {%- set datasource_url = 'jdbc:mysql://localhost:3306/nest_dev' %}
-{%- set db_user = 'root' }
+{%- set db_user = 'root' %}
 {%- set db_password = '' %}
 
 install-unzip:
