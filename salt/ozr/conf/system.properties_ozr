@@ -1,0 +1,124 @@
+############################
+# Project images path
+# CAUTION: Never put '/' character at the end of path (e.g. /www/nest/tomcat7/webapps/data)
+############################
+
+# for local server
+#projectImgPath=C:/howocoast_framework/workspace/www.nestfunding.kr/src/main/webapp/data
+# for operation server
+projectImgPath={{ tomcat_home }}/webapps/data
+
+############################
+# Temporary files location
+############################
+#LOCAL-SERVER
+#temp.file.dir=C:/howocoast_framework/workspace/www.nestfunding.kr/src/main/webapp/WEB-INF/temp
+#OPERATION-SERVER
+temp.file.dir={{ tomcat_home }}/webapps/WEB-INF/temp
+
+############################
+# Encryption keys
+# CAUTION: Never EXPOSE keys to public
+############################
+
+# Triple DES
+tripleDes=DU39AHX830NXR12390VJ99DFGNX1K2548SDNSJKZZX01
+
+############################
+# NICEPAY SETUP
+# CAUTION: Never EXPOSE nicepayEcodeKey to public
+############################
+
+#LOCAL-SERVER
+#nicepayHome=c:\\www
+#OPERATION-SERVER
+nicepayHome=/www/nest/nicepay/lite
+
+#LOCAL-SERVER
+#nestServerIp=106.245.69.54:8080
+#OPERATION-SERVER
+nestServerIp={{ service_ip }} 
+
+#TEST SERVER
+#nicepayMallId=nictest04m
+#OPERATION SERVER
+nicepayMallId=nestnest1m
+
+#TEST SERVER
+#nicepayEncodeKey=b+zhZ4yOZ7FsH8pm5lhDfHZEb79tIwnjsdA0FBXh86yLc6BJeFVrZFXhAoJ3gEWgrWwN+lJMV0W4hvDdbe4Sjw==
+#OPERATION SERVER
+nicepayEncodeKey=9jCFi5r/xNv/SkSKQtmaxrkrCpUtPxhRqSa1PjaVE3pJcQmnm/s/dStcWO7/I55jpwfqbkBcDmT9jiSBVJXpgw==
+
+#NICEPAY RETURN URL
+#TEST SERVER
+#nicepayReturnUrl=http://106.245.69.54:8080/project/back/callback.act
+#OPERATION SERVER
+nicepayReturnUrl=https://www.ozr.kr/project/back/callback.act
+
+#NICEPAY CANCEL PWD
+#TEST SERVER
+#nicepayCancelPwd=123456
+#OPERATION SERVER
+nicepayCancelPwd=maker12!@
+
+############################
+# IMAGE THUMBNAIL
+############################
+thumbnail.image.width=640
+thumbnail.image.height=410
+avatar.image.width=128
+avatar.image.height=128
+profile.image.width=800
+#profile.image.height value will be defined by aspect ratio
+project.image.width=900
+#project.image.height value will be defined by aspect ratio
+
+############################
+# IMAGE UPLOAD
+############################
+upload.image.allowed.file=jpg,png,bmp,gif
+upload.image.allowed.file.size=5000000
+upload.image.thumbnail.width=200
+upload.image.thumbnail.height=200
+
+############################
+# AWS CDN CLOUDFRONT
+############################
+cdn.domain.cloudfront=
+
+############################
+# SENDMAIL SETUP
+############################
+mail.smtp=smtp.worksmobile.com
+mail.smtp.account.id=sendonly@ozr.kr
+mail.smtp.account.password=nest12!@
+
+############################
+# ADDRESS LOOKUP API
+############################
+address.api.key=U01TX0FVVEgyMDE1MTIxMTE3MjkzMDA=
+
+############################
+# GABIA SMS API
+############################
+sms.api.id=thenest12
+sms.api.key=1e8810ff91ccda4924c5f5430a8e3452
+sms.company.tel=02-548-1510
+
+############################
+# KAKAO API
+############################
+kakao.app.key=1d63a9c4509207a5d19e00790ab6d7e2
+kakao.app.return.uri=https://dev.5giraffe.com/oauth/kakao.do
+kakao.app.token.uri=https://kauth.kakao.com/oauth/token
+
+############################
+# GOOGLE API
+############################
+google.app.server.key=AIzaSyDGGITnf-tgy9e8l-7Q7HKYXklqR2fa0Dg
+google.app.web.key=AIzaSyDQRayhmFdZgv6GwHM10cZWy6f4OrdRPeU
+
+############################
+# SCHEDULE_FLAG
+############################
+schedule.start=true

@@ -1,0 +1,32 @@
+org.quartz.threadPool.class = org.quartz.simpl.SimpleThreadPool
+org.quartz.threadPool.threadCount = 10
+org.quartz.threadPool.threadPriority = 5
+org.quartz.threadPool.threadsInheritContextClassLoaderOfInitializingThread = true
+
+# Using RAMJobStore
+## if using RAMJobStore, please be sure that you comment out the following
+## - org.quartz.jobStore.tablePrefix, 
+## - org.quartz.jobStore.driverDelegateClass, 
+## - org.quartz.jobStore.dataSource
+#org.quartz.jobStore.class = org.quartz.simpl.RAMJobStore
+org.quartz.scheduler.instanceName=OZR_scheduler
+
+# Using JobStoreTX
+## Be sure to run the appropriate script(under docs/dbTables) first to create tables
+org.quartz.jobStore.class = org.quartz.impl.jdbcjobstore.JobStoreTX
+
+# Configuring JDBCJobStore with the Table Prefix
+org.quartz.jobStore.tablePrefix = QRTZ_
+
+# Using DriverDelegate
+org.quartz.jobStore.driverDelegateClass = org.quartz.impl.jdbcjobstore.StdJDBCDelegate
+
+# Using datasource
+org.quartz.jobStore.dataSource = qzDS
+
+# Define the datasource to use
+org.quartz.dataSource.qzDS.driver = com.mysql.jdbc.Driver
+org.quartz.dataSource.qzDS.URL = {{ datasource_url }}
+org.quartz.dataSource.qzDS.user = {{ db_user }}
+org.quartz.dataSource.qzDS.password = {{ db_password }}
+org.quartz.dataSource.qzDS.maxConnections = 30 
