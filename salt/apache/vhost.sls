@@ -54,12 +54,14 @@
       '443': { 
         'server_admin': 'webmaster',
         'doc_root': '/www/nest/tomcat7/webapps',
-        'log_root': '/www/nest/logs/web'
+        'log_root': '/www/nest/logs/web',
+        'use_ssl': True
       },
     },
     'enable': True
   }
 } %}
+{%- set selinux_enabled = salt['grains.get']('selinux:enabled') %}
 
 {%- for id, site in sites.items() %}
 vhost_cfg_{{ id }}:
@@ -82,6 +84,13 @@ doc_root_{{ id }}_{{ port }}:
     - group: root
     - mode: 755
     - makedirs: True
+
+{%- if selinux_enabled %}
+selinux_httpd_sys_content_{{ id }}_{{ port }}:
+  cmd.run:
+    - name: chcon -R -t httpd_sys_content_t {{ cfg.doc_root }}
+{%- endif %}
+
 {%- endif %}
 
 {%- if cfg.get('log_root', False) != False %}
@@ -92,6 +101,12 @@ log_root_{{ id }}_{{ port }}:
     - group: root
     - mode: 755
     - makedirs: True
+
+{%- if selinux_enabled %}
+selinux_httpd_log_{{ id }}_{{ port }}:
+  cmd.run:
+    - name: chcon -R -t httpd_log_t {{ cfg.log_root }}
+{%- endif %}
 {%- endif %}
 {%- endfor %}
 {%- if site.get('enable',False) %}

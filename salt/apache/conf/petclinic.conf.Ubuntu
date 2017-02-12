@@ -1,0 +1,6 @@
+<VirtualHost *:80>
+  ServerName test1.com
+  LogLevel warn
+  ProxyPass / http://127.0.0.1:18080/
+  ProxyPassReverse / http://127.0.0.1:18080/
+</VirtualHost>

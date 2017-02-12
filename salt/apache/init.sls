@@ -1,22 +1,30 @@
-{% import 'common/firewall.sls' as firewall with context %}
-{%- set salt_home = '/root/saltstack_test/salt' %}
-{%- set salt_apachefiledir = salt_home + '/apache/files' %}
+{%- import 'common/firewall.sls' as firewall with context %}
 {%- set apache = salt['grains.filter_by']({
-    'Debian': {
-        'server': 'apache2',
-        'service': 'apache2',
-        'configdir': '/etc/apache2',
-        'configfile': 'apache2.conf',
-        'configsitefile': '000-default.conf',
-    },
-    'RedHat': {
-        'server': 'httpd',
-        'service': 'httpd',
-        'configdir': '/etc/httpd/conf',
-        'configfile': 'httpd.conf',
-    },
+  'Debian': {
+    'server': 'apache2',
+    'service': 'apache2',
+    'configdir': '/etc/apache2',
+    'configfile': 'apache2.conf',
+    'siteavailable': '/etc/apache2/sites-available',
+    'siteenabled': '/etc/apache2/sites-enabled',
+    'configsitefile': '000-default.conf',
+    'doc_root': '/var/www/html',
+    'log_root': '/var/log/apache2'
+  },
+  'RedHat': {
+    'server': 'httpd',
+    'service': 'httpd',
+    'configdir': '/etc/httpd/conf',
+    'configfile': 'httpd.conf',
+    'siteavailable': '/etc/httpd/sites-available',
+    'siteenabled': '/etc/httpd/sites-enabled',
+    'configsitefile': '000-default.conf',
+    'doc_root': '/var/www/html',
+    'log_root': '/var/log/httpd'
+  },
 })
 %}
+{%- set selinux_enabled = salt['grains.get']('selinux:enabled') %}
 
 apache:
   pkg.installed:
@@ -27,43 +35,76 @@ apache:
     - watch:
       - pkg: apache
 
-{% if grains['os_family']=="Debian" %}
+{{ firewall.firewall_open('80', require='service: apache') }}
 
+{%- if grains['os_family']=="Debian" %}
 install-proxy-module:
   cmd.run:
     - name: a2enmod proxy;a2enmod proxy_http;
+{% endif %}
 
-{{ apache.configdir }}/{{ apache.configfile }}:
+config_file:
   file.managed:
     - source: salt://apache/conf/_{{ apache.configfile }}
+    - name: {{ apache.configdir }}/{{ apache.configfile }}
     - user: root
     - group: root
     - mode: '640'
     - template: jinja
-    - defaults:
-      listen_port: 80
 
-{{ apache.configdir }}/sites-available/{{ apache.configsitefile }}:
+sites-available:
+  file.directory:
+    - name: {{ apache.siteavailable }}
+    - user: root
+    - group: root
+    - dir_mode: 755
+
+sites-enabled:
+  file.directory:
+    - name: {{ apache.siteenabled }}
+    - user: root
+    - group: root
+    - dir_mode: 755
+
+default_site:
   file.managed:
     - source: salt://apache/conf/_{{ apache.configsitefile }}
-    - user: root
-    - group: root
-    - mode: '640'
+    - name: {{ apache.siteavailable }}/{{ apache.configsitefile }}
     - template: jinja
+    - context:
+      doc_root: {{ apache.doc_root }}
+      log_root: {{ apache.log_root }}
 
-{% endif %}
+default_site_enabled:
+  file.symlink:
+    - target: {{ apache.siteavailable }}/{{ apache.configsitefile }}
+    - name: {{ apache.siteenabled }}/{{ apache.configsitefile }}
 
-{% if grains['os_family']=="RedHat" %}
+{%- if selinux_enabled %}
+install_policycoreutils:
+  pkg.installed:
+    - name: policycoreutils-python
 
-{{ apache.configdir }}/{{ apache.configfile }}:
-  file.append:
-    - source: salt://apache/conf/_{{ apache.configfile }}
-    - template: jinja
+selinux_data_haw:
+  module.run:
+    - name: selinux.setsebool
+    - boolean: httpd_anon_write
+    - value: On
+    - persist: True
 
-{% endif %}
+selinux_data_hssaw:
+  module.run:
+    - name: selinux.setsebool
+    - boolean: httpd_sys_script_anon_write
+    - value: On
+    - persist: True
+{%- endif %}
 
-{{ apache.service }}:
-  service.running:
-    - reload: True
+restart_{{ apache.service }}:
+  module.run:
+    - name: service.restart
+    - m_name: {{ apache.service }}
 
-{{ firewall.firewall_open('80', require='service: apache') }}
+
+
+
