@@ -1,11 +1,12 @@
-{%- set tomcat_insthome = '/www/nest' %}
-{%- set tomcat_dir = 'tomcat7' %}
-{%- set tomcat_home = tomcat_insthome+'/'+tomcat_dir %}
-{%- set tomcat_version = 'apache-tomcat-7.0.75' %}
-{%- set tomcat_tar = tomcat_version + '.tar.gz' %}
-{%- set tomcat_downloadurl = 'http://apache.mirror.cdnetworks.com/tomcat/tomcat-7/v7.0.75/bin/'+tomcat_tar %}
-{%- set tomcat_downloadhash = '1373d27e7e9cd4c481b4b17c6b2c36aff157b66e' %}
-{%- set java_opts = '-server -Xms512m -Xmx512m -XX:PermSize=128m -XX:MaxPermSize=128m -XX:+DisableExplicitGC' %}
+{% set tomcat_insthome = pillar['tomcat']['tomcat_insthome'] %}
+{% set tomcat_dir = pillar['tomcat']['tomcat_dir'] %}
+{% set tomcat_home = pillar['tomcat']['tomcat_home'] %}
+{% set tomcat_version = pillar['tomcat']['tomcat_version'] %}
+{% set tomcat_tar = tomcat_version + '.tar.gz' %}
+{% set tomcat_downloadurl = pillar['tomcat']['tomcat_downloadurl'] %}
+{% set tomcat_downloadhash = pillar['tomcat']['tomcat_downloadhash'] %}
+{% set java_opts = pillar['tomcat']['tomcat_java_opts'] %}
+
 
 download-tomcat-tar:
   cmd.run:
