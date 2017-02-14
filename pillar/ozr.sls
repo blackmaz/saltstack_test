@@ -1,9 +1,9 @@
 ####################################
 ### ozr pillar
 ####################################
-# pillar update
+# pillar 업데이트 명령
 #$ salt 'test2' saltutil.refresh_pillar
-# pillar select
+# pillar 조회하기
 #$ salt 'test2' pillar.items
 
 db_server:
@@ -21,6 +21,8 @@ application:
   datasource_url: jdbc:mysql://localhost:3306/nest
 
 
+# tomcat pillar
+# downloadurl 수정시 hash값도 수정 필요
 tomcat:
   tomcat_insthome: /www/nest
   tomcat_dir: tomcat7
