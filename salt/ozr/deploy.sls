@@ -15,6 +15,13 @@ download-sample-tar:
     - name: curl -s -L -o '/tmp/'{{ deploy_tar }} {{ deploy_downloadurl }}
     - unless: test -f '/tmp/'{{ deploy_tar }}
 
+{{ tomcat_home }}:
+  file.directory:
+    - user: root
+    - group: root
+    - mode: 755
+    - makedirs: True
+
 deploy-sample-tar:
   cmd.run:
     - name: cp '/tmp/'{{ deploy_tar }} {{ tomcat_home }}
