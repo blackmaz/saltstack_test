@@ -1,3 +1,11 @@
+####################################
+### ozr pillar
+####################################
+# pillar update
+#$ salt 'test2' saltutil.refresh_pillar
+# pillar select
+#$ salt 'test2' pillar.items
+
 db_server:
   root_password: manager365
   database_nm: nest
