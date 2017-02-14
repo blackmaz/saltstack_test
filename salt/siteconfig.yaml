@@ -1,0 +1,41 @@
+physical server:
+  server1:
+    hostname: vm83
+    ip: 192.168.10.83
+    eip: 192.168.10.83
+  server2:
+    hostname: vm84
+    ip: 192.168.10.84
+    eip: 192.168.10.84
+  server3:
+    hostname: vm93
+    ip: 192.168.10.93
+    eip: 192.168.10.93
+  server4:
+    hostname: vm94
+    ip: 192.168.10.94
+    eip: 192.168.10.94
+logical server:
+  db:
+    physical server:
+      - server1
+      - server3
+  web:
+    physical server:
+      - server2
+      - server4
+  sms_man:
+    physical server:
+      - server1
+  sms_agt:
+    physical server:
+      - server2
+      - server3
+      - server4
+software:
+  mysql:
+    deploy server: db
+  apache:
+    deploy server: web
+  apache.openssl:
+    deploy server: web
