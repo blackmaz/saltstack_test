@@ -1,0 +1,23 @@
+{
+"person": [
+  "John": {
+      "age": "38",
+      "hobby": [
+        "game",
+        "watch movie",
+        "drink"
+      ],
+      "job": "programer",
+      "child": ["tom", "rora"]
+  },
+  "sam": {
+      "age": "25"
+      "hobby": [
+        "watch movie",
+        "trip"
+      ],
+      "job": "programer",
+      "child": ["samantha"]
+  }
+]
+}

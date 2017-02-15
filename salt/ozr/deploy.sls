@@ -1,10 +1,9 @@
-{%- set tomcat_home = '/www/nest_dev/tomcat7' %}
-{%- set service_ip = '192.168.10.10' %}
-{%- set deploy_tar = 'webapps_ozr.zip' %}
-{%- set deploy_downloadurl = 'https://www.dropbox.com/s/y257ychikv0gwz1/webapps_ozr.zip?dl=0' %}
-{%- set datasource_url = 'jdbc:mysql://localhost:3306/nest_dev' %}
-{%- set db_user = 'root' %}
-{%- set db_password = '' %}
+{% set tomcat_home = pillar['tomcat']['tomcat_home'] %}
+{% set service_ip = pillar['application']['service_ip'] %}
+{% set deploy_tar = pillar['application']['deploy_tar'] %}
+{% set deploy_downloadurl = pillar['application']['deploy_downloadurl'] %}
+{% set datasource_url = pillar['application']['datasource_url'] %}
+{% set db_password = pillar['db_server']['root_password'] %}
 
 install-unzip:
   pkg.installed:
@@ -15,6 +14,13 @@ download-sample-tar:
   cmd.run:
     - name: curl -s -L -o '/tmp/'{{ deploy_tar }} {{ deploy_downloadurl }}
     - unless: test -f '/tmp/'{{ deploy_tar }}
+
+{{ tomcat_home }}:
+  file.directory:
+    - user: root
+    - group: root
+    - mode: 755
+    - makedirs: True
 
 deploy-sample-tar:
   cmd.run:
@@ -45,6 +51,6 @@ unpack-sample-tar:
         - template: jinja
         - context:
             datasource_url: {{ datasource_url }}
-            db_user: {{ db_user }}
+            db_user: root
             db_password: {{ db_password }}
 
