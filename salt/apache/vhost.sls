@@ -55,7 +55,9 @@
         'server_admin': 'webmaster',
         'doc_root': '/www/nest/tomcat7/webapps',
         'log_root': '/www/nest/logs/web',
-        'use_ssl': True
+        'use_ssl': True,
+        'use_modjk': True,
+        'jk_pattern': {'/*.jsp': 'worker2', '/*.do': 'worker2', '/*.act': 'worker2'}
       },
     },
     'enable': True
