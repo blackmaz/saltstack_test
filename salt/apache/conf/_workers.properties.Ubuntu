@@ -1,0 +1,50 @@
+{%- set workers = {
+  'tomcat_home' : site.get('tomcat_home','/usr/share/tomcat8'),
+  'java_home'   : site.get('java_home','/usr/lib/jvm/default-java'),
+  'ps'          : site.get('ps','/'),
+  'worker'      : site.get('worker', {'ajp13_worker': {}}),
+  'lb'          : site.get('lb',     {}),
+  'list'        : site.get('list', [])
+}
+%}
+workers.tomcat_home={{ workers.tomcat_home }}
+workers.java_home={{ workers.java_home }}
+ps={{ workers.ps }}
+
+{%- if workers.list !=[] %}
+worker.list={{ ",".join(workers.list) }}
+{%- else %}
+{%- set lb_list = workers.get('lb').keys() %}
+{%- if lb_list != [] %}
+worker.list={{ ",".join(lb_list) }}
+{%- else %}
+{%- set worker_list = workers.get('worker').keys() %}
+worker.list={{ ",".join(worker_list) }}
+{%- endif %}
+{%- endif %}
+
+{%- for id, worker in workers.get('worker').items() %}
+{%- set worker_cfg = {
+  'port' : worker.get('port', '8009'),
+  'host' : worker.get('host', 'localhost'),
+  'type' : 'ajp13',
+  'lbfactor' : worker.get('lbfactor', '1')
+}
+%}
+worker.{{ id }}.port={{ worker_cfg.port }}
+worker.{{ id }}.host={{ worker_cfg.host }}
+worker.{{ id }}.type={{ worker_cfg.type }}
+worker.{{ id }}.lbfactor={{ worker_cfg.lbfactor }}
+
+{%- endfor %}
+
+{%- for id, lb in workers.get('lb').items() %}
+{%- set lb_cfg = {
+  'type' : 'lb',
+  'balance_workers' : lb.get('balance_workers')
+}
+%}
+worker.{{ id }}.type={{ lb_cfg.type }}
+worker.{{ id }}.balance_workers={{ ",".join(lb_cfg.balance_workers) }}
+{%- endfor %}
+
