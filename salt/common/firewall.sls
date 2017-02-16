@@ -34,3 +34,16 @@ iptables-add-port-{{port}}:
 {%- endif -%}
 {%- endmacro %}
 
+{% macro firewall_open_service(service_nm, require='') -%}
+{%- if grains['os'] == 'CentOS' -%}
+firewall-add-server-{{service_nm}}:
+  module.run:
+    - name: firewalld.add_service
+    - zone: public
+    - service: {{service_nm}}
+  {% if require != '' %}
+    - require:
+	  - {{require}}
+  {% endif %}
+{%- endif -%}
+{%- endmacro %}
