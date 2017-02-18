@@ -3,6 +3,7 @@ import salt.client
 import yaml
 import sys
 import getopt
+import pprint
 
 input_file=''
 
@@ -24,15 +25,11 @@ def option():
         
     for opt, arg in options:
         if (opt == '-i') or (opt == '--input'):
-            #print "input file = "+arg
             input_file = arg
         elif (opt == '-h') or (opt == '--help'):
             help()
             sys.exit(1)
 
-    print options
-    print args
-             
     return
 
 option()
@@ -61,10 +58,5 @@ for id, sw in sws.items():
     for pSvr in lSvrs.get(lSvr).get('physical server'):
         host_list.append(pSvrs.get(pSvr).get('hostname'))
     ret = local.cmd(host_list, cmd_list, arg_list, expr_form='list')
-    for h in host_list:
-        if ret != {}:
-            for s, r in  ret.get(h).get('state.apply').items():
-                print '['+h+']' + '['+id+']' + '['+str(r.get('result'))+']' + s
-        else:
-            print '['+h+']' + '['+id+']' 
+    pprint.pprint(ret)
       
