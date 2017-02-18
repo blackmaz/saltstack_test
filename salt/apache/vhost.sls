@@ -7,62 +7,7 @@
   },
   'default': 'Ubuntu',
 }, grain='os') %}
-# 신규로 생성되는 사이트 별로 정의하는 설정, 추후에 xml로 UI에서 받아와야 함
-{%- set sites = {
-  '5giraffe.com'    : { 
-    'ports': {
-      '80': {  
-        'use_redir': True, 
-        'redirect_from': '/', 
-        'redirect_to': 'https://www.ozr.kr/'
-      },
-      '443': {
-        'use_redir': True, 
-        'redirect_from': '/', 
-        'redirect_to': 'https://www.ozr.kr/'
-      },
-    },
-    'enable': True 
-  },
-  'www.5giraffe.com': { 
-    'ports': {
-      '443': {
-        'use_redir': True, 
-        'redirect_from': '/', 
-        'redirect_to': 'https://www.ozr.kr/'
-      },
-    },
-    'enable': True 
-  },
-  'ozr.kr'          : { 
-    'ports': {
-      '80': {
-        'use_redir': True, 
-        'redirect_from': '/', 
-        'redirect_to': 'https://www.ozr.kr/'
-      },
-      '443': {
-        'use_redir': True, 
-        'redirect_from': '/', 
-        'redirect_to': 'https://www.ozr.kr/'
-      },
-    },
-    'enable': True 
-  },
-  'www.ozr.kr'      : { 
-    'ports': {
-      '443': { 
-        'server_admin': 'webmaster',
-        'doc_root': '/www/nest/tomcat7/webapps',
-        'log_root': '/www/nest/logs/web',
-        'use_ssl': True,
-        'use_modjk': True,
-        'jk_pattern': {'/*.jsp': 'worker2', '/*.do': 'worker2', '/*.act': 'worker2'}
-      },
-    },
-    'enable': True
-  }
-} %}
+{%- set sites = salt['pillar.get']('sites',{}) %}
 {%- set selinux_enabled = salt['grains.get']('selinux:enabled') %}
 
 {%- for id, site in sites.items() %}

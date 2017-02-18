@@ -15,17 +15,7 @@
   'default': 'Ubuntu',
 }, grain='os') %}
 {%- set os = grains['os'] %}
-
-{%- set workers = {
-  'worker' : {
-    'worker1' : {'port': '8009', 'host': 'localhost' },
-    'worker2' : {'port': '9009', 'host': 'localhost' }
-  },
-  'lb' : {
-    'loadbalancer' : {'balance_workers' : [ 'worker1', 'worker2' ] }
-  },
-  'list' : [ 'worker1', 'worker2']
-} %}
+{%- set workers = salt['pillar.get']('workers', {}) %}
 {%- set mod_jk_src = {
     'name'         : 'tomcat-connectors-1.2.42-src',
     'dn_url'       : 'http://mirror.navercorp.com/apache/tomcat/tomcat-connectors/jk/tomcat-connectors-1.2.42-src.tar.gz',
