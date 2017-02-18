@@ -2,7 +2,8 @@
 
 #NFS Server 설정
 nfs-server:
-  server-ip: 192.168.50.102
+#  server-ip: 192.168.50.102
+  server-ip: 192.168.50.104
   exports-dir: /share/data
   nfs-allowed-client-ip: 192.168.50.*
   nfs-opts: rw,sync
