@@ -1,0 +1,6 @@
+LoadModule jk_module "/etc/httpd/modules/mod_jk.so"
+JkWorkersFile {{ worker_file }}
+JkLogFile /var/log/httpd/mod_jk.log
+JkLogLevel info
+JkShmFile /var/run/httpd/mod_jk.shm
+JkLogStampFormat "[%a %b %d %H:%M:%S %Y] "

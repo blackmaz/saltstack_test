@@ -39,3 +39,9 @@ software:
     deploy server: web
   apache.openssl:
     deploy server: web
+  apache.pkikey:
+    deploy server: web
+  apache.modjk:
+    deploy server: web
+  apache.vhost:
+    deploy server: web
