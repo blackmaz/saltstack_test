@@ -1,9 +1,11 @@
 {%- set apache = salt['grains.filter_by']({
   'Ubuntu': {
-    'cfg_home': '/etc/apache2'
+    'cfg_home': '/etc/apache2',
+    'service': 'apache2'
   },
   'CentOS': {
-    'cfg_home': '/etc/httpd'
+    'cfg_home': '/etc/httpd',
+    'service': 'httpd'
   },
   'default': 'Ubuntu',
 }, grain='os') %}
@@ -63,4 +65,10 @@ site_enalbe_{{ id }}:
     - target: {{ apache.cfg_home }}/sites-available/{{ id }}.conf
 {%- endif %}
 {%- endfor %}
+
+restart_{{ apache.service }}:
+  module.run:
+    - name: service.restart
+    - m_name: {{ apache.service }}
+ 
 

@@ -33,6 +33,8 @@ logical server:
 software:
   mysql:
     deploy server: db
+  mysql_user:
+    deploy server: db
   ozr.mysql_db_import:
     deploy server: db
   apache:

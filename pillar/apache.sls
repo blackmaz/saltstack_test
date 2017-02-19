@@ -1,10 +1,10 @@
 workers:
   worker: 
     worker1: 
-      port: 8009
+      port: 7009
       host: localhost
     worker2: 
-      port: 9009
+      port: 8009
       host: localhost 
   lb: 
     loadbalancer: 
@@ -12,7 +12,8 @@ workers:
         - worker1
         - worker2 
   list: 
-    - loadbalancer
+    - worker1
+    - worker2
 sites:
   5giraffe.com:  
     ports: 
@@ -55,5 +56,4 @@ sites:
           /*.jsp: worker2
           /*.do: worker2 
           /*.act: worker2
-          /*.go: worker2
     enable: True

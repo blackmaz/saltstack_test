@@ -30,6 +30,7 @@ rename-tomcat-dir:
     file.copy:
         - source: {{ tomcat_insthome }}/{{ tomcat_version }}
         - name: {{ tomcat_insthome }}/{{ tomcat_dir }}
+        - force: True
 
 
 {{ tomcat_home }}/conf/server.xml:
