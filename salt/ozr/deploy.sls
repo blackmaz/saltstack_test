@@ -5,7 +5,10 @@
 {% set service_ip = pillar['application']['service_ip'] %}
 {% set deploy_tar = pillar['application']['deploy_tar'] %}
 {% set deploy_downloadurl = pillar['application']['deploy_downloadurl'] %}
-{% set datasource_url = pillar['application']['datasource_url'] %}
+{% set dbms_ip = pillar['application']['dbms_ip'] %}
+{% set dbms_port = pillar['application']['dbms_port'] %}
+{% set db_name = pillar['application']['database_name'] %}
+{% set datasource_url = 'jdbc:mysql://' + dbms_ip + ':' + dbms_port + db_name %}
 {% set db_user = pillar['application']['db_user'] %}
 {% set db_password = pillar['application']['db_user_password'] %}
 

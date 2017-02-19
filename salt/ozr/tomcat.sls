@@ -25,7 +25,6 @@ unpack-tomcat-tar:
     - tar_option: zxvf
 
 # 개발서버와 동일하게 경로 변경
-
 rename-tomcat-dir:
     file.copy:
         - source: {{ tomcat_insthome }}/{{ tomcat_version }}

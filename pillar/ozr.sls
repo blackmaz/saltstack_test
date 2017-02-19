@@ -15,10 +15,15 @@ application:
   db_user: root
   database_name: nest
   db_user_password: manager365
+# 서비스ip(밖에서 보이는 주소)
   service_ip: 192.168.10.10
+# dbms ip(db연결시 사용할 주소)
+  dbms_ip: 192.168.10.12
+# dbms port(숫자만 들어가 있으면 script 에러 발생)
+  dbms_port: 3306/ 
   deploy_tar: webapps_ozr.zip
   deploy_downloadurl: https://www.dropbox.com/s/y257ychikv0gwz1/webapps_ozr.zip?dl=0
-  datasource_url: jdbc:mysql://localhost:3306/nest
+#  datasource_url: jdbc:mysql://localhost:3306/nest
 
 
 # tomcat pillar
