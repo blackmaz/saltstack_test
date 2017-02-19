@@ -21,10 +21,15 @@ unpack-tomcat-tar:
     - archive_format: tar
     - tar_option: zxvf
 
+#rename-tomcat-dir:
+#  cmd.run:
+#    - name: cd {{ tomcat_insthome }};mv {{ tomcat_version }} {{ tomcat_dir }}
+#    - unless: test -d {{ tomcat_home }}
+
 rename-tomcat-dir:
-  cmd.run:
-    - name: cd {{ tomcat_insthome }};mv {{ tomcat_version }} {{ tomcat_dir }}
-    - unless: test -d {{ tomcat_home }}
+    file.copy:
+        - source: {{ tomcat_insthome }}/{{ tomcat_version }}
+        - name: {{ tomcat_insthome }}/{{ tomcat_dir }}
 
 
 {{ tomcat_home }}/conf/server.xml:

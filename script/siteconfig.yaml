@@ -18,11 +18,9 @@ physical server:
 logical server:
   db:
     physical server:
-      - server1
       - server3
   web:
     physical server:
-      - server2
       - server4
   sms_man:
     physical server:
@@ -35,6 +33,8 @@ logical server:
 software:
   mysql:
     deploy server: db
+  ozr.mysql_db_import:
+    deploy server: db
   apache:
     deploy server: web
   apache.openssl:
@@ -45,3 +45,10 @@ software:
     deploy server: web
   apache.vhost:
     deploy server: web
+  ozr.openjdk:
+    deploy server: web
+  ozr.tomcat:
+    deploy server: web
+  ozr.deploy:
+    deploy server: web
+

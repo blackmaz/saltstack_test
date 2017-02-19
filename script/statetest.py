@@ -4,6 +4,21 @@ import yaml
 import sys
 import getopt
 import pprint
+import yaml
+from collections import OrderedDict
+
+# Dictionary에 데이터를 순서에 맞게 입력해줌
+def ordered_load(stream, Loader=yaml.Loader, object_pairs_hook=OrderedDict):
+    class OrderedLoader(Loader):
+        pass
+    def construct_mapping(loader, node):
+        loader.flatten_mapping(node)
+        return object_pairs_hook(loader.construct_pairs(node))
+    OrderedLoader.add_constructor(
+        yaml.resolver.BaseResolver.DEFAULT_MAPPING_TAG,
+        construct_mapping)
+    return yaml.load(stream, OrderedLoader)
+
 
 input_file=''
 
@@ -41,7 +56,7 @@ except IOError as err:
     print str(err)
     sys.exit(1)
 
-cfg = yaml.load(f)
+cfg = ordered_load(f, yaml.SafeLoader)
 
 pSvrs = cfg.get('physical server')
 lSvrs = cfg.get('logical server')
@@ -57,6 +72,10 @@ for id, sw in sws.items():
     arg_list = [[id]]
     for pSvr in lSvrs.get(lSvr).get('physical server'):
         host_list.append(pSvrs.get(pSvr).get('hostname'))
+    print "================================================================================================================================================================================================"
+    print str(host_list) + str(cmd_list) + str(arg_list)
     ret = local.cmd(host_list, cmd_list, arg_list, expr_form='list')
-    pprint.pprint(ret)
+    print "================================================================================================================================================================================================"
+    print ret
+    #pprint.pprint(ret)
       

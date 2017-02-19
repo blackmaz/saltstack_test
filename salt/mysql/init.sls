@@ -43,6 +43,6 @@ mysql:
 mysql_root_password:
   cmd.run:
     - name: mysqladmin --user root password '{{ mysql_root_pwd|replace("'", "'\"'\"'") }}'
-    - unless: mysql --user root --password='{{ mysql_root_pwd|replace("'", "'\"'\"'") }}' --execute="SELECT 1;"
+#    - unless: mysql --user root --password='{{ mysql_root_pwd|replace("'", "'\"'\"'") }}' --execute="SELECT 1;"
     - require:
       - service: mysql
