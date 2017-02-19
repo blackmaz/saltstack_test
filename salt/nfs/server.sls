@@ -3,6 +3,21 @@
 # Firewall 
 {% import 'common/firewall.sls' as firewall with context %}
 
+# nfs 설정
+{%- set nfs = salt['grains.filter_by']({
+  'Debian': {
+    'pkg': 'nfs-kernel-server',
+    'nfs_svc': 'nfs-kernel-server',
+    'rpcbind_svc': 'rpcbind'
+  },
+  'RedHat': {
+    'pkg': 'nfs-utils',
+    'nfs_svc': nfs,
+    'rpcbind_svc': 'rpcbind'
+  },
+})
+%}
+
 # pillar/nfs.sls
 {%- set expdir = pillar['nfs-server']['exports-dir'] %}
 {%- set allowip = pillar['nfs-server']['nfs-allowed-client-ip'] %}
@@ -11,7 +26,7 @@
 # pkg install
 nfs-server-install:
   pkg.installed:
-    - name: nfs-utils
+    - name: {{ nfs.pkg }}
 
 # shared directory 생성
 {{ expdir }}:
@@ -27,23 +42,30 @@ nfs-server-install:
     - text: {{expdir}} {{allowip}}({{opts}})
 
 # firewall 처리
+{%- if grains['os_family'] == "RedHat" %}
 {{ firewall.firewall_open_service('nfs') }}
 {{ firewall.firewall_open_service('rpc-bind') }}
 {{ firewall.firewall_open_service('mountd') }}
+{% endif %}
+
+{%- if grains['os_family'] == "Debian" %}
+{{ firewall.firewall_open('2049') }}
+{% endif %}
+
 
 # rpcbind service restart
 rpc-binds-reload:
   service.running:
-    - name: rpcbind
+    - name: {{ nfs.rpcbind_svc }}
     - reload: True
 
 # nfs-server 기동
 nfs-server-start:
   service.running:
-    - name: nfs-server
+    - name: {{ nfs.nfs_svc }}
     - enable: True
     - watch:
-      - pkg: nfs-utils
+      - pkg: {{ nfs.pkg }}
 
   
 
