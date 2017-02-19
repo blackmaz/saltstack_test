@@ -1,66 +1,15 @@
 {%- set apache = salt['grains.filter_by']({
   'Ubuntu': {
-    'cfg_home': '/etc/apache2'
+    'cfg_home': '/etc/apache2',
+    'service': 'apache2'
   },
   'CentOS': {
-    'cfg_home': '/etc/httpd'
+    'cfg_home': '/etc/httpd',
+    'service': 'httpd'
   },
   'default': 'Ubuntu',
 }, grain='os') %}
-# 신규로 생성되는 사이트 별로 정의하는 설정, 추후에 xml로 UI에서 받아와야 함
-{%- set sites = {
-  '5giraffe.com'    : { 
-    'ports': {
-      '80': {  
-        'use_redir': True, 
-        'redirect_from': '/', 
-        'redirect_to': 'https://www.ozr.kr/'
-      },
-      '443': {
-        'use_redir': True, 
-        'redirect_from': '/', 
-        'redirect_to': 'https://www.ozr.kr/'
-      },
-    },
-    'enable': True 
-  },
-  'www.5giraffe.com': { 
-    'ports': {
-      '443': {
-        'use_redir': True, 
-        'redirect_from': '/', 
-        'redirect_to': 'https://www.ozr.kr/'
-      },
-    },
-    'enable': True 
-  },
-  'ozr.kr'          : { 
-    'ports': {
-      '80': {
-        'use_redir': True, 
-        'redirect_from': '/', 
-        'redirect_to': 'https://www.ozr.kr/'
-      },
-      '443': {
-        'use_redir': True, 
-        'redirect_from': '/', 
-        'redirect_to': 'https://www.ozr.kr/'
-      },
-    },
-    'enable': True 
-  },
-  'www.ozr.kr'      : { 
-    'ports': {
-      '443': { 
-        'server_admin': 'webmaster',
-        'doc_root': '/www/nest/tomcat7/webapps',
-        'log_root': '/www/nest/logs/web',
-        'use_ssl': True
-      },
-    },
-    'enable': True
-  }
-} %}
+{%- set sites = salt['pillar.get']('sites',{}) %}
 {%- set selinux_enabled = salt['grains.get']('selinux:enabled') %}
 
 {%- for id, site in sites.items() %}
@@ -116,4 +65,10 @@ site_enalbe_{{ id }}:
     - target: {{ apache.cfg_home }}/sites-available/{{ id }}.conf
 {%- endif %}
 {%- endfor %}
+
+restart_{{ apache.service }}:
+  module.run:
+    - name: service.restart
+    - m_name: {{ apache.service }}
+ 
 

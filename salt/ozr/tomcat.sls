@@ -25,10 +25,12 @@ unpack-tomcat-tar:
     - tar_option: zxvf
 
 # 개발서버와 동일하게 경로 변경
+
 rename-tomcat-dir:
-  cmd.run:
-    - name: cd {{ tomcat_insthome }};mv {{ tomcat_version }} {{ tomcat_dir }}
-    - unless: test -d {{ tomcat_home }}
+    file.copy:
+        - source: {{ tomcat_insthome }}/{{ tomcat_version }}
+        - name: {{ tomcat_insthome }}/{{ tomcat_dir }}
+        - force: True
 
 # 설정파일 업데이트
 {{ tomcat_home }}/conf/server.xml:

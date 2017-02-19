@@ -24,25 +24,40 @@ mysql:
       - {{ mysql.server }}
       - {{ mysql.client }}
       - {{ mysql.python }}
+
 {% if grains['os'] == 'Ubuntu'%}
+mysql_comment:
   file.comment:
     - name: {{ mysql.cfg }}
     - regex: ^bind-address
+    - require:
+      - pkg: mysql
+
+mysql_append:
+  file.append:
+    - name: {{ mysql.cfg }}
+    - text: lower_case_table_names = 1
+    - require:
+      - file: mysql_comment
 {% endif %}
+
+mysql_service:
   service.running:
     - name: {{ mysql.service }}
     - enable: True
     - watch:
       - pkg: mysql
 {% if grains['os'] == 'Ubuntu'%}
-      - file: mysql
+      - file: mysql_append
 {% endif %}
 
 {{ firewall.firewall_open('3306', require='service: mysql') }}
 
 mysql_root_password:
-  cmd.run:
-    - name: mysqladmin --user root password '{{ mysql_root_pwd|replace("'", "'\"'\"'") }}'
-    - unless: mysql --user root --password='{{ mysql_root_pwd|replace("'", "'\"'\"'") }}' --execute="SELECT 1;"
+  module.run:
+    - name: mysql.user_chpass
+    - user: root
+    - host: localhost
+    - password: {{ mysql_root_pwd }}
     - require:
       - service: mysql
