@@ -1,3 +1,6 @@
+###################################
+# apache-tomcat install sls
+###################################
 {% set tomcat_insthome = pillar['tomcat']['tomcat_insthome'] %}
 {% set tomcat_dir = pillar['tomcat']['tomcat_dir'] %}
 {% set tomcat_home = pillar['tomcat']['tomcat_home'] %}
@@ -7,7 +10,7 @@
 {% set tomcat_downloadhash = pillar['tomcat']['tomcat_downloadhash'] %}
 {% set java_opts = pillar['tomcat']['tomcat_java_opts'] %}
 
-
+# 다운로드 및 압축 해제
 download-tomcat-tar:
   cmd.run:
     - name: curl -s -L -o '/tmp/'{{ tomcat_tar }} {{ tomcat_downloadurl }}
@@ -21,18 +24,14 @@ unpack-tomcat-tar:
     - archive_format: tar
     - tar_option: zxvf
 
-#rename-tomcat-dir:
-#  cmd.run:
-#    - name: cd {{ tomcat_insthome }};mv {{ tomcat_version }} {{ tomcat_dir }}
-#    - unless: test -d {{ tomcat_home }}
-
+# 개발서버와 동일하게 경로 변경
 rename-tomcat-dir:
     file.copy:
         - source: {{ tomcat_insthome }}/{{ tomcat_version }}
         - name: {{ tomcat_insthome }}/{{ tomcat_dir }}
         - force: True
 
-
+# 설정파일 업데이트
 {{ tomcat_home }}/conf/server.xml:
     file.managed:
         - source: salt://ozr/conf/server.xml_ozr
@@ -56,6 +55,7 @@ rename-tomcat-dir:
         - context:
             java_opts: {{ java_opts }}
 
+# 개발서버와 동일하게 시작,종료 쉘 생성
 {{ tomcat_insthome }}/start.sh:
     file.managed:
         - source: salt://ozr/conf/start.sh_ozr
@@ -69,7 +69,7 @@ rename-tomcat-dir:
         - group: root
         - mode: '750'
 
-
+# 바로 서비스 시작
 startup-tomcat:
   cmd.run:
     - name: {{ tomcat_home }}/bin/startup.sh
