@@ -75,7 +75,7 @@ for id, sw in sws.items():
         host_list.append(pSvrs.get(pSvr).get('hostname'))
     print "===================================================="
     print str(host_list) + str(cmd_list) + str(arg_list)
-    ret = local.cmd_iter(host_list, cmd_list, arg_list, expr_form='list')
+    ret = local.cmd_iter(host_list, cmd_list, arg_list, expr_form='list',timeout=1800)
     print "===================================================="
     #print ret
     #pprint.pprint(ret)
