@@ -13,7 +13,7 @@
 
 install-apt4java-module:
   cmd.run:
-    - name: add-apt-repository ppa:openjdk-r/ppa;apt-get update
+    - name: add-apt-repository -y ppa:openjdk-r/ppa;apt-get -y update
 
 install_openjdk:
   pkg:

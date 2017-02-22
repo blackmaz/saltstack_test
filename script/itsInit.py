@@ -1,3 +1,4 @@
+#!/usr/bin/python
 import salt.client.ssh.client
 
 #ssh_key='/home/ubuntu/aws/test_key_pair'

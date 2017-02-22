@@ -1,3 +1,4 @@
+#!/usr/bin/python
 # -*- coding: utf-8 -*-
 import salt.client
 import yaml
@@ -72,10 +73,12 @@ for id, sw in sws.items():
     arg_list = [[id]]
     for pSvr in lSvrs.get(lSvr).get('physical server'):
         host_list.append(pSvrs.get(pSvr).get('hostname'))
-    print "================================================================================================================================================================================================"
+    print "===================================================="
     print str(host_list) + str(cmd_list) + str(arg_list)
-    ret = local.cmd(host_list, cmd_list, arg_list, expr_form='list')
-    print "================================================================================================================================================================================================"
-    print ret
+    ret = local.cmd_iter(host_list, cmd_list, arg_list, expr_form='list')
+    print "===================================================="
+    #print ret
     #pprint.pprint(ret)
+    for r in ret:
+        print r[r.keys()[0]]['retcode']
       

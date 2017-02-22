@@ -53,11 +53,3 @@ mysql_service:
 
 {{ firewall.firewall_open('3306', require='service: mysql') }}
 
-mysql_root_password:
-  module.run:
-    - name: mysql.user_chpass
-    - user: root
-    - host: localhost
-    - password: {{ mysql_root_pwd }}
-    - require:
-      - service: mysql
