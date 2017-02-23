@@ -1,5 +1,6 @@
 #!/usr/bin/python
 import salt.client.ssh.client
+import sys
 import getopt
 
 def help():
@@ -9,7 +10,7 @@ def help():
 ssh_key = ''
 
 def option():
-  grobal ssh_key
+  global ssh_key
   if len(sys.argv) is 1:
     help()
     sys.exit(1)
