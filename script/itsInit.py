@@ -50,7 +50,7 @@ for host in r.keys():
   if r[host]['retcode'] == 0:
     hosts.append(host)
 
-ret = s.cmd(hosts,'state.apply',['salt_minion'],expr_form='list', ssh_priv=ssh_key,ssh_identities_only=True)
+ret = s.cmd(hosts,'state.apply',['salt.minion'],expr_form='list', ssh_priv=ssh_key,ssh_identities_only=True)
 
 import salt.config
 import salt.wheel
