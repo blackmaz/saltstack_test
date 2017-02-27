@@ -1,50 +1,65 @@
-# 한글을 입력해도 돌아가는지 확인
-{%- set db_pwd  = pillar['db_server']['root_password'] %}
-{%- set db_name = pillar['application']['database_name'] %}
-{%- set db_usr  = pillar['application']['db_user'] %}
-{%- set db_usr_pwd = pillar['application']['db_user_password'] %}
+{%- set root_pwd = salt['pillar.get']('software:mysql:root_pwd') %}
+{%- set databases = salt['pillar.get']('software:mysql:databases',{}) %}
 
-create_{{ db_name }}:
+{%- for id, database in databases.items() %}
+create_{{ id }}:
   mysql_database.present:
-    - name: {{ db_name }}
+    - name: {{ id }}
     - connection_user: root
-    - connection_pass: {{ db_pwd }}
+    - connection_pass: {{ root_pwd }}
     - connection_host: localhost
     - connection_charset: utf8
   mysql_user.present:
-    - name: {{ db_usr }}
+    - name: {{ database.user }}
     - host: localhost
-    - password: {{ db_usr_pwd }}
+    - password: {{ database.pwd }}
     - use:
-      - mysql_database: {{ db_name }}
+      - mysql_database: {{ id }}
     - require:
-      - mysql_database: create_{{ db_name }} 
+      - mysql_database: create_{{ id }} 
   mysql_grants.present:
     - grant: all privileges
-    - database: {{ db_name }}.*
-    - user: {{ db_usr }}
+    - database: {{ id }}.*
+    - user: {{ database.user }}
     - host: localhost
     - use:
-      - mysql_database: {{ db_name }}
+      - mysql_database: {{ id }}
     - require:
-      - mysql_user: create_{{ db_name }}
+      - mysql_user: create_{{ id }}
 
-grant_{{ db_name }}:
+grant_{{ id }}:
   mysql_user.present:
-    - name: {{ db_usr }}
+    - name: {{ database.user }}
     - host: '%'
-    - password: {{ db_usr_pwd }}
+    - password: {{ database.pwd }}
     - use:
-      - mysql_database: {{ db_name }}
+      - mysql_database: {{ id }}
     - require:
-      - mysql_user: create_{{ db_name }}
+      - mysql_user: create_{{ id }}
 
   mysql_grants.present:
     - grant: all privileges
-    - database: {{ db_name }}.*
-    - user: {{ db_usr }}
+    - database: {{ id }}.*
+    - user: {{ database.user }}
     - host: '%'
     - use:
-      - mysql_database: {{ db_name }}
+      - mysql_database: {{ id }}
     - require:
-      - mysql_user: create_{{ db_name }}
+      - mysql_user: create_{{ id }}
+{%- if database.get('import',False) %}
+dmpfile_dn_{{ id }}:
+  file.managed:
+    - name: /tmp/dbdump_{{id}}.sql
+    - source: {{ database.data }} 
+    - user: root
+    - group: root
+    - mode: 644
+
+dmpfile_imp_{{ id }}:
+  cmd.run:
+    - name: mysql -u root -p'{{ root_pwd|replace("'", "'\"'\"'") }}' < /tmp/dbdump_{{id}}.sql
+    - require:
+      - file: dmpfile_dn_{{ id }}
+{%- endif %}
+{%- endfor %}
+

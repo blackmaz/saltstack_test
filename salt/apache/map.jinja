@@ -1,0 +1,49 @@
+#
+#
+#
+{%- set apache = salt['grains.filter_by']({
+  'Debian': {
+    'server': 'apache2',
+    'service': 'apache2',
+    'configdir': '/etc/apache2',
+    'configfile': 'apache2.conf',
+    'siteavailable': '/etc/apache2/sites-available',
+    'siteenabled': '/etc/apache2/sites-enabled',
+    'configsitefile': '000-default.conf',
+    'doc_root': '/var/www/html',
+    'log_root': '/var/log/apache2',
+    'modjk': {
+      'worker_dir'  : '/etc/libapache2-mod-jk',
+      'worker_file' : 'workers.properties',
+      'conf_dir'    : '/etc/apache2/mods-available',
+      'conf_file'   : 'jk.conf'
+    },
+    'modjksrc': {}
+  },
+  'RedHat': {
+    'server': 'httpd',
+    'service': 'httpd',
+    'configdir': '/etc/httpd/conf',
+    'configfile': 'httpd.conf',
+    'siteavailable': '/etc/httpd/sites-available',
+    'siteenabled': '/etc/httpd/sites-enabled',
+    'configsitefile': '000-default.conf',
+    'doc_root': '/var/www/html',
+    'log_root': '/var/log/httpd',
+    'modjk': {
+      'worker_dir'  : '/etc/httpd/conf' ,
+      'worker_file' : 'workers.properties',
+      'conf_dir'    : '/etc/httpd/conf.d',
+      'conf_file'   : 'mod_jk.conf'
+    },
+    'modjksrc': {
+      'name'         : 'tomcat-connectors-1.2.42-src',
+      'dn_url'       : 'http://mirror.navercorp.com/apache/tomcat/tomcat-connectors/jk/tomcat-connectors-1.2.42-src.tar.gz',
+      'working_dir'  : '/tmp/mod_jk',
+      'cfg_args'     : '--with-apxs=/usr/bin/apxs --enable-api-compatibility',
+      'libtool_args' : '--finish /usr/lib64/httpd/modules'
+    }
+  },
+  'default': 'Ubuntu',
+} ) %}
+

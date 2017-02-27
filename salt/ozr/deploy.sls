@@ -12,6 +12,8 @@
 {% set db_user = pillar['application']['db_user'] %}
 {% set db_password = pillar['application']['db_user_password'] %}
 
+{%- set deploys = salt['pillar.get']('software:tomcat:deploy',{}) %}
+
 # 현재 application 압축 포맷이 zip이므로 설치
 install-unzip:
   pkg.installed:
@@ -19,10 +21,11 @@ install-unzip:
       - unzip
 
 #download application 파일
+{% for id, deploy in deploys.items() %}
 download-sample-tar:
   cmd.run:
-    - name: curl -s -L -o '/tmp/'{{ deploy_tar }} {{ deploy_downloadurl }}
-    - unless: test -f '/tmp/'{{ deploy_tar }}
+    - name: curl -s -L -o '/tmp/'{{ deploy.tar }} {{ deploy.downloadurl }}
+    - unless: test -f '/tmp/'{{ deploy.tar }}
 
 {{ tomcat_home }}:
   file.directory:
@@ -33,8 +36,8 @@ download-sample-tar:
 
 deploy-sample-tar:
   cmd.run:
-    - name: cp '/tmp/'{{ deploy_tar }} {{ tomcat_home }}
-    - unless: test -f {{ tomcat_home }}/{{ deploy_tar }}
+    - name: cp '/tmp/'{{ deploy.tar }} {{ tomcat_home }}
+    - unless: test -f {{ tomcat_home }}/{{ deploy.tar }}
 
 # unpack - 현재 zip
 unpack-sample-tar:
@@ -68,4 +71,6 @@ unpack-sample-tar:
             datasource_url: {{ datasource_url }}
             db_user: {{ db_user }}
             db_password: {{ db_password }}
+
+{% endfor %}
 

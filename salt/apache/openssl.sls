@@ -1,6 +1,7 @@
 {%- import 'common/firewall.sls' as firewall with context %}
+{%- from "apache/map.jinja" import apache with context %}
 
-{%- if grains['os']=="Ubuntu" %}
+{%- if grains['os_family']=="Debian" %}
 mod_ssl:
   cmd.run:
     - name: a2enmod ssl
@@ -11,7 +12,7 @@ m2crypto:
     - require: 
       - cmd: mod_ssl
 {%- set req = "pkg: m2crypto" %}
-{%- else %}
+{%- elif grains['os_family']=='RedHat' %}
 mod_ssl:
   pkg.installed:
     - name: mod_ssl

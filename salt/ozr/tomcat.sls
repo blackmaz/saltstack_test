@@ -1,38 +1,26 @@
 ###################################
 # apache-tomcat install sls
 ###################################
-{% set tomcat_insthome = pillar['tomcat']['tomcat_insthome'] %}
-{% set tomcat_dir = pillar['tomcat']['tomcat_dir'] %}
-{% set tomcat_home = pillar['tomcat']['tomcat_home'] %}
-{% set tomcat_version = pillar['tomcat']['tomcat_version'] %}
-{% set tomcat_tar = tomcat_version + '.tar.gz' %}
-{% set tomcat_downloadurl = pillar['tomcat']['tomcat_downloadurl'] %}
-{% set tomcat_downloadhash = pillar['tomcat']['tomcat_downloadhash'] %}
-{% set java_opts = pillar['tomcat']['tomcat_java_opts'] %}
+{%- set tomcat = salt['pillar.get']('software:tomcat:config') %}
 
 # 다운로드 및 압축 해제
-download-tomcat-tar:
-  cmd.run:
-    - name: curl -s -L -o '/tmp/'{{ tomcat_tar }} {{ tomcat_downloadurl }}
-    - unless: test -f '/tmp/'{{ tomcat_tar }}
-
 unpack-tomcat-tar:
   archive.extracted:
-    - name: {{ tomcat_insthome }}
-    - source:  file:///tmp/{{ tomcat_tar }}
-    - source_hash: sha1={{ tomcat_downloadhash }}
+    - name: {{ tomcat.insthome }}
+    - source:  {{ tomcat.downloadurl }}
+    - source_hash: sha1={{ tomcat.downloadhash }}
     - archive_format: tar
     - tar_option: zxvf
 
 # 개발서버와 동일하게 경로 변경
 rename-tomcat-dir:
     file.copy:
-        - source: {{ tomcat_insthome }}/{{ tomcat_version }}
-        - name: {{ tomcat_insthome }}/{{ tomcat_dir }}
+        - source: {{ tomcat.insthome }}/{{ tomcat.version }}
+        - name: {{ tomcat.home }}
         - force: True
 
 # 설정파일 업데이트
-{{ tomcat_home }}/conf/server.xml:
+{{ tomcat.home }}/conf/server.xml:
     file.managed:
         - source: salt://ozr/conf/server.xml_ozr
         - user: root
@@ -45,7 +33,7 @@ rename-tomcat-dir:
         - context:
             max_threads: 100
 
-{{ tomcat_home }}/bin/catalina.sh:
+{{ tomcat.home }}/bin/catalina.sh:
     file.managed:
         - source: salt://ozr/conf/catalina.sh_ozr
         - user: root
@@ -53,16 +41,16 @@ rename-tomcat-dir:
         - mode: '750'
         - template: jinja
         - context:
-            java_opts: {{ java_opts }}
+            java_opts: {{ tomcat.java_opts }}
 
 # 개발서버와 동일하게 시작,종료 쉘 생성
-{{ tomcat_insthome }}/start.sh:
+{{ tomcat.insthome }}/start.sh:
     file.managed:
         - source: salt://ozr/conf/start.sh_ozr
         - user: root
         - group: root
         - mode: '750'
-{{ tomcat_insthome }}/stop.sh:
+{{ tomcat.insthome }}/stop.sh:
     file.managed:
         - source: salt://ozr/conf/stop.sh_ozr
         - user: root
@@ -72,6 +60,6 @@ rename-tomcat-dir:
 # 바로 서비스 시작
 startup-tomcat:
   cmd.run:
-    - name: {{ tomcat_home }}/bin/startup.sh
+    - name: {{ tomcat.home }}/bin/startup.sh
     - unless: test -n `ps -ef | grep java | awk '{print $2}'`
 

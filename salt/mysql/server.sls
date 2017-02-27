@@ -1,22 +1,5 @@
-{% import 'common/firewall.sls' as firewall with context %}
-{% set mysql = salt['grains.filter_by'] ({
-  'Ubuntu': {
-    'server': 'mysql-server',
-    'client': 'mysql-client',
-    'python': 'python-mysqldb',
-    'service': 'mysql',
-    'cfg': '/etc/mysql/mysql.conf.d/mysqld.cnf'
-  },
-  'CentOS': {
-    'server': 'mariadb-server',
-    'client': 'mariadb',
-    'python': 'MySQL-python',
-    'service': 'mariadb',
-    'cfg': '/etc/my.cnf.d/server.cnf'
-  },
-  'default': 'Ubuntu',
-}, grain='os') %}
-{% set mysql_root_pwd = pillar['db_server']['root_password'] %}
+{%- import 'common/firewall.sls' as firewall with context %}
+{%- from 'mysql/map.jinja' import mysql with context %}
 
 mysql:
   pkg.installed:
@@ -51,5 +34,12 @@ mysql_service:
       - file: mysql_append
 {% endif %}
 
-{{ firewall.firewall_open('3306', require='service: mysql') }}
+{{ firewall.firewall_open('3306', require='service: mysql_service') }}
+
+restart_{{ mysql.service }}:
+  module.run:
+    - name: service.restart
+    - m_name: {{ mysql.service }}
+    - require:
+      - service: mysql_service
 
