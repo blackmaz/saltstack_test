@@ -24,4 +24,15 @@ Its Box Server Side Script
 + SSH 설정
   - ssh 최초 접속시 known host 등록여부를 확인하는 경우에 응답을 기다리므로  salt master의 ssh 설정(/etc/ssh/ssh_config)에 StrictHostKeyChecking no를 추가
   
-# itsSvr.py
+# itsSvr.pysite 
+configuration 파일을 이용해서 정의된 salt state를 수행
+- site config
+  - yaml 형식의 파일로 pillar 정의 파일과 동일한 형태  
+  - -i /path/site/config/file or --input=/path/site/config/file
+
+# site configuration
+사이트 구성 정보를 저장한 파일, pillar로 이동예정
+- physical server
+- logical server
+- software
+
