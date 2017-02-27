@@ -1,4 +1,3 @@
 base:
   '*':
-    - apm_install
-    - ozr
+    - site_ozr
