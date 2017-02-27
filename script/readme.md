@@ -12,7 +12,7 @@ itsInit.py
 . user : root가 아닌 유저로 설정하는 경우 minion에 sudoers에 NOPASSWD가 설정되어 있어야 함 ([to-do]설정방법 추가)
 . root로 설정하는 경우, ssh root login이 허용되어 있어야 함   
 . Sudo : root가 아닌 유저로 설정하는 경우 설치시에 sudo를 이용해야 하므로 True로 설정해야 함  
---> salt의 기능으로 제어되는 것이 아니라 minion이 설치된 서버의 보안정책에 따라 달라지므로       다양한 변종이 생길수 있음 
+--> salt의 기능으로 제어되는 것이 아니라 minion이 설치된 서버의 보안정책에 따라 달라지므로 다양한 변종이 생길수 있음 
 CSP의 정책에 따라 대응 설정 확인후 추가 필요   
 확인 완료 : amazon, alyun - ssh 최초 접속시 known host 등록 
 . ssh 최초 접속시 known host 등록여부를 확인하는 경우에 응답을 기다리므로  
