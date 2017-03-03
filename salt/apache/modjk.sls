@@ -1,6 +1,6 @@
 {%- from 'apache/map.jinja' import apache with context %}
 {%- set os = grains['os'] %}
-{%- set workers = salt['pillar.get']('software:apache:workers', {}) %}
+{%- set modjk = salt['pillar.get']('software:apache:modjk', {}) %}
 
 {%- if grains['os_family']=='Debian' %}
 install_mod_jk:
@@ -62,6 +62,6 @@ mod_jk_worker:
     - group: root
     - mode: 640
     - template: jinja
-      site: {{ workers }}
+      site: {{ modjk }}
     - require:
       - file: mod_jk_conf

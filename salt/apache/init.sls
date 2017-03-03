@@ -3,13 +3,13 @@
 
 include:
   - apache.install
-{%- if a.get('sites') != {} %}
+{%- if a.get('vhosts') != {} %}
   - apache.vhost
 {%- endif %}
-{%- if a.get('worker') != {} %}
+{%- if a.get('modjk') != {} %}
   - apache.modjk
 {%- endif %}
-{%- if a.get('ssl') == True %}
+{%- if a.get('openssl') == True %}
   - apache.openssl
   - apache.pkikey
 {%- endif %}

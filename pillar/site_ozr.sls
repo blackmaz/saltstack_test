@@ -34,6 +34,8 @@ software:
   mysql:
     deploy server: db
     root_pwd: manager365
+    service_ip: server3
+    service_port: 3306
     databases:
       nest:
         user: root
@@ -45,7 +47,7 @@ software:
         pwd: 1qazxsw2
   apache:
     deploy server: web
-    sites:
+    vhosts:
       5giraffe.com:  
         ports: 
           80:
@@ -88,7 +90,7 @@ software:
               /*.do: worker2 
               /*.act: worker2
         enable: True
-    workers:
+    modjk:
       worker: 
         worker1: 
           port: 7009
@@ -104,23 +106,36 @@ software:
       list: 
         - worker1
         - worker2
-    ssl: True
+    openssl: True
   tomcat:
     deploy server: web
     jdk: openjdk
-    config:
+    install:
       insthome: /www/nest
-      home: /www/nest/tomcat7
-      version: apache-tomcat-7.0.75
-      downloadurl: http://apache.mirror.cdnetworks.com/tomcat/tomcat-7/v7.0.75/bin/apache-tomcat-7.0.75.tar.gz
-      downloadhash: 1373d27e7e9cd4c481b4b17c6b2c36aff157b66e
+      home: /www/nest/apache-tomcat-7.0.75
       java_opts: -server -Xms512m -Xmx512m -XX:PermSize=128m -XX:MaxPermSize=128m -XX:+DisableExplicitGC
-    deploys:
-      ozr:
-        service_ip: 192.168.10.10
-        tar: webapps_ozr.zip
-        downloadurl: https://www.dropbox.com/s/y257ychikv0gwz1/webapps_ozr.zip?dl=0
-        database: 
-          name: nest
-          ip: 192.168.10.12
-          port: 3306/ 
+    server:
+      http_port: 8080
+      ajp_port: 8009
+      appBase: webapps
+      name: www.nestfunding.kr
+      Contexts:
+        /:
+          docBase: ozr
+          downloadurl: salt://apps/ozr/ozr.tar.gz
+          filename: ozr
+          service_ip: server4
+          use_database: 
+            software: mysql
+            database: nest
+        test:
+          docBase: test
+          downloadurl: salt://apps/ozr/ozr.tar.gz
+          filename: ozr
+          service_ip: server4
+          use_database: pandamall
+          datasource_url: jdbc:mysql://localhost:3306/nest
+          db_user: root
+          db_password: manager365
+
+

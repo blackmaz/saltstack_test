@@ -1,8 +1,8 @@
 {%- from 'apache/map.jinja' import apache with context %}
-{%- set sites = salt['pillar.get']('software:apache:sites',{}) %}
+{%- set vhosts = salt['pillar.get']('software:apache:vhosts',{}) %}
 {%- set selinux_enabled = salt['grains.get']('selinux:enabled') %}
 
-{%- for id, site in sites.items() %}
+{%- for id, vhost in vhosts.items() %}
 vhost_cfg_{{ id }}:
   file.managed:
     - name: {{ apache.siteavailable }}/{{ id }}.conf
@@ -17,9 +17,9 @@ vhost_cfg_{{ id }}:
 {% endif %}
 {% endfor %}
       server_name: {{ id }}
-      site: {{ site }}
+      vhost: {{ vhost }}
 
-{%- for port, cfg in site.get('ports').items() %}
+{%- for port, cfg in vhost.get('ports').items() %}
 {%- if cfg.get('doc_root', False) != False %}
 doc_root_{{ id }}_{{ port }}:
   file.directory:
@@ -60,7 +60,7 @@ selinux_httpd_log_{{ id }}_{{ port }}:
 {%- endif %}
 {%- endif %}
 {%- endfor %}
-{%- if site.get('enable',False) %}
+{%- if vhost.get('enable',False) %}
 site_enalbe_{{ id }}:
   file.symlink:
     - name: {{ apache.siteenabled }}/{{ id }}.conf

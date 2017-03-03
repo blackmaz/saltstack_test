@@ -19,6 +19,19 @@
      define subcomponents such as "Valves" at this level.
      Documentation at /docs/config/server.html
  -->
+{%- set connector = {
+  'http_port' : cfg.get('http_port', '8080'),
+  'ajp_port'  : cfg.get('ajp_port', '8009')
+}
+-%}
+{%- set host = {
+  'name'      : cfg.get('name', 'localhost'),
+  'appBase'   : cfg.get('appBase', 'webapps'),
+  'unpackWARs': cfg.get('unpackWARs', 'true'),
+  'autoDeploy': cfg.get('autoDeploy', 'true'),
+  'Contexts'  : cfg.get('Contexts',{})
+}
+-%}
 <Server port="8005" shutdown="SHUTDOWN">
   <!-- Security listener. Documentation at /docs/config/listeners.html
   <Listener className="org.apache.catalina.security.SecurityListener" />
@@ -67,7 +80,7 @@
          APR (HTTP/AJP) Connector: /docs/apr.html
          Define a non-SSL HTTP/1.1 Connector on port 8080
     -->
-    <Connector port="{{ server_port }}" protocol="HTTP/1.1"
+    <Connector port="{{ connector.http_port }}" protocol="HTTP/1.1"
                connectionTimeout="20000"
                redirectPort="8443"  compression="on" compressionminsize="2048" nocompressionuseragents="gozilla, traviata" compressablemimetype="text/html,text/xml"/>
     <!-- A "Connector" using the shared thread pool-->
@@ -89,7 +102,7 @@
     -->
 
     <!-- Define an AJP 1.3 Connector on port 8009 -->
-    <Connector port="8009" protocol="AJP/1.3" redirectPort="8443" />
+    <Connector port="{{ connector.ajp_port }}" protocol="AJP/1.3" redirectPort="8443" />
 
 
     <!-- An Engine represents the entry point (within Catalina) that processes
@@ -101,7 +114,7 @@
     <!-- You should set jvmRoute to support load-balancing via AJP ie :
     <Engine name="Catalina" defaultHost="localhost" jvmRoute="jvm1">
     -->
-    <Engine name="Catalina" defaultHost="{{ domain_name }}">
+    <Engine name="Catalina" defaultHost="{{ host.name }}">
 
       <!--For clustering, please take a look at documentation at:
           /docs/cluster-howto.html  (simple how to)
@@ -121,8 +134,8 @@
                resourceName="UserDatabase"/>
       </Realm>
 
-      <Host name="{{ domain_name }}"  appBase="webapps"
-            unpackWARs="true" autoDeploy="true">
+      <Host name="{{ host.name }}"  appBase="{{ host.appBase }}"
+            unpackWARs="{{ host.unpackWARs }}" autoDeploy="{{ host.autoDeploy }}">
 
         <!-- SingleSignOn valve, share authentication between web applications
              Documentation at: /docs/config/valve.html -->
@@ -136,8 +149,9 @@
         <Valve className="org.apache.catalina.valves.AccessLogValve" directory="logs"
                prefix="localhost_access_log." suffix=".txt"
                pattern="%h %l %u %t &quot;%r&quot; %s %b" />
-
-	<Context reloadable="true" path="/" docBase=""/>
+{%- for id, Context in host.Contexts.items() %}
+	<Context reloadable="{{ Context.get('reloadable','true') }}" path="{{ id }}" docBase="{{ Context.get('docBase')}}"/>
+{%- endfor %}
 
       </Host>
     </Engine>
