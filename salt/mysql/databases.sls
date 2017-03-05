@@ -1,4 +1,4 @@
-{%- set root_pwd = salt['pillar.get']('software:mysql:root_pwd') %}
+{%- set root_pwd = salt['pillar.get']('software:mysql:root:pwd') %}
 {%- set databases = salt['pillar.get']('software:mysql:databases',{}) %}
 
 {%- for id, database in databases.items() %}
@@ -46,20 +46,5 @@ grant_{{ id }}:
       - mysql_database: {{ id }}
     - require:
       - mysql_user: create_{{ id }}
-{%- if database.get('import',False) %}
-dmpfile_dn_{{ id }}:
-  file.managed:
-    - name: /tmp/dbdump_{{id}}.sql
-    - source: {{ database.data }} 
-    - user: root
-    - group: root
-    - mode: 644
-
-dmpfile_imp_{{ id }}:
-  cmd.run:
-    - name: mysql -u root -p'{{ root_pwd|replace("'", "'\"'\"'") }}' < /tmp/dbdump_{{id}}.sql
-    - require:
-      - file: dmpfile_dn_{{ id }}
-{%- endif %}
 {%- endfor %}
 

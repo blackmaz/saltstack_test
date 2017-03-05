@@ -36,10 +36,5 @@ mysql_service:
 
 {{ firewall.firewall_open('3306', require='service: mysql_service') }}
 
-restart_{{ mysql.service }}:
-  module.run:
-    - name: service.restart
-    - m_name: {{ mysql.service }}
-    - require:
-      - service: mysql_service
+
 

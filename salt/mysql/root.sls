@@ -1,4 +1,4 @@
-{%- set root_pwd = salt['pillar.get']('software:mysql:root_pwd') %}
+{%- set root_pwd = salt['pillar.get']('software:mysql:root:pwd') %}
 
 mysql_root_password:
   module.run:

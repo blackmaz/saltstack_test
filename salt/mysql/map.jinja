@@ -6,6 +6,13 @@
     'service': 'mysql',
     'cfg': '/etc/mysql/mysql.conf.d/mysqld.cnf'
   },
+  'Debian-maria': {
+    'server': 'mariadb-server',
+    'client': 'mariadb-client',
+    'python': 'python-mysqldb',
+    'service': 'mysql',
+    'cfg': '/etc/mysql/mariadb.conf.d/50-server.cnf'
+  },
   'RedHat': {
     'server': 'mariadb-server',
     'client': 'mariadb',

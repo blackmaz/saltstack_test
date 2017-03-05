@@ -1,11 +1,16 @@
-{%- set root_pwd = salt['pillar.get']('software:mysql:root_pwd','') %}
-{%- set databases = salt['pillar.get']('software:mysql:databases',{}) %}
+{%- set m = salt['pillar.get']('software:mysql',{}) %}
+{%- from 'mysql/map.jinja' import mysql with context %}
 
 include:
   - mysql.server
-{%- if root_pwd != '' %}
+{%- if m.get('root') != {} %}
   - mysql.root
 {%- endif %}
-{%- if databases != {} %}
-  - mysql.user
+{%- if m.get('databases') != {} %}
+  - mysql.databases
 {%- endif %}
+
+restart_{{ mysql.service }}:
+  module.run:
+    - name: service.restart
+    - m_name: {{ mysql.service }}
