@@ -170,5 +170,3 @@ software:
           datasource_url: jdbc:mysql://localhost:3306/nest
           db_user: root
           db_password: manager365
-
-
