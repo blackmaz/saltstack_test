@@ -6,3 +6,11 @@ mysql_root_password:
     - user: root
     - host: localhost
     - password: {{ root_pwd }}
+#  module.run:
+#    - name: mysql.query
+#    - database: mysql
+#    - query: alter user 'root'@'localhost' identified with mysql_native_password by 'manager365'
+#    - default-auth: mysql_native_password
+    - connection_user: root
+    - connection_pass: manager365
+    - connection_host: localhost

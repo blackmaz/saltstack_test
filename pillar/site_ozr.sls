@@ -140,6 +140,39 @@ software:
         - worker1
         - worker2
     openssl: True
+  nginx:
+    deploy server: web
+    vhosts:
+      5giraffe.com:  
+        ports: 
+          80:
+            use_redir: True 
+            redirect_from: / 
+            redirect_to: https://www.ozr.kr
+        enable: True 
+      www.5giraffe.com:  
+        ports: 
+          80: 
+            use_redir: True 
+            redirect_from: / 
+            redirect_to: https://www.ozr.kr
+        enable: True 
+      ozr.kr:  
+        ports: 
+          80: 
+            use_redir: True 
+            redirect_from: / 
+            redirect_to: https://www.ozr.kr
+        enable: True 
+      www.ozr.kr:  
+        ports: 
+          443:  
+            server_admin: webmaster
+            doc_root: /www/nest/tomcat7/webapps
+            log_root: /www/nest/logs/web
+            use_ssl: True
+        enable: True
+    openssl: True
   tomcat:
     deploy server: web
     jdk: openjdk
