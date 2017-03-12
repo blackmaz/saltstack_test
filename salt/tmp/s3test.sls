@@ -17,35 +17,18 @@ awscli-config-dir:
     - mode: 755
     - makedirs: True
 
-#s3_credentials:
-#  file.managed:
-#    - source: salt://tmp/_s3_credentials
-#    - name: ~/.aws/credentials
-#    - user: root
-#    - group: root
-#    - mode: '600'
-#    - template: jinja
-#    - context:
-#        s3_key: {{ s3_key }}
-#        s3_keyid: {{ s3_keyid }}
+make_s3_credential1:
+   environ.setenv:
+     - name: AWS_SECRET_ACCESS_KEY
+     - value: {{ s3_key }}
+     - update_minion: True
 
-make-s3-credentials:
+make_s3_credential2:
+   environ.setenv:
+     - name: AWS_ACCESS_KEY_ID
+     - value: {{ s3_keyid }}
+     - update_minion: True
+
+s3_filedownload:
   cmd.run:
-    - name: export AWS_SECRET_ACCESS_KEY={{ s3_key }};export AWS_ACCESS_KEY_ID={{ s3_keyid }};export AWS_DEFAULT_REGION={{ s3_region }}
-
-s3_config:
-  file.managed:
-    - source: salt://tmp/_s3_config
-    - name: ~/.aws/config
-    - user: root
-    - group: root
-    - mode: '600'
-    - template: jinja
-    - context:
-        s3_region: {{ s3_region }}
-
-#s3test:
-#  file.managed:
-#    - name: /root/petclinic.war
-#    - source: s3://my-bucket-for-fileserver/petclinic.war
-#    - source_hash: md5=ca347e8e20321d1573e0a1d42ad2c48c
+    - name: aws s3 cp s3://my-bucket-for-fileserver/petclinic.war ./petclinic.war --region={{ s3_region }}
