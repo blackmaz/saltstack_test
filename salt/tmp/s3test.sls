@@ -2,20 +2,12 @@
 {%- set s3_keyid = salt['pillar.get']('s3.keyid') %}
 {%- set s3_region = salt['pillar.get']('s3.region') %}
 {%- set s3_bucket = salt['pillar.get']('s3.bucket') %}
-{%- set s3_filename = salt['pillar.get']('s3.filename') %}
+{%- set s3_filename = "petclinic.war" %}
 
 install_awscli:
   pkg:
     - installed
     - name: awscli
-
-awscli-config-dir:
-  file.directory:
-    - name: ~/.aws
-    - user: root
-    - group: root
-    - mode: 755
-    - makedirs: True
 
 make_s3_credential1:
    environ.setenv:
@@ -31,4 +23,4 @@ make_s3_credential2:
 
 s3_filedownload:
   cmd.run:
-    - name: aws s3 cp s3://my-bucket-for-fileserver/petclinic.war ./petclinic.war --region={{ s3_region }}
+    - name: aws s3 cp s3://{{ s3_bucket }}/{{ s3_filename }} ./{{ s3_filename }} --region={{ s3_region }}
