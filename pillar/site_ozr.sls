@@ -59,6 +59,11 @@ logical server:
 # sofeware식별자: 소프트웨어명칭 saltstack formula 명
 # deploy server: S/W가 설치될 Logical Server의 식별자
 software:
+  common:
+    s3.keyid: AKIAIW2OJFOMVVHJMDGA
+    s3.key: avSB4Ks2L9BNneBRYQUxpe2snGaOxRW9AIYsT1GC
+    s3.region: ap-northeast-1
+    s3.bucket: my-bucket-for-fileserver
   mysql:
     deploy server: db
     # A 미사용

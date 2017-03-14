@@ -1,17 +1,32 @@
-{%- from 'tomcat/settings.sls' import tomcat with context %}
-{%- set deploy_war = 'petclinic.war' %}
-{%- set deploy_downloadurl = 'https://www.dropbox.com/s/vjnjxbb921jneet/petclinic.war?dl=0' %}
+{%- set tomcat_home = salt['pillar.get']('software:tomcat:install:home') %}
+{%- set s3_key = salt['pillar.get']('software:common:s3.key') %}
+{%- set s3_keyid = salt['pillar.get']('software:common:s3.keyid') %}
+{%- set s3_region = salt['pillar.get']('software:common:s3.region') %}
+{%- set s3_bucket = salt['pillar.get']('software:common:s3.bucket') %}
+{%- set s3_filename = 'petclinic.war' %}
 
-download-sample-war:
+install_awscli:
+  pkg:
+    - installed
+    - name: awscli
+
+make_s3_credential1:
+   environ.setenv:
+     - name: AWS_SECRET_ACCESS_KEY
+     - value: {{ s3_key }}
+     - update_minion: True
+
+make_s3_credential2:
+   environ.setenv:
+     - name: AWS_ACCESS_KEY_ID
+     - value: {{ s3_keyid }}
+     - update_minion: True
+
+s3_filedownload:
   cmd.run:
-    - name: curl -s -L -o '/tmp/'{{ deploy_war }} {{ deploy_downloadurl }}
-    - unless: test -f '/tmp/'{{ deploy_war }}
+    - name: aws s3 cp s3://{{ s3_bucket }}/{{ s3_filename }} /tmp/{{ s3_filename }} --region={{ s3_region }}
 
 deploy-sample-war:
   cmd.run:
-    - name: cp '/tmp/'{{ deploy_war }} {{ tomcat.tomcat_home }}/webapps/{{ deploy_war }}
-    - unless: test -f {{ tomcat.tomcat_home }}/webapps/{{ deploy_war }}
-
-#remove-sample-war:
-#  file.absent:
-#    - name: {{ tomcat.salt_tomcat_filedir }}/{{ deploy_war }}
+    - name: cp '/tmp/'{{ s3_filename }} {{ tomcat_home }}/webapps/{{ s3_filename }}
+    - unless: test -f {{ tomcat_home }}/webapps/{{ s3_filename }}
