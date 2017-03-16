@@ -1,8 +1,8 @@
 {%- set tomcat_home = salt['pillar.get']('software:tomcat:install:home') %}
-{%- set s3_key = salt['pillar.get']('software:common:s3.key') %}
-{%- set s3_keyid = salt['pillar.get']('software:common:s3.keyid') %}
-{%- set s3_region = salt['pillar.get']('software:common:s3.region') %}
-{%- set s3_bucket = salt['pillar.get']('software:common:s3.bucket') %}
+{%- set s3_key = salt['pillar.get']('software:common:s3:key') %}
+{%- set s3_keyid = salt['pillar.get']('software:common:s3:keyid') %}
+{%- set s3_region = salt['pillar.get']('software:common:s3:region') %}
+{%- set s3_bucket = salt['pillar.get']('software:common:s3:bucket') %}
 {%- set s3_filename = 'petclinic.war' %}
 
 install_awscli:
