@@ -21,7 +21,7 @@ salt_minion:
   cmd.run:
     - name: |
         curl -L https://bootstrap.saltstack.com -o install_salt.sh
-        sh install_salt.sh -P
+        sh install_salt.sh -P stable 2016.11.2
     - unless: test -x /usr/bin/salt-minion
     - require:
       - pkg: install_curl

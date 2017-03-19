@@ -183,7 +183,7 @@ software:
     jdk: openjdk
     install:
       insthome: /www/nest
-      home: /www/nest/apache-tomcat-7.0.75
+      home: /www/nest/apache-tomcat-7.0.76
       java_opts: -server -Xms512m -Xmx512m -XX:PermSize=128m -XX:MaxPermSize=128m -XX:+DisableExplicitGC
     server:
       http_port: 8080
@@ -193,18 +193,5 @@ software:
       Contexts:
         /:
           docBase: ozr
-          downloadurl: salt://apps/ozr/ozr.tar.gz
-          filename: ozr
-          service_ip: server4
-          use_database: 
-            software: mysql
-            database: nest
         test:
           docBase: test
-          downloadurl: salt://apps/ozr/ozr.tar.gz
-          filename: ozr
-          service_ip: server4
-          use_database: pandamall
-          datasource_url: jdbc:mysql://localhost:3306/nest
-          db_user: root
-          db_password: manager365
