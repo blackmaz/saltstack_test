@@ -129,6 +129,23 @@ software:
               /*.do: worker2 
               /*.act: worker2
         enable: True
+      www.oops.kr:  
+        ports: 
+          80:  
+            server_admin: webmaster
+            doc_root: /www/nest/oops
+            log_root: /www/nest/logs/web
+            use_modproxy: True
+            proxy_pattern:
+              /: http://192.168.10.85:8080/
+              /test: http://192.168.10.85:8080/test/
+# 특정 확장자는 proxy로 보내지 않는 설정 필요
+#              jepg, gif 등 이미지, html, css같은 정적 컨텐츠는 web서버에서 처리토록
+# 확장자를 지정하여 proxy로 보내는 설정-- 현재 에러나서 막아둠
+#            proxy_ext:
+#              jsp: http://192.168.10.85:8080/
+#              do: http://192.168.10.85:8080/
+        enable: True
     modjk:
       worker: 
         worker1: 
@@ -172,11 +189,17 @@ software:
         enable: True 
       www.ozr.kr:  
         ports: 
-          443:  
+          80:  
             server_admin: webmaster
             doc_root: /www/nest/tomcat7/webapps
             log_root: /www/nest/logs/web
-            use_ssl: True
+#            use_ssl: True
+            use_modproxy: True
+# context 전체를 보낼때 / 가 중복되는 경우 에러가 나서 그 부분 해결 필요
+# nginx는 컨텍스트 보다는 확장자 설정이 편리하게 되어 있음
+            proxy_ext:
+              jsp: http://192.168.10.85:8080
+              do : http://192.168.10.85:8080
         enable: True
     openssl: True
   tomcat:

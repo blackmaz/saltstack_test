@@ -80,6 +80,14 @@ selinux_data_hssaw:
     - boolean: httpd_sys_script_anon_write
     - value: On
     - persist: True
+
+# mod_proxy를 사용하면서 tomcat 서버가 물리적으로 분리되어 있을 경우에 enable 필요
+selinux_setsebool_tomcat:
+  module.run:
+    - name: selinux.setsebool
+    - boolean: httpd_can_network_connect
+    - value: On
+    - persist: True
 {%- endif %}
 
 
