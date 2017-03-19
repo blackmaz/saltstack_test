@@ -1,13 +1,37 @@
-{%- set s3_key = salt['pillar.get']('s3.key') %}
-{%- set s3_keyid = salt['pillar.get']('s3.keyid') %}
-{%- set s3_region = salt['pillar.get']('s3.region') %}
-{%- set s3_bucket = salt['pillar.get']('s3.bucket') %}
+{%- set s3_key = salt['pillar.get']('software:common:s3:key') %}
+{%- set s3_keyid = salt['pillar.get']('software:common:s3:keyid') %}
+{%- set s3_region = salt['pillar.get']('software:common:s3:region') %}
+{%- set s3_bucket = salt['pillar.get']('software:common:s3:bucket') %}
 {%- set s3_filename = "petclinic.war" %}
+
+{% if grains['os_family']=="Debian" %}
 
 install_awscli:
   pkg:
     - installed
     - name: awscli
+
+{% endif %}
+{% if grains['os_family']=="RedHat" %}
+
+install_devtools:
+  pkg.group_installed:
+    - name: "Development Tools"
+
+install_epelrepo:
+  cmd.run:
+    - name: rpm -Uvh https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
+
+install_pip:
+  pkg:
+    - installed
+    - name: python-pip
+
+install_awscli:
+  cmd.run:
+    - name: pip install awscli
+
+{% endif %}
 
 make_s3_credential1:
    environ.setenv:
