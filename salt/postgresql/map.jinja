@@ -1,0 +1,17 @@
+{% set postgresql = salt['grains.filter_by'] ({
+  'Debian': {
+    'server': 'postgresql',
+    'client': 'postgresql-client',
+    'service': 'postgresql',
+    'python': 'python-psycopg2',
+    'cfg': '/var/lib/pgsql/'
+  },
+  'RedHat': {
+    'server': 'postgresql',
+    'client': 'postgresql-client',
+    'service': 'postgresql',
+    'python': 'python-psycopg2',
+    'cfg': '/var/lib/pgsql/'
+  },
+  'default': 'Ubuntu',
+} ) %}
