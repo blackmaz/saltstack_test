@@ -1,27 +1,34 @@
 {%- import 'common/firewall.sls' as firewall with context %}
 {%- from "nginx/map.jinja" import nginx with context %}
 
-{%- if grains['os_family']=="Debian" %}
-m2crypto:
-  pkg.installed:
-    - name: m2crypto
-{%- set req = "pkg: m2crypto" %}
-{%- elif grains['os_family']=='RedHat' %}
-python-pip:
-  pkg.installed:
-    - pkgs:
-      - python2-pip
-      - gcc
-      - python-devel
-      - openssl-devel
+# nginx는 openssl 사용시에 별도로 설치할 것이 없음
 
-m2crypto:
-  pip.installed:
-    - name: m2crypto
+{{ firewall.firewall_open('443') }}
+
+/etc/pki:
+  file.directory: []
+
+/etc/pki/www.key:
+  x509.private_key_managed:
+    - bits: 4096
+    - backup: True
     - require:
-      - pkg: python-pip
-{%- set req = "pip: m2crypto" %}
-{%- endif %}
+      - file: /etc/pki
 
-{{ firewall.firewall_open('443', require=req) }}
+/etc/pki/www.crt:
+  x509.certificate_managed:
+    - signing_private_key: /etc/pki/www.key
+    - CN: ca.example.com
+    - C: KR
+    - ST: Seoul
+    - L: Jung-gu
+    - basicConstraints: "critical CA:true"
+    - keyUsage: "critical cRLSign, keyCertSign"
+    - subjectKeyIdentifier: hash
+    - authorityKeyIdentifier: keyid,issuer:always
+    - days_valid: 3650
+    - days_remaining: 0
+    - backup: True
+    - require:
+      - x509: /etc/pki/www.key
 

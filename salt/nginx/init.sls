@@ -1,5 +1,6 @@
 {%- set a = salt['pillar.get']('software:nginx', {}) %}
 {%- from 'nginx/map.jinja' import nginx with context %}
+{%- import 'common/service.sls' as service with context %}
 
 include:
   - nginx.install
@@ -11,10 +12,8 @@ include:
 #{%- endif %}
 {%- if a.get('openssl') == True %}
   - nginx.openssl
-  - nginx.pkikey
 {%- endif %}
 
-restart_{{ nginx.service }}:
-  module.run:
-    - name: service.restart
-    - m_name: {{ nginx.service }}
+{{ service.service_restart(nginx.service) }}
+
+

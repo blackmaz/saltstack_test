@@ -25,4 +25,28 @@ salt_minion:
     - unless: test -x /usr/bin/salt-minion
     - require:
       - pkg: install_curl
-      
+
+# openssl 설치시 x509와 종속성이 있는 패키지
+{%- if grains['os_family']=="Debian" %}
+m2crypto:
+  pkg.installed:
+    - name: m2crypto
+    - require: 
+      - cmd: salt_minion
+{%- elif grains['os_family']=='RedHat' %}
+python-pip:
+  pkg.installed:
+    - pkgs:
+      - python2-pip
+      - gcc
+      - python-devel
+      - openssl-devel
+    - require:
+      - cmd: salt_minion
+
+m2crypto:
+  pip.installed:
+    - name: m2crypto
+    - require:
+      - pkg: python-pip
+{%- endif %}
