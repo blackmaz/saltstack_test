@@ -7,8 +7,8 @@
 # 회사와 시스템의 구분
 # ItsBox를 여러개의 회사가 동시에 사용하고, 한 회사에 다수의 시스템이 존재할수 있으므로 
 # 이런 구조에 대응하기 위해 company, system명을 제일 위에 둠
-hwbc:
-  ozr:
+panda:
+  pandamall:
 
 # Physical Server 
 # Cloud에 생성된 서버(인스턴스)의 정보

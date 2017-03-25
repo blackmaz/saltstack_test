@@ -1,5 +1,9 @@
 {%- from 'apache/map.jinja' import apache with context %}
-{%- set vhosts = salt['pillar.get']('software:apache:vhosts',{}) %}
+
+{%- set company = salt['pillar.get']('company','default') %}
+{%- set system = salt['pillar.get']('system','default') %}
+{%- set vhosts = salt['pillar.get'](company+':'+system+':software:apache:vhosts',{}) %}
+
 {%- set selinux_enabled = salt['grains.get']('selinux:enabled') %}
 
 {%- for id, vhost in vhosts.items() %}
@@ -11,7 +15,7 @@ vhost_cfg_{{ id }}:
     - group: root
     - mode: 640
     - template: jinja
-{% for key, value in salt['pillar.get']('physical server',{}).items() %}
+{% for key, value in salt['pillar.get'](company+':'+system+':physical server',{}).items() %}
 {% if salt['grains.get']('host') == value.get('hostname') %}
       listen_ip: {{ value.get('ip') }}
 {% endif %}

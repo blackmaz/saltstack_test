@@ -81,4 +81,6 @@ for id, sw in sws.items():
     #pprint.pprint(ret)
     for r in ret:
         print r[r.keys()[0]]['retcode']
-      
+#
+# local.cmd_iter(hosts, cmds, [ args, 'pillar={"foo": "bar"}'], expr_form ~~) 
+# note : Loading companyCode, systemCode at run-time in pillar

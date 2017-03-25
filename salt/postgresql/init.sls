@@ -1,4 +1,7 @@
-{%- set m = salt['pillar.get']('software:postgresql',{}) %}
+{%- set company = salt['pillar.get']('company','default') %}
+{%- set system = salt['pillar.get']('system','default') %}
+{%- set m = salt['pillar.get'](company+':'+system+':software:postgresql',{}) %}
+
 {%- from 'postgresql/map.jinja' import postgresql with context %}
 
 include:

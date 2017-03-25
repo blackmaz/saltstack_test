@@ -8,7 +8,7 @@ mysql:
       - {{ mysql.client }}
       - {{ mysql.python }}
 
-{% if grains['os'] == 'Ubuntu'%}
+{% if grains['os_family'] == 'Debian'%}
 mysql_comment:
   file.comment:
     - name: {{ mysql.cfg }}
@@ -30,7 +30,7 @@ mysql_service:
     - enable: True
     - watch:
       - pkg: mysql
-{% if grains['os'] == 'Ubuntu'%}
+{% if grains['os_family'] == 'Debian'%}
       - file: mysql_append
 {% endif %}
 

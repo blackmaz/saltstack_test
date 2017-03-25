@@ -1,5 +1,7 @@
-{%- set root_pwd = salt['pillar.get']('software:mysql:root:pwd') %}
-{%- set databases = salt['pillar.get']('software:mysql:databases',{}) %}
+{%- set company = salt['pillar.get']('company','default') %}
+{%- set system     = salt['pillar.get']('system','default') %}
+{%- set root_pwd= salt['pillar.get'](company+':'+system+':software:mysql:root:pwd','') %}
+{%- set databases= salt['pillar.get'](company+':'+system+':software:mysql:databases',{}) %}
 
 {%- for id, database in databases.items() %}
 create_{{ id }}:

@@ -1,4 +1,4 @@
-{%- if grains['os'] == 'CentOS'-%}
+{%- if grains['os_family'] == 'RedHat'-%}
 install_epel:
   pkg.installed:
     - name: epel-release

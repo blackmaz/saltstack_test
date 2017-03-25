@@ -1,5 +1,8 @@
-{%- set m = salt['pillar.get']('software:mysql',{}) %}
+{%- set company = salt['pillar.get']('company','default') %}
+{%- set system     = salt['pillar.get']('system','default') %}
+{%- set m             = salt['pillar.get'](company+':'+system+':software:mysql','') %}
 {%- from 'mysql/map.jinja' import mysql with context %}
+{%- import 'common/service.sls' as service with context %}
 
 include:
   - mysql.server
@@ -10,7 +13,4 @@ include:
   - mysql.databases
 {%- endif %}
 
-restart_{{ mysql.service }}:
-  module.run:
-    - name: service.restart
-    - m_name: {{ mysql.service }}
+{{ service.service_restart(mysql.service) }}

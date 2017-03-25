@@ -1,6 +1,9 @@
 {%- from 'apache/map.jinja' import apache with context %}
 {%- set os = grains['os'] %}
-{%- set modjk = salt['pillar.get']('software:apache:modjk', {}) %}
+
+{%- set company = salt['pillar.get']('company','default') %}
+{%- set system = salt['pillar.get']('system','default') %}
+{%- set modjk = salt['pillar.get'](company+':'+system+':software:apache:modjk',{}) %}
 
 {%- if grains['os_family']=='Debian' %}
 install_mod_jk:

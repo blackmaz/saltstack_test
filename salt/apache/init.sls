@@ -1,4 +1,8 @@
-{%- set a = salt['pillar.get']('software:apache', {}) %}
+
+{%- set company = salt['pillar.get']('company','default') %}
+{%- set system = salt['pillar.get']('system','default') %}
+{%- set a = salt['pillar.get'](company+':'+system+':software:apache',{}) %}
+
 {%- from 'apache/map.jinja' import apache with context %}
 {%- import 'common/service.sls' as service with context %}
 

@@ -1,6 +1,6 @@
 # firewall.sls
 {% macro firewall_open(port, prot='tcp', require='') -%}
-{%- if grains['os'] == 'CentOS' -%}
+{%- if grains['os_family'] == 'RedHat' -%}
 firewall-add-port-{{port}}:
   module.run:
     - name: firewalld.add_port
@@ -15,7 +15,7 @@ firewall-reload-{{port}}:
     - name: firewalld.reload_rules
     - require:
       - module: firewall-add-port-{{port}}
-{%- elif grains['os'] == 'Ubuntu' -%}
+{%- elif grains['os'] == 'Debian' -%}
 iptables-add-port-{{port}}:
   iptables.append:
     - table: filter
@@ -35,7 +35,7 @@ iptables-add-port-{{port}}:
 {%- endmacro %}
 
 {% macro firewall_open_service(service_nm, require='') -%}
-{%- if grains['os'] == 'CentOS' -%}
+{%- if grains['os_family'] == 'RedHat' -%}
 firewall-add-server-{{service_nm}}:
   module.run:
     - name: firewalld.add_service
