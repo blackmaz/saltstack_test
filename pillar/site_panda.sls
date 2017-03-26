@@ -84,121 +84,18 @@ panda:
         # mysql.databases Action
         # mysql의 user와 database를 생성하고 grant를 설정
         databases:
-          nest:
-            user: root
-            pwd: manager365
           pandamall:
             user: pandamall
             pwd: 1qazxsw2
-      apache:
-        deploy server: web
-        vhosts:
-          5giraffe.com:  
-            ports: 
-              80:
-                use_redir: True 
-                redirect_from: / 
-                redirect_to: https://www.ozr.kr/
-              443: 
-                use_redir: True 
-                redirect_from: / 
-                redirect_to: https://www.ozr.kr/
-            enable: True 
-          www.5giraffe.com:  
-            ports: 
-              443: 
-                use_redir: True 
-                redirect_from: / 
-                redirect_to: https://www.ozr.kr/
-            enable: True 
-          ozr.kr:  
-            ports: 
-              80: 
-                use_redir: True 
-                redirect_from: / 
-                redirect_to: https://www.ozr.kr/
-              443: 
-                use_redir: True 
-                redirect_from: / 
-                redirect_to: https://www.ozr.kr/
-            enable: True 
-          www.ozr.kr:  
-            ports: 
-              443:  
-                server_admin: webmaster
-                doc_root: /www/nest/tomcat7/webapps
-                log_root: /www/nest/logs/web
-                use_ssl: True
-                use_modjk: True
-                jk_pattern: 
-                  /*.jsp: worker2
-                  /*.do: worker2 
-                  /*.act: worker2
-            enable: True
-          www.oops.kr:  
-            ports: 
-              80:  
-                server_admin: webmaster
-                doc_root: /www/nest/oops
-                log_root: /www/nest/logs/web
-                use_modproxy: True
-                proxy_pattern:
-                  /: http://192.168.10.85:8080/
-                  /test: http://192.168.10.85:8080/test/
-# 특정 확장자는 proxy로 보내지 않는 설정 필요
-#              jepg, gif 등 이미지, html, css같은 정적 컨텐츠는 web서버에서 처리토록
-# 확장자를 지정하여 proxy로 보내는 설정-- 현재 에러나서 막아둠
-#            proxy_ext:
-#              jsp: http://192.168.10.85:8080/
-#              do: http://192.168.10.85:8080/
-            enable: True
-        modjk:
-          worker: 
-            worker1: 
-              port: 7009
-              host: localhost
-            worker2: 
-              port: 8009
-              host: localhost 
-          lb: 
-            loadbalancer: 
-              balance_workers: 
-                - worker1
-                - worker2 
-          list: 
-            - worker1
-            - worker2
-        openssl: True
       nginx:
         deploy server: web
         vhosts:
-          5giraffe.com:  
-            ports: 
-              80:
-                use_redir: True 
-                redirect_from: / 
-                redirect_to: https://www.ozr.kr
-            enable: True 
-          www.5giraffe.com:  
-            ports: 
-              80: 
-                use_redir: True 
-                redirect_from: / 
-                redirect_to: https://www.ozr.kr
-            enable: True 
-          ozr.kr:  
-            ports: 
-              80: 
-                use_redir: True 
-                redirect_from: / 
-                redirect_to: https://www.ozr.kr
-            enable: True 
-          www.ozr.kr:  
+          www.pandamall.kr:  
             ports: 
               80:  
                 server_admin: webmaster
-                doc_root: /www/nest/tomcat7/webapps
-                log_root: /www/nest/logs/web
+                doc_root: /www/panda/tomcat7/webapps
+                log_root: /www/panda/logs/web
 #                use_ssl: True
                 use_modproxy: True
 # context 전체를 보낼때 / 가 중복되는 경우 에러가 나서 그 부분 해결 필요
@@ -212,16 +109,16 @@ panda:
         deploy server: web
         jdk: openjdk
         install:
-          insthome: /www/nest
-          home: /www/nest/apache-tomcat-7.0.76
+          insthome: /www/panda
+          home: /www/panda/apache-tomcat-7.0.76
           java_opts: -server -Xms512m -Xmx512m -XX:PermSize=128m -XX:MaxPermSize=128m -XX:+DisableExplicitGC
         server:
           http_port: 8080
           ajp_port: 8009
           appBase: webapps
-          name: www.nestfunding.kr
+          name: www.pandamall.kr
           Contexts:
             /:
-              docBase: ozr
+              docBase: panda
             test:
               docBase: test
