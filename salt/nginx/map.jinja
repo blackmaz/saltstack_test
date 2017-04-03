@@ -1,0 +1,33 @@
+#
+#
+#
+{%- set nginx = salt['grains.filter_by']({
+  'Debian': {
+    'server': 'nginx',
+    'service': 'nginx',
+    'configdir': '/etc/nginx',
+    'configfile': 'nginx.conf',
+    'siteavailable': '/etc/nginx/sites-available',
+    'siteenabled': '/etc/nginx/sites-enabled',
+    'configsitefile': 'default',
+    'doc_root': '/usr/share/nginx/html',
+    'log_root': '/var/log/nginx',
+    'modjk': {},
+    'modjksrc': {}
+  },
+  'RedHat': {
+    'server': 'nginx',
+    'service': 'nginx',
+    'configdir': '/etc/nginx',
+    'configfile': 'nginx.conf',
+    'siteavailable': '/etc/nginx/sites-available',
+    'siteenabled': '/etc/nginx/sites-enabled',
+    'configsitefile': '000-default.conf',
+    'doc_root': '/usr/share/nginx/html',
+    'log_root': '/var/log/nginx',
+    'modjk': {},
+    'modjksrc': {}
+  },
+  'default': 'Debian',
+} ) %}
+

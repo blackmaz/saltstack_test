@@ -1,47 +1,22 @@
-{% import 'common/firewall.sls' as firewall with context %}
-{% set os = grains['os'] %}
+{%- set company = salt['pillar.get']('company','default') %}
+{%- set system = salt['pillar.get']('system','default') %}
+{%- set a = salt['pillar.get'](company+':'+system+':software:nginx',{}) %}
 
-nginx:
-  pkg.installed:
-    - name: nginx
-  service.running:
-    - name: nginx
-    - enable: True
-    - watch:
-      - pkg: nginx
+{%- from 'nginx/map.jinja' import nginx with context %}
+{%- import 'common/service.sls' as service with context %}
 
-{{ firewall.firewall_open('80', require='service: nginx') }}
+include:
+  - nginx.install
+{%- if a.get('vhosts') != {} %}
+  - nginx.vhost
+{%- endif %}
+#{%- if a.get('modjk') != {} %}
+#  - nginx.modjk
+#{%- endif %}
+{%- if a.get('openssl') == True %}
+  - nginx.openssl
+{%- endif %}
 
-/etc/nginx/nginx.conf:
-  file.managed:
-    - source: salt://nginx/nginx.conf.{{ os }}
-    - require:
-      - pkg: nginx
+{{ service.service_restart(nginx.service) }}
 
-/etc/nginx/sites-available:
-  file.directory:
-    - user: root
-    - group: root
-    - dir_mode: 755
-    - require:
-      - pkg: nginx
 
-/etc/nginx/sites-enabled:
-  file.directory:
-    - user: root
-    - group: root
-    - dir_mode: 755
-    - require:
-      - pkg: nginx
-
-/etc/nginx/sites-available/default:
-  file.managed:
-    - source: salt://nginx/default.{{ os }}
-    - require:
-      - file: /etc/nginx/sites-available
-
-/etc/nginx/sites-enabled/default:
-  file.symlink:
-    - target: /etc/nginx/sites-available/default
-    - require:
-      - file: /etc/nginx/sites-enabled

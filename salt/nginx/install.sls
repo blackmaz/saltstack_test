@@ -1,48 +1,42 @@
-# 
 {%- import 'common/firewall.sls' as firewall with context %}
-{%- from 'apache/map.jinja' import apache with context %}
+{%- from 'nginx/map.jinja' import nginx with context %}
+{%- set os = grains['os'] %}
 {%- set selinux_enabled = salt['grains.get']('selinux:enabled') %}
 
-apache:
+nginx:
   pkg.installed:
-    - name: {{ apache.server }}
+    - name: {{ nginx.server }} 
   service.running:
-    - name: {{ apache.service }}
+    - name: {{ nginx.service }}
     - enable: True
     - watch:
-      - pkg: apache
+      - pkg: nginx
 
-{{ firewall.firewall_open('80', require='service: apache') }}
+{{ firewall.firewall_open('80', require='service: nginx') }}
 
-{%- if grains['os_family']=="Debian" %}
-install-proxy-module:
-  cmd.run:
-    - name: a2enmod proxy;a2enmod proxy_http;
-{% endif %}
-
-config_file:
+config_file: 
   file.managed:
-    - source: salt://apache/conf/_{{ apache.configfile }}
-    - name: {{ apache.configdir }}/{{ apache.configfile }}
+    - source: salt://nginx/conf/_{{ nginx.configfile }}.{{ os }}
+    - name : {{ nginx.configdir }}/{{ nginx.configfile }} 
     - user: root
     - group: root
     - mode: '640'
     - template: jinja
     - require:
-      - service: apache
+      - service: nginx
 
 sites-available:
   file.directory:
-    - name: {{ apache.siteavailable }}
+    - name: {{ nginx.siteavailable }}
     - user: root
     - group: root
     - dir_mode: 755
     - require:
       - file: config_file
 
-sites-enabled:
+sites-enabled: 
   file.directory:
-    - name: {{ apache.siteenabled }}
+    - name: {{ nginx.siteenabled }}
     - user: root
     - group: root
     - dir_mode: 755
@@ -51,20 +45,20 @@ sites-enabled:
 
 default_site:
   file.managed:
-    - source: salt://apache/conf/_{{ apache.configsitefile }}
-    - name: {{ apache.siteavailable }}/{{ apache.configsitefile }}
+    - source: salt://nginx/conf/_{{ nginx.configsitefile }}.{{ os }}
+    - name: {{ nginx.siteavailable }}/{{ nginx.configsitefile }}
     - template: jinja
     - context:
-      doc_root: {{ apache.doc_root }}
-      log_root: {{ apache.log_root }}
+      doc_root: {{ nginx.doc_root }}
+      log_root: {{ nginx.log_root }}
     - require:
       - file: sites-available
       - file: sites-enabled
 
 default_site_enabled:
   file.symlink:
-    - target: {{ apache.siteavailable }}/{{ apache.configsitefile }}
-    - name: {{ apache.siteenabled }}/{{ apache.configsitefile }}
+    - target: {{ nginx.siteavailable }}/{{ nginx.configsitefile }}
+    - name: {{ nginx.siteenabled }}/{{ nginx.configsitefile }}
     - require:
       - file: default_site
 

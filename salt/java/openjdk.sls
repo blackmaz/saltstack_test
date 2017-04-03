@@ -25,9 +25,8 @@ install_openjdk:
     - installed
     - name: {{ openjdk.package }}
 
-{% endif %}
 # Redhat계열(CentOS,Fedora)의 경우
-{% if grains['os_family']=="RedHat" %}
+{% elif grains['os_family']=="RedHat" %}
 
 install_openjdk:
   pkg:

@@ -1,5 +1,10 @@
-{%- set a = salt['pillar.get']('software:apache', {}) %}
+
+{%- set company = salt['pillar.get']('company','default') %}
+{%- set system = salt['pillar.get']('system','default') %}
+{%- set a = salt['pillar.get'](company+':'+system+':software:apache',{}) %}
+
 {%- from 'apache/map.jinja' import apache with context %}
+{%- import 'common/service.sls' as service with context %}
 
 include:
   - apache.install
@@ -11,10 +16,8 @@ include:
 {%- endif %}
 {%- if a.get('openssl') == True %}
   - apache.openssl
-  - apache.pkikey
 {%- endif %}
 
-restart_{{ apache.service }}:
-  module.run:
-    - name: service.restart
-    - m_name: {{ apache.service }}
+{{ service.service_restart(apache.service) }}
+
+

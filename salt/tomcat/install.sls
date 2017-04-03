@@ -1,32 +1,33 @@
 ###################################
 # apache-tomcat install sls
 ###################################
-{%- set install = salt['pillar.get']('software:tomcat:install') %}
+{%- set company    = salt['pillar.get']('company','default') %}
+{%- set system     = salt['pillar.get']('system','default') %}
+{%- set install    = salt['pillar.get'](company+':'+system+':software:tomcat:install') %}
 {%- from 'tomcat/map.jinja' import tomcat with context %}
-{%- set server = salt['pillar.get']('software:tomcat:server') %}
+
+# install home 존재 여부를 확인하고 없으면 생성
+create_inst_home:
+  file.directory:
+    - name: {{ install.insthome }}
+    - user: root
+    - group: root
+    - dir_mode: 755
+    - makedirs: True
 
 # 다운로드 및 압축 해제
+# stable 2016.11.3 버전으로 업그래이드 시에 에러가 발생한다.
+# stable 2016.11.2 버전으로 유지 해야 함
 unpack-tomcat-tar:
   archive.extracted:
     - name: {{ install.insthome }}
     - source:  {{ tomcat.downloadurl }}
-    - source_hash: sha1={{ tomcat.downloadhash }}
+#    - source_hash: sha1={{ tomcat.downloadhash }}
     - archive_format: tar
     - tar_option: zxvf
-
-# 설정파일 업데이트
-sever-xml:
-  file.managed:
-    - source: salt://tomcat/conf/server.xml_ozr
-    - name: {{ install.home }}/conf/server.xml
-    - user: root
-    - group: root
-    - mode: '640'
-    - template: jinja
-    - context:
-        cfg: {{ server }}
-    - require:
-      - archive: unpack-tomcat-tar
+    - skip_verify: True
+#    - if_missing: {{ install.home }}
+    - keep: False
 
 catalina-sh:
   file.managed:
@@ -41,13 +42,5 @@ catalina-sh:
     - require:
       - file: sever-xml
 
-# 바로 서비스 시작
-startup-tomcat:
-  cmd.run:
-    - name: {{ install.home }}/bin/startup.sh
-    - unless: test -n `ps -ef | grep java | awk '{print $2}'`
-    - require:
-      - archive: unpack-tomcat-tar
-      - file: sever-xml
-      - file: catalina-sh
+
 

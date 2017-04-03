@@ -1,21 +1,9 @@
 {%- import 'common/firewall.sls' as firewall with context %}
-{%- from "apache/map.jinja" import apache with context %}
+{%- from "nginx/map.jinja" import nginx with context %}
 
-{%- if grains['os_family']=="Debian" %}
-mod_ssl:
-  cmd.run:
-    - name: a2enmod ssl
+# nginx는 openssl 사용시에 별도로 설치할 것이 없음
 
-{%- set req = "cmd: mod_ssl" %}
-{%- elif grains['os_family']=='RedHat' %}
-mod_ssl:
-  pkg.installed:
-    - name: mod_ssl
-
-{%- set req = "pkg: mod_ssl" %}
-{%- endif %}
-
-{{ firewall.firewall_open('443', require=req) }}
+{{ firewall.firewall_open('443') }}
 
 /etc/pki:
   file.directory: []

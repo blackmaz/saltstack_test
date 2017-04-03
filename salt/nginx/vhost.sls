@@ -1,16 +1,15 @@
-{%- from 'apache/map.jinja' import apache with context %}
-
 {%- set company = salt['pillar.get']('company','default') %}
 {%- set system = salt['pillar.get']('system','default') %}
-{%- set vhosts = salt['pillar.get'](company+':'+system+':software:apache:vhosts',{}) %}
+{%- set vhosts  = salt['pillar.get'](company+':'+system+':software:nginx:vhosts',{}) %}
 
+{%- from 'nginx/map.jinja' import nginx with context %}
 {%- set selinux_enabled = salt['grains.get']('selinux:enabled') %}
 
 {%- for id, vhost in vhosts.items() %}
 vhost_cfg_{{ id }}:
   file.managed:
-    - name: {{ apache.siteavailable }}/{{ id }}.conf
-    - source: salt://apache/conf/_vhost.conf
+    - name: {{ nginx.siteavailable }}/{{ id }}.conf
+    - source: salt://nginx/conf/_vhost.conf
     - user: root
     - group: root
     - mode: 640
@@ -67,8 +66,8 @@ selinux_httpd_log_{{ id }}_{{ port }}:
 {%- if vhost.get('enable',False) %}
 site_enalbe_{{ id }}:
   file.symlink:
-    - name: {{ apache.siteenabled }}/{{ id }}.conf
-    - target: {{ apache.siteavailable }}/{{ id }}.conf
+    - name: {{ nginx.siteenabled }}/{{ id }}.conf
+    - target: {{ nginx.siteavailable }}/{{ id }}.conf
     - require:
       - file: vhost_cfg_{{ id }}
 {%- endif %}
