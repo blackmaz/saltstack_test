@@ -7,9 +7,8 @@
 # 회사와 시스템의 구분
 # ItsBox를 여러개의 회사가 동시에 사용하고, 한 회사에 다수의 시스템이 존재할수 있으므로 
 # 이런 구조에 대응하기 위해 company, system명을 제일 위에 둠
-nbil:
+sample:
   petclinic:
-
 # Physical Server 
 # Cloud에 생성된 서버(인스턴스)의 정보
 #
@@ -20,21 +19,13 @@ nbil:
 # eip: 서버에 할당된 공인 ip address, 외부 서비스를 위해 사용
     physical server:
       server1:
-        hostname: vm83
-        ip: 192.168.10.83
-        eip: 192.168.10.83
+        hostname: ip-10-20-0-225
+        ip: 10.20.0.225
+        eip: 13.112.153.34
       server2:
-        hostname: vm84
-        ip: 192.168.10.84
-        eip: 192.168.10.84
-      server3:
-        hostname: vm93
-        ip: 192.168.10.93
-        eip: 192.168.10.93
-      server4:
-        hostname: vm94
-        ip: 192.168.10.94
-        eip: 192.168.10.94
+        hostname: ip-10-20-0-226
+        ip: 10.20.0.226
+        eip: 54.92.70.34
 # Logical Server
 # ItsBox에서 PS와 S/W를 연결하기 위한 가상의 서버
 #
@@ -47,25 +38,20 @@ nbil:
     logical server:
       db:
         physical server:
-          - server3
+          - server2
       web:
         physical server:
-          - server4
-      sms_man:
+          - server1
+      was:
         physical server:
           - server1
-      sms_agt:
-        physical server:
-          - server2
-          - server3
-          - server4
 # Software
 # 설치될 소프트웨어의 정보와 솔트스택 포뮬러에 입력으로 사용될 변수의 집합
 #
 # sofeware식별자: 소프트웨어명칭 saltstack formula 명
 # deploy server: S/W가 설치될 Logical Server의 식별자
     software:
-      common:
+      apps:
         s3:
           keyid: xxxx
           key: xxxx
@@ -84,41 +70,35 @@ nbil:
         # mysql.databases Action
         # mysql의 user와 database를 생성하고 grant를 설정
         databases:
-          pandamall:
+          petclinic:
             user: pandamall
             pwd: 1qazxsw2
       nginx:
         deploy server: web
         vhosts:
-          www.pandamall.kr:  
+          localhost:  
             ports: 
               80:  
                 server_admin: webmaster
-                doc_root: /www/panda/tomcat7/webapps
-                log_root: /www/panda/logs/web
-#                use_ssl: True
                 use_modproxy: True
-# context 전체를 보낼때 / 가 중복되는 경우 에러가 나서 그 부분 해결 필요
-# nginx는 컨텍스트 보다는 확장자 설정이 편리하게 되어 있음
-                proxy_ext:
-                  jsp: http://192.168.10.85:8080
-                  do : http://192.168.10.85:8080
+                proxy_pass:
+                  jsp: http://10.20.0.225:8080
             enable: True
         openssl: True
       tomcat:
         deploy server: web
         jdk: openjdk
         install:
-          insthome: /www/panda
-          home: /www/panda/apache-tomcat-7.0.76
+          insthome: /www/petclinic
+          home: /www/petclinic/apache-tomcat-7.0.76
           java_opts: -server -Xms512m -Xmx512m -XX:PermSize=128m -XX:MaxPermSize=128m -XX:+DisableExplicitGC
         server:
           http_port: 8080
           ajp_port: 8009
           appBase: webapps
-          name: www.pandamall.kr
+          name: petclinic
           Contexts:
             /:
-              docBase: panda
+              docBase: petclinic
             test:
               docBase: test
