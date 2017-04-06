@@ -71,8 +71,8 @@ sample:
         # mysql의 user와 database를 생성하고 grant를 설정
         databases:
           petclinic:
-            user: pandamall
-            pwd: 1qazxsw2
+            user: petclinic
+            pwd: 1q2w3e
       nginx:
         deploy server: web
         vhosts:
