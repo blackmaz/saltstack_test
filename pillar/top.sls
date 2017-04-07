@@ -1,5 +1,8 @@
 base:
   '*':
-    - site_ozr
-    - net
     - salt
+    - net
+    - site_default
+    - site_ozr
+    - site_panda
+    - site_petcli
