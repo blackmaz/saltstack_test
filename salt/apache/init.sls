@@ -17,6 +17,9 @@ include:
 {%- if a.get('openssl',False) == True %}
   - apache.openssl
 {%- endif %}
+{%- if a.get('modphp',False) == True %}
+  - apache.modphp
+{%- endif %}
 
 {{ service.service_restart(apache.service) }}
 

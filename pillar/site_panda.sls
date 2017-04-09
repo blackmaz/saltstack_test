@@ -5,13 +5,13 @@ panda:
 # Physical Server 
     physical server:
       server1:
-        hostname: vm83
-        ip: 192.168.10.83
-        eip: 192.168.10.83
+        hostname: vm93
+        ip: 192.168.10.93
+        eip: 192.168.10.93
       server2:
-        hostname: vm84
-        ip: 192.168.10.84
-        eip: 192.168.10.84
+        hostname: vm94
+        ip: 192.168.10.94
+        eip: 192.168.10.94
 # Logical Server
     logical server:
       db:
@@ -30,7 +30,7 @@ panda:
           pandamall:
             user: pandamall
             pwd: 1qazxsw2
-      nginx:
+      apache:
         deploy server: web
         vhosts:
           www.pandamall.kr:  
@@ -44,6 +44,7 @@ panda:
                 php_port: 9000
             enable: True
         openssl: False
+        modphp: True
       php:
         deploy server: web
         cfg:
