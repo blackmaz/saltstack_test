@@ -37,7 +37,7 @@ group = apache
 ;   '/path/to/unix/socket' - to listen on a unix socket.
 ; Note: This value is mandatory.
 {%- endraw %}
-{{ listen_addr }}
+listen = {{ listen_addr }}:{{ listen_port }}
 {%- raw %}
 ; Set listen(2) backlog.
 ; Default Value: 511
@@ -64,7 +64,11 @@ group = apache
 ; accepted from any ip address.
 ; Default Value: any
 {%- endraw %}
-{{ listen_allowed_client }}
+{%- if listen_allowed_client == 'any' %}
+; listen.allowed_clients = 127.0.0.1
+{%- else %}
+listen.allowed_clients = {{ listen_allowed_client }}
+{%- endif %}
 {%- raw %}
 
 ; Specify the nice(2) priority to apply to the pool processes (only if set)

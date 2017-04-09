@@ -7,13 +7,13 @@
 
 include:
   - nginx.install
-{%- if a.get('vhosts') != {} %}
+{%- if a.get('vhosts','null') != 'null' %}
   - nginx.vhost
 {%- endif %}
-#{%- if a.get('modjk') != {} %}
+#{%- if a.get('modjk','null') != 'null' %}
 #  - nginx.modjk
 #{%- endif %}
-{%- if a.get('openssl') == True %}
+{%- if a.get('openssl',False) == True %}
   - nginx.openssl
 {%- endif %}
 

@@ -6,7 +6,7 @@
 include:
   - java.{{ t.jdk }}
   - tomcat.install
-{%- if t.get('server') != {} %}
+{%- if t.get('server','null') != 'null' %}
   - tomcat.server
 {%- endif %}
 

@@ -1,0 +1,19 @@
+{% set php = salt['grains.filter_by'] ({
+  'Debian': {
+    'php': 'php',
+    'fpm': 'php-fpm',
+    'mysql': 'php-mysqlnd',
+    'service': 'php7.0-fpm',
+    'cfg': '/etc/php/7.0/fpm/pool.d/www.conf',
+    'repository': ''
+  },
+  'RedHat': {
+    'php': 'php',
+    'fpm': 'php-fpm',
+    'mysql': 'php-mysqlnd',
+    'service': 'php-fpm',
+    'cfg': '/etc/php-fpm.d/www.conf',
+    'repository': 'remi-php70'
+  },
+  'default': 'Debian',
+}) %}
