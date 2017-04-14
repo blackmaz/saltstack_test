@@ -67,6 +67,20 @@ def option():
 
     return
 
+# 로그 출력 함수
+def printLog(ret):
+    for server, server_ret in ret.items():
+        #print server
+        for command, command_ret in server_ret.items():
+            #print command_ret
+            prt = {}
+            for key, val in command_ret.items():
+                prt[val["__run_num__"]] = { "name": val.get("name","") , "comment": val.get("comment",""), "result": val.get("result","")}
+
+            for key, val in prt.items():
+                print val
+
+
 option()
 
 # 사이트 정의 파일을 읽어들인다. 
@@ -99,19 +113,25 @@ local = salt.client.LocalClient()
 
 # 정의된 소프트웨어를 한땀한땀 수행해 주는 역할을 한다. 
 for id, sw in sws.items():
-    lSvr = sw.get('deploy server')
+    lSvr = sw.get('deploy server','')
+    # sw에 설치 대상 서버가 정의되 않았을 때 처리
+    # 다 체크해보고 정상일 경우만 실제 명령 수행하도록 변경
+    if lSvr == '':
+      print " error "
     host_list = []
     arg_list = [[id, runtime_pillar]]
     for pSvr in lSvrs.get(lSvr).get('physical server'):
         host_list.append(pSvrs.get(pSvr).get('hostname'))
     print "===================================================="
     print str(host_list) + str(cmd_list) + str(arg_list)
-    ret = local.cmd_iter(host_list, cmd_list, arg_list, expr_form='list',timeout=1800)
+#    ret = local.cmd_iter(host_list, cmd_list, arg_list, expr_form='list',timeout=1800)
+    ret = local.cmd(host_list, cmd_list, arg_list, expr_form='list',timeout=1800)
     print "===================================================="
-    #print ret
+    printLog(ret)
+#    print ret
     #pprint.pprint(ret)
-    for r in ret:
-        print r[r.keys()[0]]['retcode']
+#    for r in ret:
+#        print r[r.keys()[0]]['retcode']
 #
 # local.cmd_iter(hosts, cmds, [ args, 'pillar={"foo": "bar"}'], expr_form ~~) 
 # note : Loading companyCode, systemCode at run-time in pillar
