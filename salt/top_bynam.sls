@@ -1,15 +1,14 @@
 base:
   '*':
     - base.repo
-  'vm83,vm93':
+  'server2':
     - match: list
     - mysql
 #    - mysql.root_user
-    - mysql_user.petclinic
-  'vm84,vm94':
+    - apps.petclinic.database
+  'server1':
     - match: list
-    - sun-java
+    - java.openjdk
     - tomcat
-    - tomcat.deploy
-    - apache
+    - apps.petclinic.deploy
 
