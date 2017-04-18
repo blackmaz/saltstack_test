@@ -8,14 +8,17 @@
 
 include:
   - apache.install
-{%- if a.get('vhosts') != {} %}
+{%- if a.get('vhosts','null') != 'null' %}
   - apache.vhost
 {%- endif %}
-{%- if a.get('modjk') != {} %}
+{%- if a.get('modjk','null') != 'null' %}
   - apache.modjk
 {%- endif %}
-{%- if a.get('openssl') == True %}
+{%- if a.get('openssl',False) == True %}
   - apache.openssl
+{%- endif %}
+{%- if a.get('modphp',False) == True %}
+  - apache.modphp
 {%- endif %}
 
 {{ service.service_restart(apache.service) }}

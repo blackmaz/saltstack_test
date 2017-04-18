@@ -50,3 +50,32 @@ m2crypto:
     - require:
       - pkg: python-pip
 {%- endif %}
+
+# mysql returner 지정을 위한 python mysql 라이브러리 설치
+{%- if grains['os_family']=="Debian" %}
+mysql_returner:
+  pkg.installed:
+    - name: python-mysqldb
+{%- elif grains['os_family']=='RedHat' %}
+mysql_returner:
+  pkg.installed:
+    - name: MySQL-python
+{%- endif %}
+
+# 미니언 설정 파일에 기본 리터너 지정
+salt_returner:
+  file.line:
+    - name: /etc/salt/minion
+    - content: "return: mysql,syslog"
+    - mode: ensure
+    - after: '#  - slack'
+
+# 미니언 재시작
+restart_salt:
+  module.run:
+    - name: service.restart
+    - m_name: salt-minion
+    - require:
+      - file: salt_returner
+
+  
