@@ -24,13 +24,13 @@ mysql_append:
       - file: mysql_comment
 {% endif %}
 
+{% if grains['os_family'] == 'Redhat'%}
 mysql_service:
   service.running:
     - name: {{ mysql.service }}
     - enable: True
     - watch:
       - pkg: mysql
-{% if grains['os_family'] == 'Debian'%}
       - file: mysql_append
 {% endif %}
 
