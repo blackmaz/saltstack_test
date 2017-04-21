@@ -26,7 +26,7 @@ input_file=''
 company_cd=''
 system_cd=''
 
-# 옵션을 주지 않고 실행했을때 도움말 표시후 중단한다. 
+# 옵션을 주지 않고 실행했을때 도움말 표시후 중단한다.
 def help():
     print "python statetest.py -i site_config_file -c company -s system"
     return
@@ -38,17 +38,17 @@ def option():
     global company_cd
     global system_cd
 
-    if len(sys.argv) is 1:
+    if(len(sys.argv) is 1) and ((company_cd == '')):
         help()
         sys.exit(1)
-    try:    
+    try:
         options, args =  getopt.getopt(sys.argv[1:], "i:c:s:h", ["input=","company=","system=","help"])
     except getopt.GetoptError as err:
         print str(err)
         help()
         sys.exit(1)
-    
-    # 옵션에 따라서 변수에 값을 담아준다. 
+
+    # 옵션에 따라서 변수에 값을 담아준다.
     for opt, arg in options:
         if (opt == '-i') or (opt == '--input'):
             input_file = arg
@@ -83,7 +83,7 @@ def printLog(ret):
 
 option()
 
-# 사이트 정의 파일을 읽어들인다. 
+# 사이트 정의 파일을 읽어들인다.
 print input_file
 try:
     f = open(input_file, 'r')
@@ -92,8 +92,8 @@ except IOError as err:
     sys.exit(1)
 
 # 사이트 정의 파일을 순서 보장되는 딕셔너리에 담고
-# 입력받은 회사코드와 시스템 코드 하위의 정보를 
-# 각각의 딕셔너리에 담아준다. 
+# 입력받은 회사코드와 시스템 코드 하위의 정보를
+# 각각의 딕셔너리에 담아준다.
 cfg = ordered_load(f, yaml.SafeLoader)
 #cfg = yaml.load(f)
 
@@ -111,7 +111,7 @@ runtime_pillar='pillar={"company": "'+company_cd+'", "system": "'+system_cd+'"}'
 
 local = salt.client.LocalClient()
 
-# 정의된 소프트웨어를 한땀한땀 수행해 주는 역할을 한다. 
+# 정의된 소프트웨어를 한땀한땀 수행해 주는 역할을 한다.
 for id, sw in sws.items():
     lSvr = sw.get('deploy server','')
     # sw에 설치 대상 서버가 정의되 않았을 때 처리
@@ -133,6 +133,6 @@ for id, sw in sws.items():
 #    for r in ret:
 #        print r[r.keys()[0]]['retcode']
 #
-# local.cmd_iter(hosts, cmds, [ args, 'pillar={"foo": "bar"}'], expr_form ~~) 
+# local.cmd_iter(hosts, cmds, [ args, 'pillar={"foo": "bar"}'], expr_form ~~)
 # note : Loading companyCode, systemCode at run-time in pillar
 # 'pillar={"company": "hwbc", "system": "ozr"}'
