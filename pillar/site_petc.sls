@@ -37,12 +37,12 @@ sample:
       petclinic:
         deploy server: was
         s3:
-          keyid: xxx 
+          keyid: xxx
           key: yyy
           region: ap-northeast-1
           bucket: my-bucket-for-fileserver
           downloadDir: /tmp
         deploy:
           type: war
+          filename: petclinic.war
           home: /www/petclinic/apache-tomcat-7.0.77/webapps
-          config:
