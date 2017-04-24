@@ -2,9 +2,9 @@ sample:
   petclinic:
     physical server:
       server1:
-        hostname: ip-10-20-0-225
-        ip: 13.112.153.34
-        eip: 13.112.153.34
+        hostname: vm93
+        ip: 192.168.10.93
+        eip: 192.168.10.93
     logical server:
       db:
         physical server:
@@ -35,14 +35,17 @@ sample:
               docBase: test
     apps:
       petclinic:
-        deploy server: was
-        s3:
-          keyid: xxx 
-          key: yyy
-          region: ap-northeast-1
-          bucket: my-bucket-for-fileserver
-          downloadDir: /tmp
-        deploy:
-          type: war
-          home: /www/petclinic/apache-tomcat-7.0.77/webapps
-          config:
+        source:
+          s3: 
+            keyid: xxxx 
+            key: yyyy
+            region: ap-northeast-1
+            bucket: my-bucket-for-fileserver
+            filename: petclinic.war
+        target:
+          tomcat:
+            home: /www/petclinic/apache-tomcat-7.0.77
+            appBase: webapps
+            docBase: petclinic
+        tmp: /tmp  
+
