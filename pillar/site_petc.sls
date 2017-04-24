@@ -16,6 +16,22 @@ sample:
         physical server:
           - server1
     software:
+      mysql:
+        deploy server: db
+        service_ip: server1
+        service_port: 3306
+        root:
+          pwd: petclinic
+      nginx:
+        deploy server: web
+        vhosts:
+          localhost:
+            ports:
+              80:
+                server_admin: webmaster
+                use_modproxy: True
+                proxy_ext:
+                  /petclinic : http://localhost:8080
       tomcat:
         deploy server: web
         jdk: openjdk

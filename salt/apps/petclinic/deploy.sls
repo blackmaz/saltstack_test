@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 {%- set company = salt['pillar.get']('company','sample') %}
 {%- set system  = salt['pillar.get']('system','petclinic') %}
 {%- set s3      = salt['pillar.get'](company+':'+system+':apps:petclinic:source:s3') %}
@@ -11,3 +12,4 @@ deploy-sample-war:
   cmd.run:
     - name: cp '/tmp/'{{ s3.filename }} {{ tomcat.home }}/{{tomcat.appBase}}/{{ s3.filename }}
     - unless: test -f {{ tomcat.home }}/{{tomcat.appBase}}/{{ s3.filename }}
+
