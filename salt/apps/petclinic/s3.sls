@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 {%- set company = salt['pillar.get']('company','sample') %}
 {%- set system  = salt['pillar.get']('system','petclinic') %}
 {%- set s3 = salt['pillar.get'](company+':'+system+':apps:petclinic:source:s3') %}
