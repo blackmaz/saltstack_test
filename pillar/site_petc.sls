@@ -52,16 +52,15 @@ sample:
     apps:
       petclinic:
         source:
-          s3: 
-            keyid: xxxx 
-            key: yyyy
-            region: ap-northeast-1
-            bucket: my-bucket-for-fileserver
-            filename: petclinic.war
+          s3:
+            keyid: changeme-1
+            key: changeme-2
+            region: ap-northeast-2
+            bucket: itsbox
+            filename: apps/petclinic/petclinic.war
         target:
           tomcat:
             home: /www/petclinic/apache-tomcat-7.0.77
             appBase: webapps
             docBase: petclinic
-        tmp: /tmp  
-
+        tmp: /tmp
