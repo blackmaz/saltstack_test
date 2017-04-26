@@ -57,7 +57,8 @@ sample:
             key: changeme-2
             region: ap-northeast-2
             bucket: itsbox
-            filename: apps/petclinic/petclinic.war
+            filepath: apps/petclinic
+            filename: petclinic.war
         target:
           tomcat:
             home: /www/petclinic/apache-tomcat-7.0.77
