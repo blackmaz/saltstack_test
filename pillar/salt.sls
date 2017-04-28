@@ -1,3 +1,3 @@
 salt_master:
-  ip_address: 192.168.10.80
+  ip_address: 183.98.3.78
 
