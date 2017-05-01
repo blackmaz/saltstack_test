@@ -1,5 +1,17 @@
 {%- import 'common/firewall.sls' as firewall with context %}
 {%- from 'mysql/map.jinja' import mysql with context %}
+{%- set root_pwd= salt['pillar.get'](company+':'+system+':software:mysql:root:pwd','') %}
+
+
+{% if grains['os_family'] == 'Debian'%}
+
+set_mysql_rootpassword:
+  cmd.run:
+    - name: sudo debconf-set-selections <<< 'mysql-server mysql-server/root_password password {{ root_pwd }}'
+
+set_mysql_rootpassword_again:
+  cmd.run:
+    - name: sudo debconf-set-selections <<< 'mysql-server mysql-server/root_password_again password {{ root_pwd }}'
 
 mysql:
   pkg.installed:
@@ -8,7 +20,6 @@ mysql:
       - {{ mysql.client }}
       - {{ mysql.python }}
 
-{% if grains['os_family'] == 'Debian'%}
 mysql_comment:
   file.comment:
     - name: {{ mysql.cfg }}
@@ -25,6 +36,13 @@ mysql_append:
 {% endif %}
 
 {% if grains['os_family'] == 'Redhat'%}
+mysql:
+  pkg.installed:
+    - pkgs:
+      - {{ mysql.server }}
+      - {{ mysql.client }}
+      - {{ mysql.python }}
+
 mysql_service:
   service.running:
     - name: {{ mysql.service }}
@@ -35,6 +53,3 @@ mysql_service:
 {% endif %}
 
 {{ firewall.firewall_open('3306', require='service: mysql_service') }}
-
-
-
