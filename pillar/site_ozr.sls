@@ -20,11 +20,11 @@ hwbc:
 # eip: 서버에 할당된 공인 ip address, 외부 서비스를 위해 사용
     physical server:
       server1:
-        hostname: vm83
+        hostname: hwbcdb01
         ip: 192.168.10.83
         eip: 192.168.10.83
       server2:
-        hostname: vm84
+        hostname: hwbcwb01
         ip: 192.168.10.84
         eip: 192.168.10.84
 # Logical Server

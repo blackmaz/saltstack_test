@@ -6,6 +6,7 @@ import getopt
 import salt.client
 import salt.config
 
+# salt-call을 이용해서 local pillar를 조회하기 위해 설정함
 __opts__ = salt.config.minion_config('/etc/salt/minion')
 __opts__['file_client'] = 'local'
 

@@ -5,7 +5,6 @@ import yaml
 import sys
 import getopt
 import pprint
-import yaml
 from collections import OrderedDict
 
 # Dictionary에 데이터를 순서에 맞게 입력해줌
@@ -28,7 +27,7 @@ system_cd=''
 
 # 옵션을 주지 않고 실행했을때 도움말 표시후 중단한다.
 def help():
-    print "python statetest.py -i site_config_file -c company -s system"
+    print "itsSvr.py -i site_config_file -c company -s system"
     return
 
 # 옵션을 파싱해서 글로벌 변수에 담는다.
