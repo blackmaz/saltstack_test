@@ -55,9 +55,9 @@ def option():
     return
     
 #ssh_key='/home/ubuntu/aws/test_key_pair'
-ssh_key='/home/sungsic/.ssh/id_rsa'
-company_cd = "hwbc"
-system_cd  = "ozr"
+#ssh_key='/home/sungsic/.ssh/id_rsa'
+#company_cd = "hwbc"
+#system_cd  = "ozr"
 
 option()
 
