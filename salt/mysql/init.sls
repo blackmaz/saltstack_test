@@ -6,9 +6,6 @@
 
 include:
   - mysql.server
-{%- if m.get('root','null') != 'null' %}
-  - mysql.root
-{%- endif %}
 {%- if m.get('databases','null') != 'null' %}
   - mysql.databases
 {%- endif %}

@@ -35,7 +35,7 @@ mysql_append:
       - file: mysql_comment
 {% endif %}
 
-{% if grains['os_family'] == 'Redhat'%}
+{% if grains['os_family'] == 'RedHat'%}
 
 mysql:
   pkg.installed:
@@ -48,9 +48,18 @@ mysql_service:
   service.running:
     - name: {{ mysql.service }}
     - enable: True
-    - watch:
+    - require:
       - pkg: mysql
-      - file: mysql_append
+
+mysql_root_password:
+  module.run:
+    - name: mysql.user_chpass
+    - user: root
+    - host: localhost
+    - password: {{ root_pwd }}
+    - require:
+      - service: mysql_service
+
 {% endif %}
 
 {{ firewall.firewall_open('3306', require='service: mysql_service') }}
