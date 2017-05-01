@@ -1,7 +1,8 @@
 {%- import 'common/firewall.sls' as firewall with context %}
 {%- from 'mysql/map.jinja' import mysql with context %}
+{%- set company = salt['pillar.get']('company','default') %}
+{%- set system     = salt['pillar.get']('system','default') %}
 {%- set root_pwd= salt['pillar.get'](company+':'+system+':software:mysql:root:pwd','') %}
-
 
 {% if grains['os_family'] == 'Debian'%}
 
