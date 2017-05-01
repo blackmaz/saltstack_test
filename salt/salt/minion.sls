@@ -1,21 +1,22 @@
-{% set salt_master_ip = salt['pillar.get']('salt_master:ip_address')  %}
+{%- set salt_master = salt['pillar.get']('salt_master')  %}
 
+# salt master가 ip를 사용하는 경우 host파일에 ip를 등록함
+{%- if salt_master.get('ip_address',False) != False %}
 reg_salt_master:
   host.present:
     - name: salt
-    - ip: {{ salt_master_ip }}
+    - ip: {{ salt_master.ip_address }}
+{%- endif %}
 
 install_curl:
   pkg.installed:
     - name: curl
-    - require:
-      - host: reg_salt_master
 
 install_pyyaml:
   pip.removed:
     - name: PyYAML
     - require:
-      - host: reg_salt_master
+      - pkg: install_pyyaml
       
 salt_minion:
   cmd.run:
@@ -60,6 +61,16 @@ mysql_returner:
 mysql_returner:
   pkg.installed:
     - name: MySQL-python
+{%- endif %}
+
+# salt master가 url을 사용하는 경우 minion 설정파일에 url을 등록함
+{%- if salt_master.get('url',False) != False %}
+salt_master:
+  file.line:
+    - name: /etc/salt/minion
+    - content: 'master: {{ salt_master.url }}'
+    - mode: ensure
+    - after: '#master: salt'
 {%- endif %}
 
 # 미니언 설정 파일에 기본 리터너 지정

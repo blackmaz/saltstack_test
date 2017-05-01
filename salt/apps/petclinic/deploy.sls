@@ -6,7 +6,7 @@
 
 s3_filedownload:
   cmd.run:
-    - name: aws s3 cp s3://{{ s3.bucket }}/{{ s3.filename }} {{ tmp }}/{{ s3.filename }} --region={{ s3.region }}
+    - name: aws s3 cp s3://{{ s3.bucket }}/{{ s3.filepath }}/{{ s3.filename }} {{ tmp }}/{{ s3.filename }} --region={{ s3.region }}
 
 deploy-sample-war:
   cmd.run:
