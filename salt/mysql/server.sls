@@ -4,22 +4,14 @@
 {%- set system     = salt['pillar.get']('system','default') %}
 {%- set root_pwd= salt['pillar.get'](company+':'+system+':software:mysql:root:pwd','') %}
 
-{% if grains['os_family'] == 'Debian'%}
-
-set_mysql_rootpassword:
-  cmd.run:
-    - name: sudo debconf-set-selections <<< 'mysql-server mysql-server/root_password password {{ root_pwd }}'
-
-set_mysql_rootpassword_again:
-  cmd.run:
-    - name: sudo debconf-set-selections <<< 'mysql-server mysql-server/root_password_again password {{ root_pwd }}'
-
 mysql:
   pkg.installed:
     - pkgs:
       - {{ mysql.server }}
       - {{ mysql.client }}
       - {{ mysql.python }}
+
+{% if grains['os_family'] == 'Debian'%}
 
 mysql_comment:
   file.comment:
@@ -37,12 +29,6 @@ mysql_append:
 {% endif %}
 
 {% if grains['os_family'] == 'Redhat'%}
-mysql:
-  pkg.installed:
-    - pkgs:
-      - {{ mysql.server }}
-      - {{ mysql.client }}
-      - {{ mysql.python }}
 
 mysql_service:
   service.running:
