@@ -38,9 +38,13 @@ hwbc:
 # 그것을 대표하는 속성은 앞으로함 이 부분에 추가 정의
     logical server:
       db:
+        hostname: hwbcdb
+        vip: 192.168.10.73
         physical server:
           - server1
       web:
+        hostname: hwbcwb
+        vip: 192.168.10.74
         physical server:
           - server2
 # Software

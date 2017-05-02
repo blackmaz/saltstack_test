@@ -100,7 +100,7 @@ for host, val in r.items():
     if host != val.get('return'):
         # hostname 변경
         #print 'change hostname'
-        ret = s.cmd(host, 'state.apply', ['common.hostname', 'pillar={"hostname": "'+host+'"}'], expr_form='list', ssh_priv=ssh_key, ssh_identities_only=True)
+        ret = s.cmd(host, 'state.apply', ['salt.hostname', 'pillar={"hostname": "'+host+'"}'], expr_form='list', ssh_priv=ssh_key, ssh_identities_only=True)
         #print ret[host]['retcode']
 
 #print '------------------'
@@ -123,6 +123,9 @@ for host in phySvr:
 
 # pillar에 등록된 서버에 salt-minion을 설치한다. 
 ret = s.cmd(hosts, 'state.apply', ['salt.minion'], expr_form='list', ssh_priv=ssh_key, ssh_identities_only=True)
+
+# 미니언 설치된 서버에 host 파일에 
+ret = s.cmd(hosts, 'state.apply', ['salt.addhost', 'pillar={"company": "'+company_cd+'", "system": "'+system_cd+'"}'], expr_form='list', ssh_priv=ssh_key, ssh_identities_only=True)
 
 # minion key를 master에 등록한다.
 for host in phySvr:
