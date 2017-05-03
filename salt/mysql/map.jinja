@@ -4,21 +4,26 @@
     'client': 'mysql-client',
     'python': 'python-mysqldb',
     'service': 'mysql',
-    'cfg': '/etc/mysql/mysql.conf.d/mysqld.cnf'
+    'cfg': '/etc/mysql/mysql.conf.d/mysqld.cnf',
+    'cfg_svr': '/etc/mysql/mysql.conf.d/mysqld.cnf'
   },
   'Debian-maria': {
     'server': 'mariadb-server',
     'client': 'mariadb-client',
     'python': 'python-mysqldb',
     'service': 'mysql',
-    'cfg': '/etc/mysql/mariadb.conf.d/50-server.cnf'
+    'cfg': '/etc/mysql/mariadb.conf.d/50-server.cnf',
+    'cfg_svr': '/etc/mysql/mysql.conf.d/mysqld.cnf'
   },
   'RedHat': {
     'server': 'mariadb-server',
     'client': 'mariadb',
     'python': 'MySQL-python',
     'service': 'mariadb',
-    'cfg': '/etc/my.cnf.d/server.cnf'
+    'cfg': '/etc/my.cnf',
+    'cfg_svr': '/etc/my.cnf.d/server.cnf'
   },
   'default': 'Ubuntu',
 } ) %}
+
+
