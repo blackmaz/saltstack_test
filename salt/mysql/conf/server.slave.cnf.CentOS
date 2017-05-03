@@ -1,0 +1,43 @@
+{%- set company = salt['pillar.get']('company','default') %}
+{%- set system = salt['pillar.get']('system','default') %}
+{%- set svr_id = { 'curr':2, 'tmp': 0 } %}
+{#  unique server id 만들기 #}
+{%- set m = salt['pillar.get'](company+':'+system, {}) %}
+{%- set svr_id = { 'id':0, 'tmp':2 } %}
+{%- for psvr, info in m.get("physical server", {}).items() %}
+{%- if salt['grains.get']('host') == info.hostname %}
+{% do svr_id.update({'id': svr_id.tmp }) %}
+{% else %}
+{% do svr_id.update({'tmp': svr_id.tmp + 1}) %}
+{%- endif %}
+{%- endfor %}
+
+#
+# These groups are read by MariaDB server.
+# Use it for options that only the server (but not clients) should see
+#
+# See the examples of server my.cnf files in /usr/share/mysql/
+#
+
+# this is read by the standalone daemon and embedded servers
+[server]
+
+# this is only for the mysqld standalone daemon
+[mysqld]
+
+# this is only for embedded server
+[embedded]
+
+# This group is only read by MariaDB-5.5 servers.
+# If you use the same .cnf file for MariaDB of different versions,
+# use this group for options that older servers don't understand
+[mysqld-5.5]
+
+# These two groups are only read by MariaDB servers, not by MySQL.
+# If you use the same .cnf file for MySQL and MariaDB,
+# you can put MariaDB-only options here
+[mariadb]
+server_id={{svr_id.id}}
+
+[mariadb-5.5]
+

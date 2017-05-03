@@ -1,0 +1,37 @@
+{%- set cfg = {
+      'data_dir': salt['pillar.get'](company+':'+system+':software:mysql:data_dir','/var/lib/mysql')
+    , 'log_dir' : salt['pillar.get'](company+':'+system+':software:mysql:log_dir','/var/log/mariadb')
+    , 'service_ip' : salt['pillar.get'](company+':'+system+':software:mysql:service_ip',None)
+    , 'bind_ip' : None
+}
+%}
+{%- set m = salt['pillar.get'](company+':'+system, {}) %}
+{%- if cfg.service_ip %}
+{%- for psvr, info in m.get("physical server", {}).items() %}
+{%- if salt['grains.get']('host') == info.hostname %}
+{% do cfg.update({'bind_ip': info.get(cfg.service_ip,None) }) %}
+{%- endif %}
+{%- endfor %}
+{%- endif %}
+
+[mysqld]
+datadir={{ cfg.data_dir }}
+socket={{ cfg.data_dir }}/mysql.sock
+# Disabling symbolic-links is recommended to prevent assorted security risks
+symbolic-links=0
+# Settings user and group are ignored when systemd is used.
+# If you need to run mysqld under a different user or group,
+# customize your systemd unit file for mariadb according to the
+# instructions in http://fedoraproject.org/wiki/Systemd
+port={{ service_port }}
+{%- if cfg.bind_ip %}
+bind-address={{cfg.bind_ip}}
+{%- endif %}
+
+[mysqld_safe]
+log-error={{ cfg.log_dir }}/mariadb.log
+pid-file=/var/run/mariadb/mariadb.pid
+
+# include all files from the config directory
+!includedir /etc/my.cnf.d
+

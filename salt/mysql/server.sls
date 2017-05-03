@@ -1,17 +1,18 @@
 {%- import 'common/firewall.sls' as firewall with context %}
 {%- from 'mysql/map.jinja' import mysql with context %}
 {%- set company = salt['pillar.get']('company','default') %}
-{%- set system     = salt['pillar.get']('system','default') %}
-{%- set root_pwd= salt['pillar.get'](company+':'+system+':software:mysql:root:pwd','') %}
+{%- set system = salt['pillar.get']('system','default') %}
+{%- set service_port = salt['pillar.get'](company+':'+system+':software:mysql:service_port','3306') %}
+{%- set root_pwd = salt['pillar.get'](company+':'+system+':software:mysql:root:pwd','') %}
 
-
-{% if grains['os_family'] == 'Debian'%}
+{%- if grains['os_family'] == 'Debian' %}
 mysql-debconf:
   debconf.set:
-    - name: mysql-server
+    - name: {{ mysql.server }}
     - data:
-        'mysql-server/root_password': {'type': 'string', 'value': '{{ root_pwd }}'}
-        'mysql-server/root_password_again': {'type': 'string', 'value': '{{ root_pwd }}'}
+        'mysql-server/root_password': {'type': 'string', 'value':'{{root_pwd}}'}
+        'mysql-server/root_password_again': {'type':'string', 'value':'{{root_pwd}}'}
+{%- endif %}
 
 mysql:
   pkg.installed:
@@ -20,46 +21,26 @@ mysql:
       - {{ mysql.client }}
       - {{ mysql.python }}
 
-mysql_comment:
-  file.comment:
+mysql_cfg:
+  file.managed:
     - name: {{ mysql.cfg }}
-    - regex: ^bind-address
-    - require:
-      - pkg: mysql
-
-mysql_append:
-  file.append:
-    - name: {{ mysql.cfg }}
-    - text: lower_case_table_names = 1
-    - require:
-      - file: mysql_comment
-{% endif %}
-
-{% if grains['os_family'] == 'RedHat'%}
-
-mysql:
-  pkg.installed:
-    - pkgs:
-      - {{ mysql.server }}
-      - {{ mysql.client }}
-      - {{ mysql.python }}
+    - source: salt://mysql/conf/my.cnf.{{ grains['os'] }}
+    - user: root
+    - group: root
+    - mode: 644
+    - template: jinja
+      company: {{company}}
+      system: {{system}}
+      service_port: {{service_port}}
 
 mysql_service:
   service.running:
     - name: {{ mysql.service }}
     - enable: True
-    - require:
+    - watch:
       - pkg: mysql
+      - file: mysql_cfg
 
-mysql_root_password:
-  module.run:
-    - name: mysql.user_chpass
-    - user: root
-    - host: localhost
-    - password: {{ root_pwd }}
-    - require:
-      - service: mysql_service
+{{ firewall.firewall_open(service_port, require='service: mysql_service') }}
 
-{% endif %}
 
-{{ firewall.firewall_open('3306', require='service: mysql_service') }}
