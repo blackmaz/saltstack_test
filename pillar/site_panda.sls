@@ -5,13 +5,15 @@ panda:
 # Physical Server 
     physical server:
       server1:
-        hostname: vm93
-        ip: 192.168.10.93
-        eip: 192.168.10.93
+        hostname: pandadb02
+        ip: 192.168.10.83
+        eip: 192.168.10.83
+        user: sungsic
       server2:
-        hostname: vm94
-        ip: 192.168.10.94
-        eip: 192.168.10.94
+        hostname: pandaweb02
+        ip: 192.168.10.84
+        eip: 192.168.10.84
+        user: sungsic
 # Logical Server
     logical server:
       db:

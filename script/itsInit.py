@@ -90,6 +90,8 @@ for host in r.keys():
         hosts.append(host)
 
 # pillar에 등록된 서버가 전부 ping에 응답해야지 다음 단계로 넘어간다. 
+phySvr.sort()
+hosts.sort()
 if phySvr != hosts:
     print "You have a server that is not responding."
     exit()
