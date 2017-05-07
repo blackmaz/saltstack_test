@@ -71,6 +71,12 @@ site_enalbe_{{ id }}:
     - target: {{ apache.siteavailable }}/{{ id }}.conf
     - require:
       - file: vhost_cfg_{{ id }}
+{%- else %}
+site_disalbe_{{ id }}:
+  module.run:
+    - name: file.remove
+    - path: {{ apache.siteenabled }}/{{ id }}.conf
+    - onlyif: test -f {{ apache.siteenabled }}/{{ id }}.conf
 {%- endif %}
 {%- endfor %}
 

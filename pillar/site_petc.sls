@@ -2,19 +2,25 @@ sample:
   petclinic:
     physical server:
       server1:
-        hostname: vm93
-        ip: 192.168.10.93
-        eip: 192.168.10.93
+        hostname: petdb02
+        ip: 192.168.10.83
+        eip: 192.168.10.83
+        user: sungsic
+      server2:
+        hostname: petws02
+        ip: 192.168.10.84
+        eip: 192.168.10.84
+        user: sungsic
     logical server:
       db:
         physical server:
           - server1
       web:
         physical server:
-          - server1
+          - server2
       was:
         physical server:
-          - server1
+          - server2
     software:
       mysql:
         deploy server: db
@@ -25,15 +31,24 @@ sample:
       nginx:
         deploy server: web
         vhosts:
-          localhost:
+          www.petclinic.kr:
             ports:
               80:
                 server_admin: webmaster
+                doc_root: /www/petc/htdocs
+                log_root: /www/petc/logs/web
                 use_modproxy: True
-                proxy_ext:
+# 패턴에 맞는 url을 백엔드로 보내려면 proxy_pattern을 사용
+# 확장자를 백엔드로 보내려면 proxy_ext를 사용
+                proxy_pattern:
                   /petclinic : http://localhost:8080
+#               proxy_ext:
+#                 jsp : http://localhost:8080
+# enable: False --> 컨피그 파일을 생성하지만 실제 적용은 하지 않음(default)
+# enable: True  --> 컨피그 파일을 생성하고 web 서버에 적용함
+            enable: False
       tomcat:
-        deploy server: web
+        deploy server: was
         jdk: openjdk
         install:
           insthome: /www/petclinic

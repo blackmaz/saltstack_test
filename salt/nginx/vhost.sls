@@ -70,6 +70,12 @@ site_enalbe_{{ id }}:
     - target: {{ nginx.siteavailable }}/{{ id }}.conf
     - require:
       - file: vhost_cfg_{{ id }}
+{%- else %}
+site_disalbe_{{ id }}:
+  module.run:
+    - name: file.remove
+    - path: {{ nginx.siteenabled }}/{{ id }}.conf
+    - onlyif: test -f {{ nginx.siteenabled }}/{{ id }}.conf
 {%- endif %}
 {%- endfor %}
 
