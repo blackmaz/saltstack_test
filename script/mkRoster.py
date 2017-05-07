@@ -76,6 +76,10 @@ except IOError as err:
 
 roster_dic = yaml.load(r)
 
+# roster 파일에 아무런 내용이 없을 경우에는 변수를 dic으로 초기화 해준다.
+if roster_dic == None :
+  roster_dic = {}
+
 # 서버 정보를 읽어 roster 파일의 형태로 dic에 쓴다.
 #company = cfg.get(company_cd)
 #system  = company.get(system_cd)

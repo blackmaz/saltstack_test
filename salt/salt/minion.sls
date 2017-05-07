@@ -17,12 +17,13 @@ install_pyyaml:
     - name: PyYAML
     - require:
       - pkg: install_pyyaml
-      
+
+#        sh install_salt.sh -P stable 2016.11.2      
 salt_minion:
   cmd.run:
     - name: |
         curl -L https://bootstrap.saltstack.com -o install_salt.sh
-        sh install_salt.sh -P stable 2016.11.2
+        sh install_salt.sh -P 
     - unless: test -x /usr/bin/salt-minion
     - require:
       - pkg: install_curl
@@ -44,10 +45,11 @@ python-pip:
       - openssl-devel
     - require:
       - cmd: salt_minion
-
+# 0.26.0 설치시 _parse_subject에서 null을 리턴할 경우 에러 발생
+# https://github.com/saltstack/salt/issues/40490
 m2crypto:
   pip.installed:
-    - name: m2crypto
+    - name: m2crypto == 0.25.1
     - require:
       - pkg: python-pip
 {%- endif %}

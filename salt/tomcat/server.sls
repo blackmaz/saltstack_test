@@ -1,14 +1,15 @@
 {%- import 'common/firewall.sls' as firewall with context %}
 
 {%- set company = salt['pillar.get']('company','default') %}
-{%- set system     = salt['pillar.get']('system','default') %}
-{%- set t               = salt['pillar.get'](company+':'+system+':software:tomcat',{}) %}
+{%- set system  = salt['pillar.get']('system','default') %}
+{%- set t       = salt['pillar.get'](company+':'+system+':software:tomcat',{}) %}
+{%- from 'tomcat/map.jinja' import tomcat with context %}
 
 # 설정파일 업데이트
 sever-xml:
   file.managed:
     - source: salt://tomcat/conf/server.xml_ozr
-    - name: {{ t.install.home }}/conf/server.xml
+    - name: {{ t.install.insthome }}/{{ tomcat.dirname }}/conf/server.xml
     - user: root
     - group: root
     - mode: '640'
@@ -23,7 +24,7 @@ sever-xml:
 {%- for id, context in t.server.Contexts.items() %}
 docbase-{{ id }}:
   file.directory:
-    - name: {{ t.install.home }}/{{ t.server.appBase }}/{{ context.docBase }}
+    - name: {{ t.install.insthome }}/{{ tomcat.dirname }}/{{ t.server.appBase }}/{{ context.docBase }}
     - user: root
     - group: root
     - dir_mode: 755
@@ -31,7 +32,7 @@ docbase-{{ id }}:
 # 동작여부를 확인하기 위한 sample page... 나중에는 삭제해도 됨
 sample-{{ id }}:
   file.append:
-    - name: {{ t.install.home }}/{{ t.server.appBase }}/{{ context.docBase }}/sample.jsp
+    - name: {{ t.install.insthome }}/{{ tomcat.dirname }}/{{ t.server.appBase }}/{{ context.docBase }}/sample.jsp
     - text: This is sample page of {{ context.docBase }} 
 
 {%- endfor %}

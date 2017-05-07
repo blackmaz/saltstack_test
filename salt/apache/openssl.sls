@@ -30,10 +30,17 @@ mod_ssl:
 /etc/pki/www.crt:
   x509.certificate_managed:
     - signing_private_key: /etc/pki/www.key
-    - CN: ca.example.com
+#    - serial_number: test
+#    - serialNumber: test
     - C: KR
+    - CN: ca.example.com
+#    - Email: test@example.com
+#    - GN: test
+    - L: Jung gu
+#    - O: test
+#    - OU: test
+#    - SN: test
     - ST: Seoul
-    - L: Jung-gu
     - basicConstraints: "critical CA:true"
     - keyUsage: "critical cRLSign, keyCertSign"
     - subjectKeyIdentifier: hash

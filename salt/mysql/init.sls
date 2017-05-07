@@ -21,19 +21,19 @@ include:
 
   # master / slave 구성 필요 시 호출
 {%- if m.get('install type','standalone') == 'master/slave' %}
-{%- set isMaster = {'val':false} %}
-{%- for psvr in tcfg.get('logical server').get(m.get('deploy server')).get('physical server', []) %}
-{%- for id, info in tcfg.get('physical server').items() %}
-{%- if info.hostname == salt['grains.get']('host') %}
-{%- if "mysql_master" in info.get('role',[]) %}
-{%- do isMaster.update({'val':true}) %}
-{%- endif %}
-{%- endif %}
-{%- endfor %}
-{%- endfor %}
-{%- if isMaster.val == true %}
-  - mysql.master
-{%- else %}
-  - mysql.slave
-{%- endif %}
+  {%- set isMaster = {'val':false} %}
+  {%- for psvr in tcfg.get('logical server').get(m.get('deploy server')).get('physical server', []) %}
+    {%- for id, info in tcfg.get('physical server').items() %}
+      {%- if info.hostname == salt['grains.get']('host') %}
+        {%- if "mysql_master" in info.get('role',[]) %}
+          {%- do isMaster.update({'val':true}) %}
+        {%- endif %}
+      {%- endif %}
+    {%- endfor %}
+  {%- endfor %}
+  {%- if isMaster.val == true %}
+    - mysql.master
+  {%- else %}
+    - mysql.slave
+  {%- endif %}
 {%- endif %}
