@@ -88,6 +88,9 @@ if roster_dic == None :
 # pillar에 정의된 physical server 정보를 읽어 온다.
 caller = salt.client.Caller(mopts=__opts__)
 add_servers = caller.cmd('pillar.get',company_cd+':'+system_cd+':physical server')
+if add_servers == "":
+  print "Can not find physical server in pillar"
+  exit()
 
 # roster file에 등록되지 않은 server를 파일에 추가한다.
 # key가 중복되는 경우에는 추가하지 않는다.(덮어쓰거나 변경하지 않음)

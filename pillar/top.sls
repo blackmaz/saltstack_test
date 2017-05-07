@@ -6,3 +6,4 @@ base:
     - site_ozr
     - site_panda
     - site_petc
+    - site_replica

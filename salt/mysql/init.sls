@@ -32,8 +32,8 @@ include:
     {%- endfor %}
   {%- endfor %}
   {%- if isMaster.val == true %}
-    - mysql.master
+  - mysql.master
   {%- else %}
-    - mysql.slave
+  - mysql.slave
   {%- endif %}
 {%- endif %}
