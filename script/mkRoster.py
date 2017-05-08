@@ -76,6 +76,10 @@ except IOError as err:
 
 roster_dic = yaml.load(r)
 
+# roster 파일에 아무런 내용이 없을 경우에는 변수를 dic으로 초기화 해준다.
+if roster_dic == None :
+  roster_dic = {}
+
 # 서버 정보를 읽어 roster 파일의 형태로 dic에 쓴다.
 #company = cfg.get(company_cd)
 #system  = company.get(system_cd)
@@ -84,6 +88,9 @@ roster_dic = yaml.load(r)
 # pillar에 정의된 physical server 정보를 읽어 온다.
 caller = salt.client.Caller(mopts=__opts__)
 add_servers = caller.cmd('pillar.get',company_cd+':'+system_cd+':physical server')
+if add_servers == "":
+  print "Can not find physical server in pillar"
+  exit()
 
 # roster file에 등록되지 않은 server를 파일에 추가한다.
 # key가 중복되는 경우에는 추가하지 않는다.(덮어쓰거나 변경하지 않음)

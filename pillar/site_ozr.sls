@@ -20,13 +20,15 @@ hwbc:
 # eip: 서버에 할당된 공인 ip address, 외부 서비스를 위해 사용
     physical server:
       server1:
-        hostname: hwbcdb01
-        ip: 192.168.10.83
-        eip: 192.168.10.83
+        hostname: hwbcdb02
+        ip: 192.168.10.93
+        eip: 192.168.10.93
+        user: sungsic
       server2:
-        hostname: hwbcwb01
-        ip: 192.168.10.84
-        eip: 192.168.10.84
+        hostname: hwbcwb02
+        ip: 192.168.10.94
+        eip: 192.168.10.94
+        user: sungsic
 # Logical Server
 # ItsBox에서 PS와 S/W를 연결하기 위한 가상의 서버
 #
@@ -105,7 +107,7 @@ hwbc:
             ports: 
               80:  
                 server_admin: webmaster
-                doc_root: /www/nest/tomcat7/webapps
+                doc_root: /www/nest/htdocs
                 log_root: /www/nest/logs/web
                 use_ssl: True
                 use_modjk: True
@@ -142,7 +144,6 @@ hwbc:
         jdk: openjdk
         install:
           insthome: /www/nest
-          home: /www/nest/apache-tomcat-7.0.76
           java_opts: -server -Xms512m -Xmx512m -XX:PermSize=128m -XX:MaxPermSize=128m -XX:+DisableExplicitGC
         server:
           http_port: 8080

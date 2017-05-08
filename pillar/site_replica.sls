@@ -8,7 +8,7 @@
 # ItsBox를 여러개의 회사가 동시에 사용하고, 한 회사에 다수의 시스템이 존재할수 있으므로 
 # 이런 구조에 대응하기 위해 company, system명을 제일 위에 둠
 hwbc:
-  ozr:
+  replica:
 
 # Physical Server 
 # Cloud에 생성된 서버(인스턴스)의 정보
@@ -20,15 +20,17 @@ hwbc:
 # eip: 서버에 할당된 공인 ip address, 외부 서비스를 위해 사용
     physical server:
       server1:
-        hostname: wkr1
-        ip: 192.168.50.102
-        eip: 192.168.50.102
+        hostname: wkr3
+        ip: 192.168.10.93
+        eip: 192.168.10.93
+        user: sungsic
         role: 
           - mysql_master
       server2:
-        hostname: wkr2
-        ip: 192.168.50.103
-        eip: 192.168.50.103
+        hostname: wkr4
+        ip: 192.168.10.94
+        eip: 192.168.10.94
+        user: sungsic
         role: 
           - mysql_slave
 # Logical Server
@@ -45,9 +47,6 @@ hwbc:
         physical server:
           - server1
           - server2
-      web:
-        physical server:
-          - server2
 # Software
 # 설치될 소프트웨어의 정보와 솔트스택 포뮬러에 입력으로 사용될 변수의 집합
 #
@@ -61,23 +60,23 @@ hwbc:
       mysql:
         install type: master/slave
         deploy server: db
-        # A 미사용
+# A 미사용
         service_ip: ip
         service_port: 3306
 #        data_dir: 
 #        log_dir:
-        # mysql.root Action
-        # mysql의 root password를 설정
-        # issue: ubuntu에서 mysql 설치 직후에 연결하여 수행하면 에러 발생
+# mysql.root Action
+# mysql의 root password를 설정
+# issue: ubuntu에서 mysql 설치 직후에 연결하여 수행하면 에러 발생
         root:
           pwd: manager365
-        # mysql.databases Action
-        # mysql의 user와 database를 생성하고 grant를 설정
+# mysql.databases Action
+# mysql의 user와 database를 생성하고 grant를 설정
         databases:
           nest:
             user: root
             pwd: manager365
-        # master / slave 일경우, replication을 위한 user와 password를 설정
+# master / slave 일경우, replication을 위한 user와 password를 설정
         replication:
           id: repl
           pw: 1q2w3e4r

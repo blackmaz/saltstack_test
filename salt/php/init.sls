@@ -11,4 +11,6 @@ include:
 
 {{ service.service_restart(php.service) }}
 
+# restart webserver를 해줘야 정상 동작함
+# 어떤 web서버와 연관있는지 설정에서 표현해줘야 함
 
