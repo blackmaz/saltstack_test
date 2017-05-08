@@ -27,6 +27,7 @@ port={{ service_port }}
 {%- if cfg.bind_ip %}
 bind-address={{cfg.bind_ip}}
 {%- endif %}
+character_set_server=utf8
 
 [mysqld_safe]
 log-error={{ cfg.log_dir }}/mariadb.log
