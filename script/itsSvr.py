@@ -74,8 +74,8 @@ def printLog(ret):
             #print command_ret
             prt = {}
             for key, val in command_ret.items():
-                prt[val["__run_num__"]] = { "name": val.get("name","") , "comment": val.get("comment",""), "result": val.get("result","")}
-
+#                prt[val["__run_num__"]] = { "id": val.get("__id__","") , "comment": val.get("comment",""), "result": val.get("result","")}
+                prt[val["__run_num__"]] = "[ "+ str(val.get("result",""))+ " ] " + server + " | " + val.get("__id__","null") + " | " + val.get("comment","")
             for key, val in prt.items():
                 print val
 
@@ -126,8 +126,9 @@ for id, sw in sws.items():
 #    ret = local.cmd_iter(host_list, cmd_list, arg_list, expr_form='list',timeout=1800)
     ret = local.cmd(host_list, cmd_list, arg_list, expr_form='list',timeout=1800)
     print "===================================================="
-    printLog(ret)
 #    print ret
+    printLog(ret)
+
     #pprint.pprint(ret)
 #    for r in ret:
 #        print r[r.keys()[0]]['retcode']
