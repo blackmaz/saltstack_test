@@ -73,7 +73,7 @@ bind-address		= {{ cfg.bind_ip }}
 lower_case_table_names = 1
 collation-server = utf8_unicode_ci
 character-set-server = utf8
-skip-charater-set-client-handshake
+skip-character-set-client-handshake
 
 #
 # * Fine Tuning
