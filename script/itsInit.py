@@ -8,43 +8,7 @@ import salt.config
 import salt.wheel
 from operator import xor
 
-# pillar에 정의된 physicalServer 정보를 읽은 클래스
-class physicalServer:
-    pSvrDic = {}
-
-    def __init__(self, company_cd, system_cd):
-        # salt-call을 이용해서 local pillar를 조회하기 위해 설정한다.
-        __opts__ = salt.config.minion_config('/etc/salt/minion')
-        __opts__['file_client'] = 'local'
-        caller = salt.client.Caller(mopts=__opts__)
-        self.pSvrDic = caller.cmd('pillar.get', company_cd+':'+system_cd+':physical server')
-        if not (self.pSvrDic):
-            pSvrDic = {}
-
-    # 호스트 명의 리스트를 리턴
-    def listHostName(self):
-        ret = []
-        try:
-            for svr_id, svr in self.pSvrDic.items():
-                ret.append(svr.get("hostname"))
-            return ret
-        except:
-            return ret
-    # IP의 리스트를 리턴
-    def listIp(self):
-        ret = []
-        try:
-            for svr_id, svr in self.pSvrDic.items():
-                ret.append(svr.get("ip"))
-            return ret
-        except:
-            return ret
-    # IP로 호스트명을 찾아서 리턴(구현예정)
-    def lookupHost(self, ip):
-        return "null"
-    # 호스트명으로 IP를 찾아서 리턴(구현예정)
-    def lookupIp(self, hostname):
-        return "null"
+from itsSitePillar import physicalServer
 
 # salt ssh를 사용하기 위한 클래스
 class saltSSH:

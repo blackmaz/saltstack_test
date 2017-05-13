@@ -20,15 +20,25 @@ hwbc:
 # eip: 서버에 할당된 공인 ip address, 외부 서비스를 위해 사용
     physical server:
       server1:
+        hostname: hwbcdb01
+        ip: 192.168.10.83
+        eip: 192.168.10.83
+        user: root
+      server2:
+        hostname: hwbcwb01
+        ip: 192.168.10.84
+        eip: 192.168.10.84
+        user: root
+      server3:
         hostname: hwbcdb02
         ip: 192.168.10.93
         eip: 192.168.10.93
-        user: sungsic
-      server2:
+        user: root
+      server4:
         hostname: hwbcwb02
         ip: 192.168.10.94
         eip: 192.168.10.94
-        user: sungsic
+        user: root
 # Logical Server
 # ItsBox에서 PS와 S/W를 연결하기 위한 가상의 서버
 #
@@ -44,11 +54,13 @@ hwbc:
         vip: 192.168.10.73
         physical server:
           - server1
+          - server3
       web:
         hostname: hwbcwb
         vip: 192.168.10.74
         physical server:
           - server2
+          - server4
 # Software
 # 설치될 소프트웨어의 정보와 솔트스택 포뮬러에 입력으로 사용될 변수의 집합
 #
