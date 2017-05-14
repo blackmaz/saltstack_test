@@ -51,6 +51,18 @@ def itsSvr(company_cd, system_cd, swName):
     
     return True
 
+# 호스트 목록에 대해 pillar를 리프레시 한다.
+def itsRefPillar(hosts):
+    cmd = ['saltutil.refresh_pillar']
+    args = []
+    print str(hosts) + str(cmd) + str(args)
+
+    s = saltLocal()
+    ret = s.cmdList(hosts,cmd,args)
+    printLog(ret)
+    
+    return True
+
 swName=''
 company_cd=''
 system_cd=''
