@@ -8,6 +8,11 @@ s3_filedownload:
   cmd.run:
     - name: aws s3 cp s3://{{ s3.bucket }}/{{ s3.filepath }}/{{ s3.filename }} {{ tmp }}/{{ s3.filename }} --region={{ s3.region }}
 
+deploy-backup-war:
+  cmd.run:
+    - name: cp {{ tomcat.home }}/{{tomcat.appBase}}/{{ s3.filename }} {{ tomcat.home }}/{{tomcat.appBase}}/{{ s3.filename }}_`date +"%Y%m%d%H%M"`
+    - unless: test -f {{ tomcat.home }}/{{tomcat.appBase}}/{{ s3.filename }}
+
 deploy-sample-war:
   cmd.run:
     - name: cp {{ tmp }}/{{ s3.filename }} {{ tomcat.home }}/{{tomcat.appBase}}/{{ s3.filename }}
