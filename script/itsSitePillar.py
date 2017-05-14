@@ -33,6 +33,19 @@ class physicalServer:
             return ret
         except:
             return ret
+    # Roster 파일 형태의 Dic을 리턴
+    def listRoster(self):
+        ret = {}
+        for svr_id, svr in self.pSvrDic.items():
+            hostname = svr.get("hostname")
+            host = svr.get("ip")
+            user = svr.get("user","root")
+            if user != "root":
+                sudo = True
+            else:
+                sudo = False
+            ret[hostname] = {"host": host, "user": user, "sudo": sudo}
+        return ret
     # IP로 호스트명을 찾아서 리턴(구현예정)
     def lookupHostByIp(self, ip):
         return "null"

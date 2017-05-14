@@ -3,20 +3,75 @@
 import yaml
 import sys
 import getopt
-import salt.client
-import salt.config
 
-# salt-call을 이용해서 local pillar를 조회하기 위해 설정함
-__opts__ = salt.config.minion_config('/etc/salt/minion')
-__opts__['file_client'] = 'local'
+from itsSitePillar import physicalServer
 
-#site_cfg   = "/srv/pillar/site_ozr.sls"
 roster_file= "/etc/salt/roster"
-#company_cd = "hwbc"
-#system_cd  = "ozr"
-
 company_cd=''
 system_cd=''
+
+#yaml 파일을 읽어서 Dic 형태로 보관하고 있으면서, 항목을 추가하거나 업데이트 한다.
+class yamlFile:
+    yamlFileDic = ''
+    chgFile = False
+
+    # yaml 파일을 읽어서 Dic에 저장한다. 
+    def readFile(self, fileName):
+        try:
+            self.yamlFileDic = yaml.load(open(fileName, 'r'))
+            if self.yamlFileDic == None:
+                self.yamlFileDic = {}
+        except:
+            self.yamlFileDic = {}
+        self.chgFile = False
+
+    # 저장된 Dic을 출력한다. 
+    def printFile(self):
+        print self.yamlFileDic
+
+    # 저장된 Dic에 Dic을 추가한다. 이때 키가 중복되는 것은 건너뛴다. 
+    def addDic(self, addDicData):
+        for key, val in addDicData.items():
+            if key not in self.yamlFileDic:
+                self.yamlFileDic[key] = val
+                self.chgFile = True
+        return True
+
+    # 저장된 Dic에 Dic을 찾아서 업데이트 한다. 키가 없는 것은 건너뛴다. 
+    def updateDic(self):
+        return False
+
+    # 저장된 Dic에 Dic을 찾아서 삭제한다.
+    def deleteDic(self):
+        return False
+
+    # 저장된 Dic을 파일로 출력한다. 
+    def writeFile(self, fileName):
+        if self.chgFile:
+            with open(fileName, 'w') as outfile:
+                yaml.dump(self.yamlFileDic, outfile, default_flow_style=False)
+            self.chgFile = False
+
+    # 특정 파일에 오퍼레이션을 한다
+    def opFile(self, op, fileName, dicData):
+        if op == 'add':
+            self.readFile(fileName)        
+            self.addDic(dicData)
+            self.writeFile(roster_file)
+            return True
+        else:
+            return False
+
+def itsMkRoster(company_cd, system_cd):
+    # pillar에 정의된 physical server 정보를 읽어 온다.
+    p = physicalServer(company_cd, system_cd)
+
+    # physical server 정보를 roster 형태로 변환한다. 
+    r = p.listRoster()
+
+    # roster 파일을 읽어서 pillar에서 생성한 정보를 추가한다. 
+    y = yamlFile()
+    y.opFile('add', roster_file, r)
 
 # 옵션을 주지 않고 실행했을때 도움말 표시후 중단한다.
 def help():
@@ -56,60 +111,8 @@ def option():
 
     return
 
-option()
+if __name__ == "__main__":
+    option()
+    itsMkRoster(company_cd, system_cd)
 
-# 사이트 정의 파일을 읽어들인다.
-#try:
-#    f = open(site_cfg, 'r')
-#except IOError as err:
-#    print str(err)
-#    sys.exit(1)
-#
-#cfg = yaml.load(f)
-
-# salt roster 파일을 읽어들인다.
-try:
-    r = open(roster_file, 'r')
-except IOError as err:
-    print str(err)
-    sys.exit(1)
-
-roster_dic = yaml.load(r)
-
-# roster 파일에 아무런 내용이 없을 경우에는 변수를 dic으로 초기화 해준다.
-if roster_dic == None :
-  roster_dic = {}
-
-# 서버 정보를 읽어 roster 파일의 형태로 dic에 쓴다.
-#company = cfg.get(company_cd)
-#system  = company.get(system_cd)
-#add_servers = system.get("physical server")
-
-# pillar에 정의된 physical server 정보를 읽어 온다.
-caller = salt.client.Caller(mopts=__opts__)
-add_servers = caller.cmd('pillar.get',company_cd+':'+system_cd+':physical server')
-if add_servers == "":
-  print "Can not find physical server in pillar"
-  exit()
-
-# roster file에 등록되지 않은 server를 파일에 추가한다.
-# key가 중복되는 경우에는 추가하지 않는다.(덮어쓰거나 변경하지 않음)
-for svr_id, svr in add_servers.items():
-  hostname = svr.get("hostname")
-  if (hostname in roster_dic) == False:
-    ip = svr.get("ip")
-    user = svr.get("user","root")
-    if user != "root":
-      sudo = True
-    else:
-      sudo = False
-    roster_dic[hostname] = {"host": ip, "user": user , "sudo": sudo}
-  else:
-    print "opps!! This server is already registered. (" + hostname + ")"
-
-#print roster_dic
-
-# roster dic을 파일에 쓴다.
-with open(roster_file, 'w') as outfile:
-  yaml.dump(roster_dic, outfile, default_flow_style=False)
 
