@@ -5,12 +5,12 @@
 # Physical Server 절은 Cloud Provisioning의 결과를 전달 받음
 
 # 회사와 시스템의 구분
-# ItsBox를 여러개의 회사가 동시에 사용하고, 한 회사에 다수의 시스템이 존재할수 있으므로 
+# ItsBox를 여러개의 회사가 동시에 사용하고, 한 회사에 다수의 시스템이 존재할수 있으므로
 # 이런 구조에 대응하기 위해 company, system명을 제일 위에 둠
 hwbc:
   ozr:
 
-# Physical Server 
+# Physical Server
 # Cloud에 생성된 서버(인스턴스)의 정보
 #
 # Server식별자 : ItsBox UI에서 부여된 Physical Server의 Unique ID
@@ -86,46 +86,46 @@ hwbc:
       apache:
         deploy server: web
         vhosts:
-          5giraffe.com:  
-            ports: 
+          5giraffe.com:
+            ports:
               80:
-                use_redir: True 
-                redirect_from: / 
+                use_redir: True
+                redirect_from: /
                 redirect_to: https://www.ozr.kr/
-              443: 
-                use_redir: True 
-                redirect_from: / 
+              443:
+                use_redir: True
+                redirect_from: /
                 redirect_to: https://www.ozr.kr/
-            enable: True 
-          www.5giraffe.com:  
-            ports: 
-              443: 
-                use_redir: True 
-                redirect_from: / 
+            enable: True
+          www.5giraffe.com:
+            ports:
+              443:
+                use_redir: True
+                redirect_from: /
                 redirect_to: http://www.ozr.kr/
-            enable: True 
-          ozr.kr:  
-            ports: 
-              80: 
-                use_redir: True 
-                redirect_from: / 
+            enable: True
+          ozr.kr:
+            ports:
+              80:
+                use_redir: True
+                redirect_from: /
                 redirect_to: http://www.ozr.kr/
-              443: 
-                use_redir: True 
-                redirect_from: / 
+              443:
+                use_redir: True
+                redirect_from: /
                 redirect_to: http://www.ozr.kr/
-            enable: True 
-          www.ozr.kr:  
-            ports: 
-              80:  
+            enable: True
+          www.ozr.kr:
+            ports:
+              80:
                 server_admin: webmaster
                 doc_root: /www/nest/htdocs
                 log_root: /www/nest/logs/web
                 use_ssl: True
                 use_modjk: True
-                jk_pattern: 
+                jk_pattern:
                   /*.jsp: worker2
-                  /*.do: worker2 
+                  /*.do: worker2
                   /*.act: worker2
             enable: True
 # 특정 확장자는 proxy로 보내지 않는 설정 필요
@@ -135,19 +135,19 @@ hwbc:
 #              jsp: http://192.168.10.85:8080/
 #              do: http://192.168.10.85:8080/
         modjk:
-          worker: 
-            worker1: 
+          worker:
+            worker1:
               port: 7009
               host: 192.168.10.84
-            worker2: 
+            worker2:
               port: 8009
-              host: 192.168.10.84 
-          lb: 
-            loadbalancer: 
-              balance_workers: 
+              host: 192.168.10.84
+          lb:
+            loadbalancer:
+              balance_workers:
                 - worker1
-                - worker2 
-          list: 
+                - worker2
+          list:
             - worker1
             - worker2
         openssl: True
@@ -167,3 +167,19 @@ hwbc:
               docBase: ozr
             test:
               docBase: test
+    apps:
+      ozr:
+        source:
+          s3:
+            keyid: changeme-1
+            key: changeme-2
+            region: ap-northeast-2
+            bucket: itsbox
+            filepath: apps/ozr
+            filename: webapps_ozr.zip
+        target:
+          tomcat:
+            home: /www/nest/
+            appBase: webapps
+            docBase: ROOT
+        tmp: /tmp

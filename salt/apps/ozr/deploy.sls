@@ -1,8 +1,8 @@
 {%- set company = salt['pillar.get']('company','sample') %}
 {%- set system  = salt['pillar.get']('system','petclinic') %}
-{%- set s3      = salt['pillar.get'](company+':'+system+':apps:petclinic:source:s3') %}
-{%- set tmp     = salt['pillar.get'](company+':'+system+':apps:petclinic:tmp') %}
-{%- set tomcat  = salt['pillar.get'](company+':'+system+':apps:petclinic:target:tomcat') %}
+{%- set s3      = salt['pillar.get'](company+':'+system+':apps:ozr:source:s3') %}
+{%- set tmp     = salt['pillar.get'](company+':'+system+':apps:ozr:tmp') %}
+{%- set tomcat  = salt['pillar.get'](company+':'+system+':apps:ozr:target:tomcat') %}
 
 s3_filedownload:
   cmd.run:
