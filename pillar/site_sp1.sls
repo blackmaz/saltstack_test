@@ -16,12 +16,15 @@ sp1:
         ip: 192.168.10.13
         eip: 192.168.10.13
         user: ubuntu
+        role:
+          - mysql_master
       server4:
         hostname: sp1db02
         ip: 192.168.10.14
         eip: 192.168.10.14
         user: ubuntu
-
+        role:
+          - mysql_slave
     logical server:
       db:
         hostname: sp1db
@@ -41,6 +44,7 @@ sp1:
           - server2
     software:
       mysql:
+        install type: master/slave
         deploy server: db
         service_ip: server1
         service_port: 3306
@@ -82,19 +86,3 @@ sp1:
               docBase: petclinic
             test:
               docBase: test
-    apps:
-      petclinic:
-        source:
-          s3:
-            keyid: changeme-1
-            key: changeme-2
-            region: ap-northeast-2
-            bucket: itsbox
-            filepath: apps/petclinic
-            filename: petclinic.war
-        target:
-          tomcat:
-            home: /www/petclinic/apache-tomcat-7.0.77
-            appBase: webapps
-            docBase: petclinic
-        tmp: /tmp
