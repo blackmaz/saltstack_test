@@ -1,0 +1,62 @@
+define service{
+use 			generic-service
+host_name 		vm85.chossvm
+service_description 	CPU Load
+check_command 		check_nrpe!check_load
+}
+
+define service{
+use 			generic-service
+host_name 		vm85.chossvm
+service_description 	Total Processes
+check_command 		check_nrpe!check_total_procs
+}
+
+define service{
+use 			generic-service
+host_name 		vm85.chossvm
+service_description 	Current Users
+check_command 		check_nrpe!check_users
+}
+
+define service{
+use 			generic-service
+host_name 		vm84.chossvm
+service_description 	CPU Load
+check_command 		check_nrpe!check_load
+}
+
+define service{
+use 			generic-service
+host_name 		vm84.chossvm
+service_description 	Total Processes
+check_command 		check_nrpe!check_total_procs
+}
+
+define service{
+use 			generic-service
+host_name 		vm84.chossvm
+service_description 	Current Users
+check_command 		check_nrpe!check_users
+}
+
+define service{
+use 			generic-service
+host_name 		vm94.chossvm
+service_description 	CPU Load
+check_command 		check_nrpe!check_load
+}
+
+define service{
+use 			generic-service
+host_name 		vm94.chossvm
+service_description 	Total Processes
+check_command 		check_nrpe!check_total_procs
+}
+
+define service{
+use 			generic-service
+host_name 		vm94.chossvm
+service_description 	Current Users
+check_command 		check_nrpe!check_users
+}
