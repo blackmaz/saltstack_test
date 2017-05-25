@@ -38,7 +38,7 @@ def itsSvr(company_cd, system_cd, swName):
     try:
         hosts = sw.lookupHostBySwName(swName)
     except:
-        print "error"
+        print "error-lookupHostBySwName"
         return False
 
     cmd = ['state.apply']
@@ -48,7 +48,7 @@ def itsSvr(company_cd, system_cd, swName):
     s = saltLocal()
     ret = s.cmdList(hosts,cmd,args)
     printLog(ret)
-    
+
     return True
 
 # 호스트 목록에 대해 pillar를 리프레시 한다.
@@ -60,9 +60,10 @@ def itsRefPillar(hosts):
     s = saltLocal()
     ret = s.cmdList(hosts,cmd,args)
     printLog(ret)
-    
+
     return True
 
+input_file=''   #없으면 오류
 swName=''
 company_cd=''
 system_cd=''
@@ -111,4 +112,3 @@ def option():
 if __name__ == "__main__":
     option()
     itsSvr(company_cd, system_cd, swName)
-
