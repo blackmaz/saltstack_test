@@ -63,7 +63,6 @@ def itsRefPillar(hosts):
 
     return True
 
-input_file=''   #없으면 오류
 swName=''
 company_cd=''
 system_cd=''
