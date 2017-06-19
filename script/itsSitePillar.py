@@ -11,7 +11,7 @@ class physicalServer:
         __opts__ = salt.config.minion_config('/etc/salt/minion')
         __opts__['file_client'] = 'local'
         caller = salt.client.Caller(mopts=__opts__)
-        self.pSvrDic = caller.cmd('pillar.get', company_cd+':'+system_cd+':physical server')
+        self.pSvrDic = caller.cmd('pillar.get', company_cd+':'+system_cd+':physical_server')
         if not (self.pSvrDic):
             self.pSvrDic = {}
 
@@ -71,13 +71,13 @@ class logicalServer:
         __opts__ = salt.config.minion_config('/etc/salt/minion')
         __opts__['file_client'] = 'local'
         caller = salt.client.Caller(mopts=__opts__)
-        self.lSvrDic = caller.cmd('pillar.get', company_cd+':'+system_cd+':logical server')
+        self.lSvrDic = caller.cmd('pillar.get', company_cd+':'+system_cd+':logical_server')
         if not (self.lSvrDic):
             self.lSvrDic = {}
         self.p = physicalServer(company_cd, system_cd)
 
     def lookUpPSvr(self, lSvr):
-        return self.lSvrDic[lSvr]['physical server']
+        return self.lSvrDic[lSvr]['physical_server']
     def lookUpHost(self, lSvr):
         return self.ids2hosts(self.lookUpPSvr(lSvr))
     def ids2hosts(self, ids):
@@ -98,7 +98,7 @@ class software:
         self.l = logicalServer(company_cd, system_cd)
 
     def lookupLSvr(self, swName):
-        return self.sw[swName]['deploy server']
+        return self.sw[swName]['deploy_server']
 
     def lookupPSvrByLSvr(self, lSvr):
         return self.l.lookUpPSvr(lSvr)
@@ -111,4 +111,3 @@ if __name__ == "__main__":
     s = software('hwbc', 'ozr')
     print s.lookupPSvrByLSvr('db')
     print s.lookupHostBySwName('mysql')
-
