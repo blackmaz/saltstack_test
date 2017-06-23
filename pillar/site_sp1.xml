@@ -2,31 +2,33 @@
 	<mysql>
 		<install_type>master</install_type>
 		<deploy_server>db</deploy_server>
-        <service_ip>server1</service_ip>
-        <service_port>3306</service_port>
-        <root>
+    <service_ip>server1</service_ip>
+    <service_port>3306</service_port>
+    <root>
 			<pwd>petclinic</pwd>
 		</root>
 	</mysql>
-    <nginx>
-        <deploy_server>web</deploy_server>
-        <vhosts>
-			<www.petclinic.kr>
-				<ports>80</ports>
-				<server_admin>webmaster</server_admin>
-				<doc_root>/www/petc/htdocs</doc_root>
-				<log_root>/www/petc/logs/web</log_root>
-				<use_modproxy>True</use_modproxy>
-				<proxy_pattern>
-					<petclinic>http://localhost:8080</petclinic>
-				</proxy_pattern>
-				<enable>False</enable>
-			</www.petclinic.kr>
+  <nginx>
+      <deploy_server>web</deploy_server>
+      <vhosts>
+				<vhost>
+					<name>www.petclinic.kr</name>
+					<ports>80</ports>
+					<server_admin>webmaster</server_admin>
+					<doc_root>/www/petc/htdocs</doc_root>
+					<log_root>/www/petc/logs/web</log_root>
+					<use_modproxy>True</use_modproxy>
+					<proxy_pattern>
+						<petclinic>http://localhost:8080</petclinic>
+					</proxy_pattern>
+					<enable>False</enable>
+			</vhost>
 		</vhosts>
+  </nginx>
 	<tomcat>
 		<deploy_server>was</deploy_server>
-        <jdk>openjdk</jdk>
-        <install>
+    <jdk>openjdk</jdk>
+    <install>
 			<insthome>/www/petclinic</insthome>
 			<home>/www/petclinic/apache-tomcat-7.0.77</home>
 			<java_opts>-server -Xms512m -Xmx512m -XX:PermSize=128m -XX:MaxPermSize=128m -XX:+DisableExplicitGC</java_opts>
@@ -37,10 +39,12 @@
 			<appBase>webapps</appBase>
 			<name>petclinic</name>
 			<Contexts>
-				<root>
+				<Context>
+					<name>/</name>
 					<docBase>petclinic</docBase>
-				</root>
-				<test>
+				</Context>
+				<Context>
+					<name>test</name>
 					<docBase>test</docBase>
 				</test>
 		  </Contexts>
