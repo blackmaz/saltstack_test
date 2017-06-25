@@ -1,7 +1,6 @@
 {%- set company = salt['pillar.get']('company','default') %}
 {%- set system     = salt['pillar.get']('system','default') %}
 {%- from 'mysql/map.jinja' import mysql with context %}
-{%- set m = salt['pillar.get'](company+':'+system, {}) %}
 {%- set cfg = {
       'root_pwd'    : salt['pillar.get'](company+':'+system+':software:mysql:root:pwd','')
     , 'rid'         : salt['pillar.get'](company+':'+system+':software:mysql:replication:id','')
