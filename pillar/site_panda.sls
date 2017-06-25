@@ -3,29 +3,29 @@ panda:
   pandamall:
 
 # Physical Server 
-    physical server:
+    physical_server:
       server1:
-        hostname: pandadb02
-        ip: 192.168.10.83
-        eip: 192.168.10.83
-        user: sungsic
+        hostname: vm01
+        ip: 172.28.128.3
+        eip: 172.28.128.3
+        user: vagrant
       server2:
-        hostname: pandaweb02
-        ip: 192.168.10.84
-        eip: 192.168.10.84
-        user: sungsic
+        hostname: vm02
+        ip: 172.28.128.4
+        eip: 172.28.128.4
+        user: vagrant
 # Logical Server
-    logical server:
+    logical_server:
       db:
-        physical server:
+        physical_server:
           - server1
       web:
-        physical server:
+        physical_server:
           - server2
 # Software
     software:
       mysql:
-        deploy server: db
+        deploy_server: db
         root:
           pwd: 1q2w3e4r5t
         databases:
@@ -33,7 +33,7 @@ panda:
             user: pandamall
             pwd: 1qazxsw2
       apache:
-        deploy server: web
+        deploy_server: web
         vhosts:
           www.pandamall.kr:  
             ports: 
@@ -48,10 +48,8 @@ panda:
         openssl: False
         modphp: True
       php:
-        deploy server: web
+        deploy_server: web
         cfg:
           listen_addr: 127.0.0.1
           listen_port: 9000
           allowed_clients: any
-
-

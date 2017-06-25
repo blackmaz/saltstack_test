@@ -15,7 +15,7 @@ vhost_cfg_{{ id }}:
     - group: root
     - mode: 640
     - template: jinja
-{% for key, value in salt['pillar.get'](company+':'+system+':physical server',{}).items() %}
+{% for key, value in salt['pillar.get'](company+':'+system+':physical_server',{}).items() %}
 {% if salt['grains.get']('host') == value.get('hostname') %}
       listen_ip: {{ value.get('ip') }}
 {% endif %}
