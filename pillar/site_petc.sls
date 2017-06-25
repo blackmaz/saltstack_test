@@ -1,35 +1,35 @@
 sample:
   petclinic:
-    physical server:
+    physical_server:
       server1:
-        hostname: petdb02
-        ip: 192.168.10.83
-        eip: 192.168.10.83
-        user: sungsic
+        hostname: vm03
+        ip: 172.28.128.13
+        eip: 172.28.128.13
+        user: ubuntu
       server2:
-        hostname: petws02
-        ip: 192.168.10.84
-        eip: 192.168.10.84
-        user: sungsic
-    logical server:
+        hostname: vm04
+        ip: 172.28.128.14
+        eip: 172.28.128.14
+        user: ubuntu
+    logical_server:
       db:
-        physical server:
+        physical_server:
           - server1
       web:
-        physical server:
+        physical_server:
           - server2
       was:
-        physical server:
+        physical_server:
           - server2
     software:
       mysql:
-        deploy server: db
+        deploy_server: db
         service_ip: server1
         service_port: 3306
         root:
           pwd: petclinic
       nginx:
-        deploy server: web
+        deploy_server: web
         vhosts:
           www.petclinic.kr:
             ports:
@@ -46,9 +46,9 @@ sample:
 #                 jsp : http://localhost:8080
 # enable: False --> 컨피그 파일을 생성하지만 실제 적용은 하지 않음(default)
 # enable: True  --> 컨피그 파일을 생성하고 web 서버에 적용함
-            enable: False
+            enable: True
       tomcat:
-        deploy server: was
+        deploy_server: was
         jdk: openjdk
         install:
           insthome: /www/petclinic
