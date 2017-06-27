@@ -1,6 +1,6 @@
 sp1:
   petclinic:
-    physical server:
+    physical_server:
       server1:
         hostname: sp1web01
         ip: 192.168.10.11
@@ -25,33 +25,33 @@ sp1:
         user: ubuntu
         role:
           - mysql_slave
-    logical server:
+    logical_server:
       db:
         hostname: sp1db
-        physical server:
+        physical_server:
           - server3
           - server4
       web:
         hostname: sp1was
         vip: 192.168.10.15
-        physical server:
+        physical_server:
           - server1
           - server2
       was:
         hostname: sp1was
-        physical server:
+        physical_server:
           - server1
           - server2
     software:
       mysql:
-        install type: master/slave
-        deploy server: db
+        install_type: master/slave
+        deploy_server: db
         service_ip: server1
         service_port: 3306
         root:
           pwd: petclinic
       nginx:
-        deploy server: web
+        deploy_server: web
         vhosts:
           www.petclinic.kr:
             ports:
@@ -70,7 +70,7 @@ sp1:
 # enable: True  --> 컨피그 파일을 생성하고 web 서버에 적용함
             enable: False
       tomcat:
-        deploy server: was
+        deploy_server: was
         jdk: openjdk
         install:
           insthome: /www/petclinic
