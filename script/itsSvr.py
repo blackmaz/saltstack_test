@@ -47,6 +47,7 @@ def itsSvr(company_cd, system_cd, swName):
 
     s = saltLocal()
     ret = s.cmdList(hosts,cmd,args)
+
     printLog(ret)
 
     return True
