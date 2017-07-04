@@ -5,12 +5,12 @@
 # Physical Server 절은 Cloud Provisioning의 결과를 전달 받음
 
 # 회사와 시스템의 구분
-# ItsBox를 여러개의 회사가 동시에 사용하고, 한 회사에 다수의 시스템이 존재할수 있으므로 
+# ItsBox를 여러개의 회사가 동시에 사용하고, 한 회사에 다수의 시스템이 존재할수 있으므로
 # 이런 구조에 대응하기 위해 company, system명을 제일 위에 둠
 hwbc:
   replica:
 
-# Physical Server 
+# Physical Server
 # Cloud에 생성된 서버(인스턴스)의 정보
 #
 # Server식별자 : ItsBox UI에서 부여된 Physical Server의 Unique ID
@@ -18,20 +18,20 @@ hwbc:
 # hostname: 서버에 할당된 hostname
 # ip: 서버에 할당된 사설 ip address, vpc 내부의 서버간 통신에 사용
 # eip: 서버에 할당된 공인 ip address, 외부 서비스를 위해 사용
-    physical server:
+    physical_server:
       server1:
         hostname: wkr3
         ip: 192.168.10.93
         eip: 192.168.10.93
         user: sungsic
-        role: 
+        role:
           - mysql_master
       server2:
         hostname: wkr4
         ip: 192.168.10.94
         eip: 192.168.10.94
         user: sungsic
-        role: 
+        role:
           - mysql_slave
 # Logical Server
 # ItsBox에서 PS와 S/W를 연결하기 위한 가상의 서버
@@ -42,9 +42,9 @@ hwbc:
 #                            여러개의 PS가 입력될수 있고, 한개의 PS는 여러개의 LS의 멤버가 될 수 있음
 # 기타 : Master-Slave 구조의 서버 그룹에서 Master ip의 정보와 같이 여러 물리 서버를 묶었을때
 # 그것을 대표하는 속성은 앞으로함 이 부분에 추가 정의
-    logical server:
+    logical_server:
       db:
-        physical server:
+        physical_server:
           - server1
           - server2
 # Software
@@ -58,12 +58,12 @@ hwbc:
 #   리스트로 logical server가 들어와도 문제 없는지 확인 필요
     software:
       mysql:
-        install type: master/slave
-        deploy server: db
+        install_type: master/slave
+        deploy_server: db
 # A 미사용
         service_ip: ip
         service_port: 3306
-#        data_dir: 
+#        data_dir:
 #        log_dir:
 # mysql.root Action
 # mysql의 root password를 설정
