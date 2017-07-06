@@ -1,0 +1,4 @@
+export JAVA_HOME=/home/ubuntu/jdk1.8.0_131
+export HADOOP_HOME=/home/ubuntu/hadoop-2.8.0
+export PATH=$JAVA_HOME/bin:$HADOOP_HOME/bin:$HADOOP_HOME/sbin:$PATH
+export CLASS_PATH=$JAVA_HOME/lib:$CLASS_PATH

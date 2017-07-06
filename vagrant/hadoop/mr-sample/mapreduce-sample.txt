@@ -1,0 +1,5 @@
+hadoop@ubuntu:/usr/local/hadoop$ 
+
+
+
+hadoop jar ./share/hadoop/tools/lib/hadoop-streaming-2.8.0.jar -file /vagrant/mapper.py -mapper /vagrant/mapper.py -file /vagrant/reducer.py -reducer /vagrant/reducer.py -input /input/4300-0.txt -output  output/4300-0.txt 

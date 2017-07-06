@@ -92,3 +92,5 @@ ENV/
 .tar
 .tar.gz
 /.project
+
+.vagrant/

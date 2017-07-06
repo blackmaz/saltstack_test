@@ -5,15 +5,15 @@ panda:
 # Physical Server 
     physical_server:
       server1:
-        hostname: vm01
+        hostname: pandadb
         ip: 172.28.128.3
         eip: 172.28.128.3
-        user: vagrant
+        user: ubuntu
       server2:
-        hostname: vm02
+        hostname: pandaweb
         ip: 172.28.128.4
         eip: 172.28.128.4
-        user: vagrant
+        user: ubuntu
 # Logical Server
     logical_server:
       db:

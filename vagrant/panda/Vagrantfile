@@ -1,0 +1,28 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+require 'yaml'
+
+configs = YAML.load_file("../../pillar/site_panda.sls")
+psrv = configs['panda']['pandamall']['physical_server']
+
+Vagrant.configure(2) do |config|
+  psrv.each do |key,val|
+
+    script = <<SCRIPT
+      sudo apt-get update
+      cat /vagrant/id_rsa.pub >> /home/"#{val['user']}"/.ssh/authorized_keys
+SCRIPT
+
+    config.vm.define val['hostname'] do |cfg|
+      cfg.vm.box = "ubuntu/xenial64"
+      cfg.vm.provider "virtualbox" do |vb|
+        vb.memory = "2048"
+      end
+      cfg.vm.network "private_network", ip: "#{val['ip']}"
+      cfg.vm.host_name = val['hostname']
+      #cfg.vm.synced_folder ".", "/vagrant", disabled: true
+      cfg.vm.provision :shell, :inline => script
+    end
+  end
+end

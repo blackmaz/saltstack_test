@@ -2,12 +2,12 @@ sample:
   petclinic:
     physical_server:
       server1:
-        hostname: vm03
+        hostname: petdb
         ip: 172.28.128.13
         eip: 172.28.128.13
         user: ubuntu
       server2:
-        hostname: vm04
+        hostname: petwas
         ip: 172.28.128.14
         eip: 172.28.128.14
         user: ubuntu
