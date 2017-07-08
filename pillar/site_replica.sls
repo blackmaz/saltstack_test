@@ -25,9 +25,10 @@ hwbc:
       mysql:
         install_type: replication
         deploy_server: db
+# A 미사용
         service_ip: ip
         service_port: 3306
-#        data_dir: 
+#        data_dir:
 #        log_dir:
         root:
           pwd: manager365
