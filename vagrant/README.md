@@ -25,7 +25,7 @@ Vagrant는 단일 워크 플로에서 가상 컴퓨터 환경을 만들고 관�
   * 종속성 설치가 빠져있거나 오래된 버전의 Vagrant가 설치됨
   * 권장하지 않음
 
-* 설치 순서
+* 소스를 받아서 설치할 경우 (권장하지 않음)
   * Ruby(2.2 이상) 설치
   * Vagrant 설치
 <pre><code>
@@ -34,32 +34,53 @@ $ cd /path/to/your/vagrant/clone
 $ bundle install
 </code></pre>
 
-* 간단한 사용법
-
 # 용어
-* 공급자 : 가상 환경을 말함 (VirtualBox와 VM Ware, EC2 등)
-* 프로비저닝 : 미들웨어의 구성과 설치를 하는 도구 도구 (쉘 스크립트, Chef (chef-solo, chef-client) Puppet 등)
-* Box 파일 : 가상 머신 시작시 기반이되는 이미지 파일, 가상 환경을 만드는데 필요함, 일반적으로 OS 이미지에서 작성
+* Providers: 가상 환경을 말함 (VirtualBox와 VM Ware, EC2 등)
+* Provisioning: 미들웨어의 구성과 설치를 하는 도구 도구 (쉘 스크립트, Chef (chef-solo, chef-client) Puppet 등)
+* Boxes: 가상 머신 시작시 기반이되는 이미지 파일, 가상 환경을 만드는데 필요함, 일반적으로 OS 이미지에서 작성
+* Vagrantfile: 
 
-# 설치
-
-# Vagrant 를 사용할 때 최소한의 설정 조건
- - Vagrant 사용자
- - sshd 시작
- - 프로비저닝 도구
- - Vagrantfile
-가상 머신의 사양이나 프로비저닝 도구의 지정 등 가상 머신의 구성
-Ruby 기반으로 작성
-기본적으로 파일과 프로비저닝 도구 설정로 2개의 파일이 있으면 동일한 환경을 구성할 수 있음
-
-# 기본 명령어
-버전 확인
+# 기본 명령
 <pre><code>
-$ vagrant -v
+# 가상머신 시작시 기반이 되는 이미지 파일(box)를 다운로드 받음
+# https://app.vagrantup.com/boxes/search 에서 box이미지를 검색하여 사용이 가능함
+$ vagrant box add NAME
+# 내 서버에 존재하는 Box의 목록
+$ vagrant box list
+# 내 서버에 존재하는 Box 중 버전이 변경된 경우 새로운 버전으로 갱신
+$ vagrant box update
+# 새로운 버전으로 갱신된 box 중 이전 버전을 모두 삭제
+$ vagrant box prune
+# box 제거
+$ vagrant box remove
+# Vagrantfile을 자동으로 생성, box의 이름을 지정하면 해당 box를 지정하여 파일이 생성됨
+$ vagrant init [box-name]
+# Vagrnatfile을 이용하여 가상머신을 부팅
+$ vagrant up
+# 가상머신 재부팅
+$ vagrant reload
+# 가상머신 재부팅 + 프로비저닝 재실행 
+# 프로비저닝은 최초 up할때 한번만 수행되며, 그 이후에 프로비저닝 쉘이 변경되어 재수행 할 경우에는 명시적으로 이 명령을 이용해야 함
+$ vagrant provision
+# 가상머신에 ssh 접속, 여러 서버를 구성했을 경우에는 접속대상 서버의 명을 지정해줌
+$ vagrant ssh [name]
+# 가상머신 종료, OS의 작업 상태는 유지되면서 서버 shutdown한것과 동일함
+$ vagrant halt
+# 가상머신 제거, OS를 날려버리는 것
+$ vagrant destroy
+# 상태 보기
+$ vagrant status
+$ vagrant global-status
+# 프로비저닝까지 된 가상머신을 box로 생성함
+$ vagrant package
+</code></pre>
 
-도움말
+# 공유 디렉토리
 
-$ vagrant -h
+# 네트워크 설정
+
+# 여러 서버 동시에 구성하기
+
 
 가상 환경의 기반이되는 Box 파일을 준비
 다음의 명령으로 box를 받아서 로컬에 추가한다.
