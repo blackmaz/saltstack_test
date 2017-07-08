@@ -15,5 +15,4 @@ include:
 startup-tomcat:
   cmd.run:
     - name: {{ t.install.insthome }}/{{ tomcat.dirname }}/bin/startup.sh
-    - unless: test -n `ps -ef | grep java | awk '{print $2}'`
-
+    - unless: test -n `ps -ef | grep java | grep -v grep | awk '{print $2}'`
