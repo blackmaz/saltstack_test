@@ -1,7 +1,32 @@
 Vagrant + Vbox를 이용한 Test환경 구성
 =====================================
+saltstack를 테스트하기 위해서 Virtualbox와 vagrant를 이용하여 테스트 환경을 구성하는 방법을 설명하고 있다.
+vagrant는 가상머신의 생성과 삭제 등을 코드로 구현 할수 있도록 해주고, 여러 종류의 하이퍼바이저와 클라우드 프로바이더를 지원하지만 로컬 PC에서 테스트하기에 가장 적합한 virtualbox를 선택했다.(무료, 테스트케이스가 가장 많이 통용됨)
+
 VBox
 -------
+VirtualBox는 엔터프라이즈와 가정용으로 사용할 수 있는 x86 및 AMD64/인텔64 가상화 제품이다. 엔터프라이즈 고객을 위해 풍부한 기능과 고성능을 제공하고 GNU General Public License (GPL) 버전 2의 조건에 따라 오픈 소스 소프트웨어로 자유롭게 사용할 수 있는 유일한 전문 솔루션이다.
+VBox는 윈도우, 리눅스, 맥, 솔라리스를 호스트 OS로 사용할 수 있으며, 많은 수의 Guest OS를 지원하고 있다. https://www.virtualbox.org/wiki/Guest_OSes
+
+# 설치
+다운로드 페이지 https://www.virtualbox.org/wiki/Downloads 에서 플랫폼에 맞는 설치 패키지를 다운받을수 있으며, 각 OS별 표준 설치 절차에 따라 설치한다. 
+
+# 네트워킹
+* NAT
+  * VBox의 기본 네트워크 모드
+  * 별다른 설정 없이 가상머신이 외부 네트워크로 엑세스
+  * 가상시스템 간 통신이 불가능하며, 외부 네트워크에서 가상머신으로 접속이 불가능함 
+* NAT Network
+  * 가정용 라우터(공유기)와 비슷한 방식으로 작동
+  * 네트워크를 그룹화 하여 외부에서 가상머신으로 접속은 방지하지만 내부 시스템간 통신이 가능함
+* Brideged Networking
+  * 호스트 OS의 네트워크 장치와 직접 연결
+  * 가상머신은 실제 호스트 OS와 연결된 물리적인 네트워크와 직접 연결된 것 처럼 보임
+  * 호스트 OS에 Bridge된 NIC와 동일한 IP 대역을 사용
+* Internal Networking
+  * 호스트 OS내부의 다른 가상머신과 통신이 가능한 네트워크
+* Host-only Networking
+  * 호스트 OS에 가상의 네트워크 인터페이스를 생성하고 호스트와 가상머신간 통신을 지원
 
 
 vagrant
@@ -60,7 +85,8 @@ $ vagrant up
 # 가상머신 재부팅
 $ vagrant reload
 # 가상머신 재부팅 + 프로비저닝 재실행 
-# 프로비저닝은 최초 up할때 한번만 수행되며, 그 이후에 프로비저닝 쉘이 변경되어 재수행 할 경우에는 명시적으로 이 명령을 이용해야 함
+# 프로비저닝은 최초 up할때 한번만 수행되며, 
+# 그 이후에 프로비저닝 쉘이 변경되어 재수행 할 경우에는 명시적으로 이 명령을 이용해야 함
 $ vagrant provision
 # 가상머신에 ssh 접속, 여러 서버를 구성했을 경우에는 접속대상 서버의 명을 지정해줌
 $ vagrant ssh [name]
@@ -81,83 +107,3 @@ $ vagrant package
 
 # 여러 서버 동시에 구성하기
 
-
-가상 환경의 기반이되는 Box 파일을 준비
-다음의 명령으로 box를 받아서 로컬에 추가한다.
-Vagrantfile의 config.vm.box 디렉토리로 지정
-
-$ vagrant box add NAME URL
-$ vagrant box add centos64 http://developer.nrel.gov/downloads/vagrant-boxes/CentOS-6.4-x86_64-v20130427.box
-
-Box 목록 확인
-
-$ vagrant box list
-'''
-# Vagrantfile
-'''
-$ vagrant init BOX_NAME
-$ vagrant init centos64
-'''
-Vagrantfile 설정
-'''
-$ Vagrant.configure (VAGRANTFILE_API_VERSION) do | config |
-     config.vm.box = "centos64"
-
-     // 네트워크 설정
-     config.vm.network : private_network, ip : "192.168.33.10"
-
-     // GUI 모드의 설정
-     config.vm.provider : virtualbox do | vb |
-         vb.gui = true
-     end
-end
-'''
-호스트 온리 네트워크
-호스트 OS와 게스트 OS간에서만 통신을 할 수있는 네트워크.
-예시에서는 게스트에 192.168.33.10 (선택)을 할당
-가상 머신의 시작
-
-Vagrantfile과 같은 디렉토리에서 실행
-$ vagrant up
-
-GUI 모드라면 VirtualBox를 시작할 때 id / pass를 모두 "vagrant" 로그인
-ssh에 로그인
-가상 머신에서 sshd가 시작되어 있어야 사용할 수 있음
-$ vagrant ssh
-
-일반적인으로 ssh를 사용해서 vagrant를 사용한다.
-$ ssh 192.168.33.10
-
-호스트에서 ssh 접속을 위한 설정방법
-# ~/.ssh/config
-Host 192.168.33. *
-IdentityFile ~ / .vagrant.d / insecure_private_key
-User vagrant
-
-가상 서버에 ssh 설정을 이용해서 로그인 할 수있다.
-$ vagrant ssh-config --host melody
-$ vagrant ssh-config --host melody >> ~ / .ssh / config
-
-$ ssh melody
-
-ssh 로그인시 설정 확인
-$ vagrant ssh-config
-
-status 확인
-$ vagrant status
-Current machine states :
-default running (virtualbox)
-(가상 머신 이름) (status)
-
-가상 머신의 정지
-$ vagrant halt
-
-가상 컴퓨터 삭제
-$ vagrant destroy
-
-가상 머신 내보내기
-$ vagrant package
-
-package.box라는 Box 파일이 생성
-이것을 배포 받는 쪽에서는 다음을 입력한다.
-$ vagrant box add new_box package.box
