@@ -79,7 +79,7 @@ salt_master:
 salt_returner:
   file.line:
     - name: /etc/salt/minion
-    - content: "return: mysql,syslog"
+    - content: "return: syslog"
     - mode: ensure
     - after: '#  - slack'
 

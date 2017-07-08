@@ -5,7 +5,7 @@ panda:
 # Physical Server 
     physical_server:
       server1:
-        hostname: pandadb
+        hostname: pandadb1
         ip: 172.28.128.3
         eip: 172.28.128.3
         user: ubuntu
@@ -14,11 +14,17 @@ panda:
         ip: 172.28.128.4
         eip: 172.28.128.4
         user: ubuntu
+      server3:
+        hostname: pandadb2
+        ip: 172.28.128.5
+        eip: 172.28.128.5
+        user: ubuntu
 # Logical Server
     logical_server:
       db:
         physical_server:
           - server1
+          - server3
       web:
         physical_server:
           - server2

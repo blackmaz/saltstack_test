@@ -1,30 +1,3 @@
-{%- set cfg = {
-      'data_dir': salt['pillar.get'](company+':'+system+':software:mysql:data_dir','/var/lib/mysql')
-    , 'log_dir' : salt['pillar.get'](company+':'+system+':software:mysql:log_dir','/var/log/mysql')
-    , 'service_ip' : salt['pillar.get'](company+':'+system+':software:mysql:service_ip',None)
-    , 'bind_ip' : None
-}
-%}
-{%- set m = salt['pillar.get'](company+':'+system, {}) %}
-{# 서버 아이피 #}
-{%- if cfg.service_ip %}
-{%- for psvr, info in m.get("physical server", {}).items() %}
-{%- if salt['grains.get']('host') == info.hostname %}
-{% do cfg.update({'bind_ip': info.get(cfg.service_ip,None) }) %}
-{%- endif %}
-{%- endfor %}
-{%- endif %}
-{%- set svr_id = { 'curr':2, 'tmp': 0 } %}
-{#  unique server id 만들기 #}
-{%- set m = salt['pillar.get'](company+':'+system, {}) %}
-{%- set svr_id = { 'id':0, 'tmp':2 } %}
-{%- for psvr, info in m.get("physical server", {}).items() %}
-{%- if salt['grains.get']('host') == info.hostname %}
-{% do svr_id.update({'id': svr_id.tmp }) %}
-{% else %}
-{% do svr_id.update({'tmp': svr_id.tmp + 1}) %}
-{%- endif %}
-{%- endfor %}
 #
 # The MySQL database server configuration file.
 #
@@ -58,7 +31,7 @@ nice		= 0
 user		= mysql
 pid-file	= /var/run/mysqld/mysqld.pid
 socket		= /var/run/mysqld/mysqld.sock
-port		= {{ service_port }}
+port		= {{ cfg.port }}
 basedir		= /usr
 datadir		= {{ cfg.data_dir }}
 tmpdir		= /tmp
@@ -114,7 +87,7 @@ log_error = {{ cfg.log_dir }}/error.log
 # The following can be used as easy to replay backup logs or for replication.
 # note: if you are setting up a replication slave, see README.Debian about
 #       other settings you may need to change.
-server-id		= {{ svr_id.id }}
+server-id		= {{ cfg.svr_id }}
 log_bin			= {{ cfg.log_dir }}/mysql-bin.log
 expire_logs_days	= 10
 max_binlog_size   = 100M

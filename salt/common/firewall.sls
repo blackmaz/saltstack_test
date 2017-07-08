@@ -1,21 +1,23 @@
 # firewall.sls
-{% macro firewall_open(port, prot='tcp', require='') -%}
-{%- if grains['os_family'] == 'RedHat' -%}
+{%- macro firewall_open(port, prot='tcp', require='') %}
+{%- if grains['os_family'] == 'RedHat' %}
+{%-   if salt['service.status']('firewalld') %}
 firewall-add-port-{{port}}:
   module.run:
     - name: firewalld.add_port
     - zone: public
     - port: {{port}}/{{prot}}
-  {% if require != '' %}
+{%-     if require != '' %}
     - require:
       - {{require}}
-  {% endif %}
+{%-     endif %}
 firewall-reload-{{port}}:
   module.run:
     - name: firewalld.reload_rules
     - require:
       - module: firewall-add-port-{{port}}
-{%- elif grains['os'] == 'Debian' -%}
+{%-   endif %}
+{%- elif grains['os'] == 'Debian' %}
 iptables-add-port-{{port}}:
   iptables.append:
     - table: filter
@@ -27,23 +29,23 @@ iptables-add-port-{{port}}:
     - proto: {{prot}}
     - sport: 1025:65535
     - save: True
-  {% if require != '' %}
+{%-   if require != '' %}
     - require:
       - {{require}}
-  {% endif %}
-{%- endif -%}
+{%-   endif %}
+{%- endif %}
 {%- endmacro %}
 
-{% macro firewall_open_service(service_nm, require='') -%}
-{%- if grains['os_family'] == 'RedHat' -%}
+{%- macro firewall_open_service(service_nm, require='') %}
+{%- if grains['os_family'] == 'RedHat' %}
 firewall-add-server-{{service_nm}}:
   module.run:
     - name: firewalld.add_service
     - zone: public
     - service: {{service_nm}}
-  {% if require != '' %}
+{%-   if require != '' %}
     - require:
 	  - {{require}}
-  {% endif %}
-{%- endif -%}
+{%-   endif %}
+{%- endif %}
 {%- endmacro %}

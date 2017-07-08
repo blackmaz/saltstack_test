@@ -10,7 +10,6 @@ Vagrant.configure("2") do |config|
   psrv.each do |key,val|
 
     script = <<SCRIPT
-      sudo apt-get update
       cat /vagrant/id_rsa.pub >> /home/"#{val['user']}"/.ssh/authorized_keys
 SCRIPT
 

@@ -3,23 +3,28 @@
 
 require 'yaml'
 
-configs = YAML.load_file("../../pillar/site_panda.sls")
-psrv = configs['panda']['pandamall']['physical_server']
+configs = YAML.load_file("../../pillar/site_replica.sls")
+psrv = configs['hwbc']['replica']['physical_server']
 
 Vagrant.configure(2) do |config|
   psrv.each do |key,val|
 
     script = <<SCRIPT
+      sudo useradd "#{val['user']}"
+      sudo mkdir /home/"#{val['user']}"/.ssh
+      sudo chown "#{val['user']}":"#{val['user']}" /home/"#{val['user']}"/.ssh
       cat /vagrant/id_rsa.pub >> /home/"#{val['user']}"/.ssh/authorized_keys
+      sudo echo "#{val['user']}    ALL=NOPASSWD: ALL" >> /etc/sudoers
 SCRIPT
 
     config.vm.define val['hostname'] do |cfg|
-      cfg.vm.box = "ubuntu/xenial64"
+      #cfg.vm.box = "ubuntu/xenial64"
+      cfg.vm.box = "centos/7"
       cfg.vm.provider "virtualbox" do |vb|
         vb.memory = "2048"
       end
       cfg.vm.network "private_network", ip: "#{val['ip']}"
-      cfg.vm.host_name = val['hostname']
+      cfg.vm.host_name = "#{val['hostname']}"
       #cfg.vm.synced_folder ".", "/vagrant", disabled: true
       cfg.vm.provision :shell, :inline => script
     end
