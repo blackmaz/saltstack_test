@@ -1,5 +1,5 @@
-Test Env
-=========
+Vagrant + Vbox를 이용한 Test환경 구성
+=====================================
 VBox
 -------
 
@@ -15,10 +15,27 @@ Vagrant는 단일 워크 플로에서 가상 컴퓨터 환경을 만들고 관�
   * Docker
   
 # 설치
-다운로드 페이지 및 플랫폼에 해당하는 설치 프로그램 또는 패키지를 얻을. 운영 체제에 맞는 표준 절차를 사용하여 패키지를 설치하십시오.
+다운로드 페이지 https://www.vagrantup.com/downloads.html 에서 플랫폼에 해당하는 설치 프로그램 또는 패키지를 얻을수 있으며, 운영 체제에 맞는 표준 절차를 사용하여 패키지를 설치한다. 설치 프로그램이 vagrant를 시스템 경로에 자동으로 추가하여 터미널에서 명령을 사용할 수 있다. 명령을 찾을수 없을 경우 시스템에서 로그 아웃하고 다시 로그인한다.(Windows의 경우가 특히 필요할 수 있음)
 
-설치 프로그램이 vagrant시스템 경로에 자동으로 추가 되어 터미널에서 사용할 수 있습니다. 발견되지 않으면 시스템에서 로그 아웃하고 다시 로그인하십시오 (Windows의 경우가 특히 필요할 수 있음).
- 
+* Rubygem으로 설치
+  * 1.0.x는 지원하였으나 더이상 지원하지 않음
+  * 새로운 버전을 설치하기 전에 Rubygem으로 설치한 버전을 삭제할 것
+
+* Repositoy를 이용한 설치
+  * 종속성 설치가 빠져있거나 오래된 버전의 Vagrant가 설치됨
+  * 권장하지 않음
+
+* 설치 순서
+  * Ruby(2.2 이상) 설치
+  * Vagrant 설치
+<pre><code>
+$ git clone https://github.com/mitchellh/vagrant.git
+$ cd /path/to/your/vagrant/clone
+$ bundle install
+</code></pre>
+
+* 간단한 사용법
+
 # 용어
 * 공급자 : 가상 환경을 말함 (VirtualBox와 VM Ware, EC2 등)
 * 프로비저닝 : 미들웨어의 구성과 설치를 하는 도구 도구 (쉘 스크립트, Chef (chef-solo, chef-client) Puppet 등)
