@@ -46,7 +46,7 @@
 				<Context>
 					<name>test</name>
 					<docBase>test</docBase>
-				</test>
+				</Context>
 		  </Contexts>
 		</server>
 	</tomcat>
