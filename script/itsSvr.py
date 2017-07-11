@@ -32,7 +32,7 @@ def printLog(ret):
             for key, val in prt.items():
                 print val
 
-def itsSvr(company_cd, system_cd, swName):
+def itsSvr(company_cd, system_cd, swName, type="install"):
     runtime_pillar='pillar={"company": "'+company_cd+'", "system": "'+system_cd+'"}'
     sw = software(company_cd, system_cd)
     try:
@@ -42,6 +42,8 @@ def itsSvr(company_cd, system_cd, swName):
         return False
 
     cmd = ['state.apply']
+    if (type == "uninstall" ):
+        swName = swName + ".uninstall"
     args = [[swName, runtime_pillar]]
     print str(hosts) + str(cmd) + str(args)
 
@@ -65,18 +67,20 @@ def itsRefPillar(hosts):
     return True
 
 swName=''
+type='install'
 company_cd=''
 system_cd=''
 
 # 옵션을 주지 않고 실행했을때 도움말 표시후 중단한다.
 def help():
-    print "itsSvr.py -n swname -c company -s system"
+    print "itsSvr.py -n swname -c company -s system [-t install|uninstall]"
     return
 
 # 옵션을 파싱해서 글로벌 변수에 담는다.
 def option():
     # 함수 밖에서 참조 할수있도록 글로벌로 선언해 준다.
     global swName
+    global type
     global company_cd
     global system_cd
 
@@ -84,7 +88,7 @@ def option():
         help()
         sys.exit(1)
     try:
-        options, args =  getopt.getopt(sys.argv[1:], "n:c:s:h", ["swname=","company=","system=","help"])
+        options, args =  getopt.getopt(sys.argv[1:], "n:t:c:s:h", ["swname=","type=","company=","system=","help"])
     except getopt.GetoptError as err:
         print str(err)
         help()
@@ -94,6 +98,8 @@ def option():
     for opt, arg in options:
         if (opt == '-n') or (opt == '--swname'):
             swName = arg
+        elif (opt == '-t') or (opt == '--type'):
+            type = arg
         elif (opt == '-c') or (opt == '--company'):
             company_cd = arg
         elif (opt == '-s') or (opt == '--system'):
@@ -111,4 +117,8 @@ def option():
 
 if __name__ == "__main__":
     option()
-    itsSvr(company_cd, system_cd, swName)
+    #print swName
+    #print company_cd
+    #print system_cd
+    #print type
+    itsSvr(company_cd, system_cd, swName, type)
