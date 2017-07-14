@@ -2,43 +2,43 @@ sp1:
   petclinic:
     physical_server:
       server1:
-        hostname: sp1web01
-        ip: 192.168.10.11
-        eip: 192.168.10.11
-        user: ubuntu
+        hostname: de2o_1
+        ip: 47.52.69.255
+        eip: 47.52.69.255
+        user: root
       server2:
-        hostname: sp1web02
-        ip: 192.168.10.12
-        eip: 192.168.10.12
-        user: ubuntu
+        hostname: de2o_2
+        ip: 47.52.21.80
+        eip: 47.52.21.80
+        user: root
       server3:
-        hostname: sp1db01
-        ip: 192.168.10.13
-        eip: 192.168.10.13
-        user: ubuntu
+        hostname: de2o_3
+        ip: 47.91.159.62
+        eip: 47.91.159.62
+        user: root
         role:
           - mysql_master
       server4:
-        hostname: sp1db02
-        ip: 192.168.10.14
-        eip: 192.168.10.14
-        user: ubuntu
+        hostname: de2o_4
+        ip: 47.91.159.30
+        eip: 47.91.159.30
+        user: root
         role:
           - mysql_slave
     logical_server:
       db:
-        hostname: sp1db
+        hostname: de2o_db
         physical_server:
           - server3
           - server4
       web:
-        hostname: sp1was
-        vip: 192.168.10.15
+        hostname: de2o_web
+        vip: 47.52.55.60
         physical_server:
           - server1
           - server2
       was:
-        hostname: sp1was
+        hostname: de2o_was
         physical_server:
           - server1
           - server2
