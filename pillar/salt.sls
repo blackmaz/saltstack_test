@@ -1,4 +1,4 @@
 salt_master:
-  ip_address: 172.28.128.1
+  ip_address: 183.98.3.78
 #  url: de2o.iptime.org
 
