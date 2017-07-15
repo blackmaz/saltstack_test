@@ -18,6 +18,7 @@ sp1:
         user: root
         role:
           - mysql_master
+        role:
       server4:
         hostname: de2o_4
         ip: 47.91.159.30
@@ -27,29 +28,33 @@ sp1:
           - mysql_slave
     logical_server:
       db:
-        hostname: de2o_db
         physical_server:
           - server3
           - server4
       web:
-        hostname: de2o_web
         vip: 47.52.55.60
         physical_server:
           - server1
           - server2
       was:
-        hostname: de2o_was
         physical_server:
           - server1
           - server2
     software:
       mysql:
-        install_type: master/slave
+        install_type: replication
         deploy_server: db
-        service_ip: server1
+        service_ip: 47.91.159.62
         service_port: 3306
         root:
           pwd: petclinic
+        databases:
+          petclinic:
+            user: root
+            pwd: petclinic
+        replication:
+          id: repl
+          pw: 1q2w3e4r
       nginx:
         deploy_server: web
         vhosts:
@@ -60,14 +65,8 @@ sp1:
                 doc_root: /www/petc/htdocs
                 log_root: /www/petc/logs/web
                 use_modproxy: True
-# 패턴에 맞는 url을 백엔드로 보내려면 proxy_pattern을 사용
-# 확장자를 백엔드로 보내려면 proxy_ext를 사용
                 proxy_pattern:
                   /petclinic : http://localhost:8080
-#               proxy_ext:
-#                 jsp : http://localhost:8080
-# enable: False --> 컨피그 파일을 생성하지만 실제 적용은 하지 않음(default)
-# enable: True  --> 컨피그 파일을 생성하고 web 서버에 적용함
             enable: False
       tomcat:
         deploy_server: was
