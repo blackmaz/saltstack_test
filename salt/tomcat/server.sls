@@ -21,10 +21,10 @@ sever-xml:
 
 # 설정된 Context의 Docbase 만들기
 # Docbase가 생성되어 있지 않으면 tomcat 부팅시 에러가 발생함
-{%- for id, context in t.server.Contexts.items() %}
+{%- for id, context in t.server.contexts.items() %}
 docbase-{{ id }}:
   file.directory:
-    - name: {{ t.install.insthome }}/{{ tomcat.dirname }}/{{ t.server.appBase }}/{{ context.docBase }}
+    - name: {{ t.install.insthome }}/{{ tomcat.dirname }}/{{ t.server.app_base }}/{{ context.doc_base }}
     - user: root
     - group: root
     - dir_mode: 755
@@ -32,8 +32,8 @@ docbase-{{ id }}:
 # 동작여부를 확인하기 위한 sample page... 나중에는 삭제해도 됨
 sample-{{ id }}:
   file.append:
-    - name: {{ t.install.insthome }}/{{ tomcat.dirname }}/{{ t.server.appBase }}/{{ context.docBase }}/sample.jsp
-    - text: This is sample page of {{ context.docBase }} 
+    - name: {{ t.install.insthome }}/{{ tomcat.dirname }}/{{ t.server.app_base }}/{{ context.doc_base }}/sample.jsp
+    - text: This is sample page of {{ context.doc_base }}
 
 {%- endfor %}
 
@@ -41,4 +41,3 @@ sample-{{ id }}:
 # 사용여부에 따라서 선택적으로 사용할 수 있도록 변경하자
 {{ firewall.firewall_open(t.server.http_port) }}
 {{ firewall.firewall_open(t.server.ajp_port) }}
-

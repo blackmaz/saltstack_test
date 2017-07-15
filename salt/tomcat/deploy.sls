@@ -15,7 +15,7 @@ unpack-app-tar-{{ id }}:
 
 copy-app-{{ id }}:
   file.copy:
-    - name: {{ home }}/{{ server.appBase }}/{{ Context.docBase }}
+    - name: {{ home }}/{{ server.app_base }}/{{ Context.doc_base }}
     - source: /tmp/{{ Context.filename }}
     - require:
       - archive: unpack-app-tar-{{ id }}
@@ -26,7 +26,7 @@ copy-app-{{ id }}:
 system-properties-{{ id }}:
   file.managed:
     - source: salt://tomcat/conf/system.properties_ozr
-    - name: {{ home }}/{{ server.appBase }}/{{ Context.docBase }}/WEB-INF/classes/config/properties/system.properties
+    - name: {{ home }}/{{ server.app_base }}/{{ Context.doc_base }}/WEB-INF/classes/config/properties/system.properties
     - user: root
     - group: root
     - mode: '740'
@@ -42,7 +42,7 @@ system-properties-{{ id }}:
 quartz-properties-{{ id }}:
   file.managed:
     - source: salt://tomcat/conf/quartz.properties_ozr
-    - name: {{ home }}/{{ server.appBase }}/{{ Context.docBase }}/WEB-INF/classes/config/properties/quartz.properties
+    - name: {{ home }}/{{ server.app_base }}/{{ Context.doc_base }}/WEB-INF/classes/config/properties/quartz.properties
     - user: root
     - group: root
     - mode: '740'
@@ -57,7 +57,7 @@ quartz-properties-{{ id }}:
 datasource-{{ id }}:
   file.managed:
     - source: salt://tomcat/conf/context-datasource.xml_ozr
-    - name: {{ home }}/{{ server.appBase }}/{{ Context.docBase }}/WEB-INF/classes/config/spring/context-datasource.xml
+    - name: {{ home }}/{{ server.app_base }}/{{ Context.doc_base }}/WEB-INF/classes/config/spring/context-datasource.xml
     - user: root
     - group: root
     - mode: '740'
@@ -70,8 +70,3 @@ datasource-{{ id }}:
       - file: copy-app-{{ id }}
 
 {% endfor %}
-
-
-
-
-
