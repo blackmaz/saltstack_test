@@ -27,10 +27,6 @@ sp1:
         role:
           - mysql_slave
     logical_server:
-      db:
-        physical_server:
-          - server3
-          - server4
       web:
         vip: 47.52.55.60
         physical_server:
@@ -40,6 +36,10 @@ sp1:
         physical_server:
           - server1
           - server2
+      db:
+        physical_server:
+          - server3
+          - server4
     software:
       mysql:
         install_type: replication
@@ -78,10 +78,10 @@ sp1:
         server:
           http_port: 8080
           ajp_port: 8009
-          appBase: webapps
+          app_base: webapps
           name: petclinic
-          Contexts:
+          contexts:
             /:
-              docBase: petclinic
+              doc_base: petclinic
             test:
-              docBase: test
+              doc_base: test
