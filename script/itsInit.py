@@ -72,7 +72,7 @@ class saltSSH:
             elif r[host]['retcode'] == 255:
                 pingResult['Die'].append(host)
 
-#        print pingResult
+        print pingResult
         return pingResult
 
     # 호스트의 응답여부를 확인한다.
@@ -180,6 +180,7 @@ def itsInit(company_cd, system_cd, authType, authStr):
     print "Get physical server list" + str(phySvrs)
     # physical server가 정의되어 있지 않으면 중단한다.
     if not(phySvrs):
+        print "[Error] Undefine physical server list"
         return False
 
     # 대상 host에 ping을 해보고, python이 설치되지 않은 host를 찾아서 raw 명령으로 python을 설치한다.
@@ -194,6 +195,7 @@ def itsInit(company_cd, system_cd, authType, authStr):
 
     # physical server가 모두 응답하지 않으면 중단한다. 
     if not(s.checkHosts(phySvrs, authType, authStr)):
+        print "[Error] Not Respose physical server"
         return False
 
     # minion 설치 전에 동일한 id로 등록된 key가 있는지 확인하고, 중복되면 삭제한다.
