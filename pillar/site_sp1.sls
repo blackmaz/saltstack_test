@@ -2,54 +2,59 @@ sp1:
   petclinic:
     physical_server:
       server1:
-        hostname: sp1web01
-        ip: 192.168.10.11
-        eip: 192.168.10.11
-        user: ubuntu
+        hostname: de2o_1
+        ip: 47.52.69.255
+        eip: 47.52.69.255
+        user: root
       server2:
-        hostname: sp1web02
-        ip: 192.168.10.12
-        eip: 192.168.10.12
-        user: ubuntu
+        hostname: de2o_2
+        ip: 47.52.21.80
+        eip: 47.52.21.80
+        user: root
       server3:
-        hostname: sp1db01
-        ip: 192.168.10.13
-        eip: 192.168.10.13
-        user: ubuntu
+        hostname: de2o_3
+        ip: 47.91.159.62
+        eip: 47.91.159.62
+        user: root
         role:
           - mysql_master
+        role:
       server4:
-        hostname: sp1db02
-        ip: 192.168.10.14
-        eip: 192.168.10.14
-        user: ubuntu
+        hostname: de2o_4
+        ip: 47.91.159.30
+        eip: 47.91.159.30
+        user: root
         role:
           - mysql_slave
     logical_server:
-      db:
-        hostname: sp1db
-        physical_server:
-          - server3
-          - server4
       web:
-        hostname: sp1was
-        vip: 192.168.10.15
+        vip: 47.52.55.60
         physical_server:
           - server1
           - server2
       was:
-        hostname: sp1was
         physical_server:
           - server1
           - server2
+      db:
+        physical_server:
+          - server3
+          - server4
     software:
       mysql:
-        install_type: master/slave
+        install_type: replication
         deploy_server: db
-        service_ip: server1
+        service_ip: 47.91.159.62
         service_port: 3306
         root:
           pwd: petclinic
+        databases:
+          petclinic:
+            user: root
+            pwd: petclinic
+        replication:
+          id: repl
+          pw: 1q2w3e4r
       nginx:
         deploy_server: web
         vhosts:
@@ -60,14 +65,8 @@ sp1:
                 doc_root: /www/petc/htdocs
                 log_root: /www/petc/logs/web
                 use_modproxy: True
-# 패턴에 맞는 url을 백엔드로 보내려면 proxy_pattern을 사용
-# 확장자를 백엔드로 보내려면 proxy_ext를 사용
                 proxy_pattern:
                   /petclinic : http://localhost:8080
-#               proxy_ext:
-#                 jsp : http://localhost:8080
-# enable: False --> 컨피그 파일을 생성하지만 실제 적용은 하지 않음(default)
-# enable: True  --> 컨피그 파일을 생성하고 web 서버에 적용함
             enable: False
       tomcat:
         deploy_server: was
@@ -79,10 +78,10 @@ sp1:
         server:
           http_port: 8080
           ajp_port: 8009
-          appBase: webapps
+          app_base: webapps
           name: petclinic
-          Contexts:
+          contexts:
             /:
-              docBase: petclinic
+              doc_base: petclinic
             test:
-              docBase: test
+              doc_base: test

@@ -1,6 +1,32 @@
+<logical_servers>
+    <logical_server>
+        <name>web</name>
+        <servers>
+            <server>server1</server>
+            <server>server2</server>
+        </servers>
+        <loadbalancer_name>de2o_slb_name</loadbalancer_name>
+    </logical_server>
+    <logical_server>
+        <name>was</name>
+        <servers>
+            <server>server1</server>
+            <server>server2</server>
+        </servers>
+        <loadbalancer_name>de2o_slb_name2</loadbalancer_name>
+    </logical_server>
+    <logical_server>
+        <name>db</name>
+        <servers>
+            <server>server3</server>
+            <server>server4</server>
+        </servers>
+        <loadbalancer_name>de2o_slb_name3</loadbalancer_name>
+    </logical_server>
+</logical_servers>
 <software>
 	<mysql>
-		<install_type>master</install_type>
+		<install_type>replication</install_type>
 		<deploy_server>db</deploy_server>
     <service_ip>server1</service_ip>
     <service_port>3306</service_port>
@@ -14,14 +40,17 @@
 				<vhost>
 					<name>www.petclinic.kr</name>
 					<ports>80</ports>
-					<server_admin>webmaster</server_admin>
+				  <server_admin>webmaster</server_admin>
 					<doc_root>/www/petc/htdocs</doc_root>
 					<log_root>/www/petc/logs/web</log_root>
-					<use_modproxy>True</use_modproxy>
-					<proxy_pattern>
-						<petclinic>http://localhost:8080</petclinic>
-					</proxy_pattern>
-					<enable>False</enable>
+					<use_modproxy>true</use_modproxy>
+          <proxy_patterns>
+            <proxy_pattern>
+              <name>/petclinic</name>
+              <pattern>http://localhost:8080</pattern>
+            </proxy_pattern>
+					</proxy_patterns>
+					<enable>false</enable>
 			</vhost>
 		</vhosts>
   </nginx>
@@ -36,18 +65,18 @@
 		<server>
 			<http_port>8080</http_port>
 			<ajp_port>8009</ajp_port>
-			<appBase>webapps</appBase>
+			<app_base>webapps</app_base>
 			<name>petclinic</name>
-			<Contexts>
-				<Context>
+			<contexts>
+				<context>
 					<name>/</name>
-					<docBase>petclinic</docBase>
-				</Context>
-				<Context>
+					<doc_base>petclinic</doc_base>
+				</context>
+				<context>
 					<name>test</name>
-					<docBase>test</docBase>
-				</test>
-		  </Contexts>
+					<doc_base>test</doc_base>
+				</context>
+		  </contexts>
 		</server>
 	</tomcat>
 </software>
