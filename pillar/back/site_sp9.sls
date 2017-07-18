@@ -1,49 +1,24 @@
-sp1:
+sp9:
   petclinic:
     physical_server:
       server1:
-        hostname: de2o_1
-        ip: 47.52.69.255
-        eip: 47.52.69.255
+        hostname: de2o_test
+        ip: 47.90.101.201
+        eip: 47.90.101.201
         user: root
-      server2:
-        hostname: de2o_2
-        ip: 47.52.21.80
-        eip: 47.52.21.80
-        user: root
-      server3:
-        hostname: de2o_3
-        ip: 47.91.159.62
-        eip: 47.91.159.62
-        user: root
-        role:
-          - mysql_master
-      server4:
-        hostname: de2o_4
-        ip: 47.91.159.30
-        eip: 47.91.159.30
-        user: root
-        role:
-          - mysql_slave
     logical_server:
       web:
-        vip: 47.52.55.60
+        vip: 47.52.91.229
         physical_server:
           - server1
-          - server2
       was:
         physical_server:
           - server1
-          - server2
-      db:
-        physical_server:
-          - server3
-          - server4
     software:
       mysql:
         install_type: replication
         deploy_server: db
-        service_ip: 47.91.159.62
+        service_ip: 47.90.101.201
         service_port: 3306
         root:
           pwd: petclinic
