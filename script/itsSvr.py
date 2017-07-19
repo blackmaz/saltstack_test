@@ -23,16 +23,17 @@ class saltLocal():
 # 로그 출력 함수
 def printLog(ret):
     for server, server_ret in ret.items():
-        #print server
         for command, command_ret in server_ret.items():
-            #print command_ret
-            prt = {}
-            for key, val in command_ret.items():
-                prt[val["__run_num__"]] = "[ "+ str(val.get("result",""))+ " ] " + server + " | " + val.get("__id__","null") + " | " + val.get("comment","")
-            for key, val in prt.items():
-                print val
+            if type(command_ret) != dict:
+                print " ".join(command_ret)
+            else:
+                prt = {}
+                for key, val in command_ret.items():
+                    prt[val["__run_num__"]] = "[ "+ str(val.get("result",""))+ " ] " + server + " | " + val.get("__id__","null") + " | " + val.get("comment","")
+                for key, val in prt.items():
+                    print val
 
-def itsSvr(company_cd, system_cd, swName, type="install"):
+def itsSvr(company_cd, system_cd, swName, insatll_type="install"):
     runtime_pillar='pillar={"company": "'+company_cd+'", "system": "'+system_cd+'"}'
     sw = software(company_cd, system_cd)
     try:
@@ -42,7 +43,7 @@ def itsSvr(company_cd, system_cd, swName, type="install"):
         return False
 
     cmd = ['state.apply']
-    if (type == "uninstall" ):
+    if (install_type == "uninstall" ):
         swName = swName + ".uninstall"
     args = [[swName, runtime_pillar]]
     print str(hosts) + str(cmd) + str(args)
@@ -67,7 +68,7 @@ def itsRefPillar(hosts):
     return True
 
 swName=''
-type='install'
+install_type='install'
 company_cd=''
 system_cd=''
 
@@ -80,7 +81,7 @@ def help():
 def option():
     # 함수 밖에서 참조 할수있도록 글로벌로 선언해 준다.
     global swName
-    global type
+    global install_type
     global company_cd
     global system_cd
 
@@ -88,7 +89,7 @@ def option():
         help()
         sys.exit(1)
     try:
-        options, args =  getopt.getopt(sys.argv[1:], "n:t:c:s:h", ["swname=","type=","company=","system=","help"])
+        options, args =  getopt.getopt(sys.argv[1:], "n:t:c:s:h", ["swname=","install-type=","company=","system=","help"])
     except getopt.GetoptError as err:
         print str(err)
         help()
@@ -98,8 +99,8 @@ def option():
     for opt, arg in options:
         if (opt == '-n') or (opt == '--swname'):
             swName = arg
-        elif (opt == '-t') or (opt == '--type'):
-            type = arg
+        elif (opt == '-t') or (opt == '--install-type'):
+            install_type = arg
         elif (opt == '-c') or (opt == '--company'):
             company_cd = arg
         elif (opt == '-s') or (opt == '--system'):
@@ -120,5 +121,5 @@ if __name__ == "__main__":
     #print swName
     #print company_cd
     #print system_cd
-    #print type
-    itsSvr(company_cd, system_cd, swName, type)
+    #print install_type
+    itsSvr(company_cd, system_cd, swName, install_type)
