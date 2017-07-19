@@ -18,6 +18,7 @@ sp1:
         user: root
         role:
           - mysql_master
+        role:
       server4:
         hostname: de2o_4
         ip: 47.91.159.30
