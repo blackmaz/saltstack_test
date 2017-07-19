@@ -5,7 +5,7 @@
             <server>server1</server>
             <server>server2</server>
         </servers>
-        <loadbalancer_name>de2o_slb_name</loadbalancer_name>
+        <vip>47.52.55.60</vip>
     </logical_server>
     <logical_server>
         <name>was</name>
@@ -13,7 +13,6 @@
             <server>server1</server>
             <server>server2</server>
         </servers>
-        <loadbalancer_name>de2o_slb_name2</loadbalancer_name>
     </logical_server>
     <logical_server>
         <name>db</name>
@@ -21,7 +20,7 @@
             <server>server3</server>
             <server>server4</server>
         </servers>
-        <loadbalancer_name>de2o_slb_name3</loadbalancer_name>
+        <vip>47.52.55.61</vip>
     </logical_server>
 </logical_servers>
 <software>

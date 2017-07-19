@@ -36,6 +36,7 @@ sp1:
           - server1
           - server2
       db:
+        vip: 47.52.55.61
         physical_server:
           - server3
           - server4
