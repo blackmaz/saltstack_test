@@ -3,6 +3,7 @@
 {%- set company = salt['pillar.get']('company','default') %}
 {%- set system  = salt['pillar.get']('system','default') %}
 {%- set t       = salt['pillar.get'](company+':'+system+':software:tomcat',{}) %}
+{%- set ctx = salt['pillar.get'](company+':'+system+':software:tomcat:contexts',{}) %}
 {%- from 'tomcat/map.jinja' import tomcat with context %}
 
 # 설정파일 업데이트
@@ -21,7 +22,8 @@ sever-xml:
 
 # 설정된 Context의 Docbase 만들기
 # Docbase가 생성되어 있지 않으면 tomcat 부팅시 에러가 발생함
-{%- for id, context in t.server.contexts.items() %}
+# t에서 items추출시 에러발생하여 ctx추가
+{%- for id, context in ctx.items() %}
 docbase-{{ id }}:
   file.directory:
     - name: {{ t.install.insthome }}/{{ tomcat.dirname }}/{{ t.server.app_base }}/{{ context.doc_base }}
