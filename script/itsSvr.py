@@ -15,13 +15,19 @@ class saltLocal():
         self.localClient = salt.client.LocalClient()
 
     def cmdList(self, hosts, cmd, args):
-        return self.localClient.cmd(hosts, cmd, args, expr_form='list',timeout=1800)
+        # deprecation warning으로 수정-expr_form->tgt_type
+        #return self.localClient.cmd(hosts, cmd, args, expr_form='list',timeout=1800)
+        return self.localClient.cmd(hosts, cmd, args, tgt_type='list',timeout=1800)
 
     def cmdSvr(self, host, cmd, args):
         return self.localClient.cmd(host, cmd, args, timeout=1800)
 
 # 로그 출력 함수
 def printLog(ret):
+
+    # for debug
+    print ret
+
     for server, server_ret in ret.items():
         for command, command_ret in server_ret.items():
             if type(command_ret) != dict:
