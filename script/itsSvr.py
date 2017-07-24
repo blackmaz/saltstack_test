@@ -33,7 +33,7 @@ def printLog(ret):
                 for key, val in prt.items():
                     print val
 
-def itsSvr(company_cd, system_cd, swName, insatll_type="install"):
+def itsSvr(company_cd, system_cd, swName, install_type="install"):
     runtime_pillar='pillar={"company": "'+company_cd+'", "system": "'+system_cd+'"}'
     sw = software(company_cd, system_cd)
     try:
