@@ -17,6 +17,7 @@ class saltLocal():
     def cmdList(self, hosts, cmd, args):
         # deprecation warning으로 수정-expr_form->tgt_type
         #return self.localClient.cmd(hosts, cmd, args, expr_form='list',timeout=1800)
+        #print "=======>debug:" + str(hosts) + "|||" + str(cmd) +"|||"+ str(args)
         return self.localClient.cmd(hosts, cmd, args, tgt_type='list',timeout=1800)
 
     def cmdSvr(self, host, cmd, args):
@@ -24,9 +25,6 @@ class saltLocal():
 
 # 로그 출력 함수
 def printLog(ret):
-
-    # for debug
-    print ret
 
     for server, server_ret in ret.items():
         for command, command_ret in server_ret.items():
