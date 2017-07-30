@@ -4,7 +4,7 @@
 {%- set selinux_enabled = salt['grains.get']('selinux:enabled') %}
 
 nginx:
-  pkg.removed:
-    - name: {{ nginx.server }}
+  service.dead:
+    - enable: true
   pkg.purged:
     - name: {{ nginx.server }}
