@@ -26,7 +26,7 @@ class saltLocal():
 # 로그 출력 함수
 def printLog(ret):
     #print ret
-    i#return
+    #return
 
     for server, server_ret in ret.items():
         for command, command_ret in server_ret.items():
