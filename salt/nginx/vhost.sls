@@ -8,7 +8,7 @@
 {%- for id, vhost in vhosts.items() %}
 vhost_cfg_{{ id }}:
   file.managed:
-    - name: {{ nginx.siteavailable }}/{{ id }}.conf
+    - name: {{ nginx.siteenabled }}/{{ id }}.conf
     - source: salt://nginx/conf/_vhost.conf
     - user: root
     - group: root
@@ -71,7 +71,7 @@ site_enalbe_{{ id }}:
     - require:
       - file: vhost_cfg_{{ id }}
 {%- else %}
-site_disalbe_{{ id }}:
+site_disable_{{ id }}:
   module.run:
     - name: file.remove
     - path: {{ nginx.siteenabled }}/{{ id }}.conf
