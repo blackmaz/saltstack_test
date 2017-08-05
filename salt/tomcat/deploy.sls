@@ -9,7 +9,7 @@
 
 shutdown-tomcat-fordeploy:
   cmd.run:
-    - name: {{ t.install.home }}/bin/shutdown.sh;sleep 5
+    - name: kill $(ps -ef | grep java | grep -v grep | awk '{print $2}');sleep 5
 
 start-tomcat-fordeploy:
   cmd.run:
@@ -25,7 +25,7 @@ start-tomcat-fordeploy:
 
 shutdown-tomcat-afterdeploy:
   cmd.run:
-    - name: {{ t.install.home }}/bin/shutdown.sh;sleep 5
+    - name: kill $(ps -ef | grep java | grep -v grep | awk '{print $2}');sleep 5
 
 start-tomcat-afterdeploy:
   cmd.run:
