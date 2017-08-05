@@ -59,8 +59,8 @@ p33:
           ajp_port: 8009
           app_base: webapps
           name: petclinic
+          deploy_file: petclinic.war
+          datasource_ip: 192.168.10.12
           contexts:
-            /:
+            /petclinic:
               doc_base: petclinic
-            test:
-              doc_base: test
