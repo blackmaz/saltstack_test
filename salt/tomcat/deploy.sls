@@ -1,72 +1,34 @@
 ###################################
-# ozr web application deploy sls
+# web application deploy sls
 ###################################
-{%- set server = salt['pillar.get']('software:tomcat:server',{}) %}
-{%- set home   = salt['pillar.get']('software:tomcat:install:home','') %}
+{%- set company = salt['pillar.get']('company','default') %}
+{%- set system  = salt['pillar.get']('system','default') %}
+{%- set t          = salt['pillar.get'](company+':'+system+':software:tomcat') %}
 
-{%- for id, Context in server.Contexts.items() %}
-# 다운로드 및 압축 해제
-unpack-app-tar-{{ id }}:
-  archive.extracted:
-    - name: /tmp
-    - source:  {{ Context.downloadurl }}
-    - archive_format: tar
-    - tar_option: zxvf
+{%- if t.server.deploy_file == 'petclinic.war' %}
 
-copy-app-{{ id }}:
-  file.copy:
-    - name: {{ home }}/{{ server.app_base }}/{{ Context.doc_base }}
-    - source: /tmp/{{ Context.filename }}
-    - require:
-      - archive: unpack-app-tar-{{ id }}
+shutdown-tomcat-fordeploy:
+  cmd.run:
+    - name: kill $(ps -ef | grep java | grep -v grep | awk '{print $2}');sleep 5
 
-# application 설정파일 업데이트
-# system.properties
-# service_ip는 외부에 열려있는 서비스IP를 의미
-system-properties-{{ id }}:
+start-tomcat-fordeploy:
+  cmd.run:
+    - name: {{ t.install.home }}/bin/startup.sh;sleep 5
+
+{{ t.install.home }}/{{ t.server.app_base }}/petclinic/WEB-INF/classes/spring/data-access.properties:
   file.managed:
-    - source: salt://tomcat/conf/system.properties_ozr
-    - name: {{ home }}/{{ server.app_base }}/{{ Context.doc_base }}/WEB-INF/classes/config/properties/system.properties
-    - user: root
-    - group: root
-    - mode: '740'
+    - source: salt://apps/petclinic/conf/_data-access.properties
+    - mode: 755
     - template: jinja
     - context:
-        tomcat_home: {{ home }}
-        service_ip: {{ Context.service_ip }}
-    - require:
-      - file: copy-app-{{ id }}
+        datasource_ip: {{ t.server.datasource_ip }}
 
-# quartz.properties
-# db 접속 설정이 존재
-quartz-properties-{{ id }}:
-  file.managed:
-    - source: salt://tomcat/conf/quartz.properties_ozr
-    - name: {{ home }}/{{ server.app_base }}/{{ Context.doc_base }}/WEB-INF/classes/config/properties/quartz.properties
-    - user: root
-    - group: root
-    - mode: '740'
-    - template: jinja
-    - context:
-        datasource_url: {{ Context.use_database.software }}
-        db_user: {{ Context.db_user }}
-        db_password: {{ Context.db_password }}
-    - require:
-      - file: copy-app-{{ id }}
+shutdown-tomcat-afterdeploy:
+  cmd.run:
+    - name: kill $(ps -ef | grep java | grep -v grep | awk '{print $2}');sleep 5
 
-datasource-{{ id }}:
-  file.managed:
-    - source: salt://tomcat/conf/context-datasource.xml_ozr
-    - name: {{ home }}/{{ server.app_base }}/{{ Context.doc_base }}/WEB-INF/classes/config/spring/context-datasource.xml
-    - user: root
-    - group: root
-    - mode: '740'
-    - template: jinja
-    - context:
-        datasource_url: {{ Context.datasource_url }}
-        db_user: {{ Context.db_user }}
-        db_password: {{ Context.db_password }}
-    - require:
-      - file: copy-app-{{ id }}
+start-tomcat-afterdeploy:
+  cmd.run:
+    - name: {{ t.install.home }}/bin/startup.sh;sleep 5
 
-{% endfor %}
+{%- endif %}

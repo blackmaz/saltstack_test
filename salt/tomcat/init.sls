@@ -10,6 +10,9 @@ include:
 {%- if t.get('server','null') != 'null' %}
   - tomcat.server
 {%- endif %}
+{%- if t.server.deploy_file != '' %}
+  - tomcat.deploy
+{%- endif %}
 
 # 바로 서비스 시작
 startup-tomcat:

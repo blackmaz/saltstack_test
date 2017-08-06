@@ -2,23 +2,28 @@ p33:
   petclinic:
     physical_server:
       server1:
-        hostname: de2oall_test
-        ip: 47.90.101.2
-        eip: 47.90.101.2
-        user: root
+        hostname: test1
+        ip: 192.168.10.10
+        eip: 192.168.10.10
+        user: vagrant 
+      server2:
+        hostname: test2
+        ip: 192.168.10.12
+        eip: 192.168.10.12
+        user: vagrant 
     logical_server:
       web:
-        vip: 47.52.91.229
+        vip: 192.168.10.12
         physical_server:
-          - server1
+          - server2
       was:
         physical_server:
-          - server1
+          - server2
     software:
       mysql:
         install_type: replication
         deploy_server: db
-        service_ip: 47.90.101.201
+        service_ip: 192.168.10.12
         service_port: 3306
         root:
           pwd: petclinic
@@ -32,16 +37,16 @@ p33:
       nginx:
         deploy_server: web
         vhosts:
-          www.petclinic.kr:
+          localhost:
             ports:
               80:
                 server_admin: webmaster
-                doc_root: /www/petc/htdocs
-                log_root: /www/petc/logs/web
+                doc_root: /www/petclinic/htdocs
+                log_root: /www/petclinic/logs/web
                 use_modproxy: True
                 proxy_pattern:
-                  /petclinic : http://localhost:8080
-            enable: False
+                  /petclinic : http://localhost:8080/petclinic
+            enable: true
       tomcat:
         deploy_server: was
         jdk: openjdk
@@ -54,8 +59,8 @@ p33:
           ajp_port: 8009
           app_base: webapps
           name: petclinic
+          deploy_file: petclinic.war
+          datasource_ip: 192.168.10.12
           contexts:
-            /:
+            /petclinic:
               doc_base: petclinic
-            test:
-              doc_base: test
