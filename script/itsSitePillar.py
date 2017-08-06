@@ -55,6 +55,9 @@ class physicalServer:
     # 서버id로 호스트명을 찾아서 리턴
     def lookupHostById(self, id):
         return self.pSvrDic[id]['hostname']
+    # 서버id로 롤 리스트를 리턴
+    def lookupRoleById(self, id):
+        return self.pSvrDic[id]['role']
     # 서버id 리스트를 받아서 호스트명 리스트를 리턴
     def lookupHostsByIds(self, ids):
         ret = []
@@ -108,6 +111,8 @@ class software:
         return self.l.lookUpHost(self.lookupLSvr(swName))
 
 if __name__ == "__main__":
-    s = software('hwbc', 'ozr')
+    s = software('hwbc', 'replica')
+    p = physicalServer('hwbc', 'replica')
     print s.lookupPSvrByLSvr('db')
     print s.lookupHostBySwName('mysql')
+    print p.lookupRoleById('server1')
