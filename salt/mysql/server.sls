@@ -35,13 +35,15 @@
 
 # From my.cnf.CentOS
 # Bind IP Setup
-{%- if cfg.iptype %}
-{%-   for psvr, info in psvrs.items() %}
-{%-     if salt['grains.get']('host') == info.hostname %}
-{%-       do cfg.update({'bind_ip': info.get(cfg.iptype,None) }) %}
-{%-     endif %}
-{%-   endfor %}
-{%- endif %}
+#{%- if cfg.iptype %}
+#{%-   for psvr, info in psvrs.items() %}
+#{%-     if salt['grains.get']('host') == info.hostname %}
+#{%-       do cfg.update({'bind_ip': info.get(cfg.iptype,None) }) %}
+#{%-     endif %}
+#{%-   endfor %}
+#{%- endif %}
+
+{%- do cfg.update({'bind_ip': salt['network.ip_addrs']()[0]}) %}
 
 # From my.cnf.Ubuntu
 # same CentOS
