@@ -10,7 +10,15 @@ Vagrant.configure(2) do |config|
   psrv.each do |key,val|
 
     script = <<SCRIPT
+      id -u "#{val['user']}" > /dev/null 2>&1
+      if [ "$?" == "1" ]; then
+          sudo useradd -m "#{val['user']}"
+          sudo mkdir /home/"#{val['user']}"/.ssh
+          sudo chown "#{val['user']}":"#{val['user']}" /home/"#{val['user']}"/.ssh
+      fi
       cat /vagrant/id_rsa.pub >> /home/"#{val['user']}"/.ssh/authorized_keys
+      sudo echo "#{val['user']}    ALL=NOPASSWD: ALL" >> /etc/sudoers
+      sudo echo "#{val['ip']}  #{val['hostname']}" >> /etc/hosts
 SCRIPT
 
     config.vm.define val['hostname'] do |cfg|
