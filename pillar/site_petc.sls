@@ -57,13 +57,13 @@ sample:
         server:
           http_port: 8080
           ajp_port: 8009
-          appBase: webapps
+          app_base: webapps
           name: petclinic
-          Contexts:
+          contexts:
             /:
-              docBase: petclinic
+              doc_base: petclinic
             test:
-              docBase: test
+              doc_base: test
     apps:
       petclinic:
         source:
