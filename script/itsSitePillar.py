@@ -54,6 +54,7 @@ class physicalServer:
         return "null"
     # 서버id로 호스트명을 찾아서 리턴
     def lookupHostById(self, id):
+        print id
         return self.pSvrDic[id]['hostname']
     # 서버id로 롤 리스트를 리턴
     def lookupRoleById(self, id):
@@ -80,6 +81,7 @@ class logicalServer:
         self.p = physicalServer(company_cd, system_cd)
 
     def lookUpPSvr(self, lSvr):
+        print lSvr
         return self.lSvrDic[lSvr]['physical_server']
     def lookUpHost(self, lSvr):
         return self.ids2hosts(self.lookUpPSvr(lSvr))

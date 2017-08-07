@@ -9,11 +9,12 @@ include:
   - tomcat.install
 {%- if t.get('server','null') != 'null' %}
   - tomcat.server
-{%- endif %}
-{%- if t.server.deploy_file != '' %}
+
+{%- if t.server.get('deploy_file','null') != 'null' %}
   - tomcat.deploy
 {%- endif %}
 
+{%- endif %}
 # 바로 서비스 시작
 startup-tomcat:
   cmd.run:

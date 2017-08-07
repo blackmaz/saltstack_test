@@ -35,7 +35,7 @@ hwbc:
       web:
         hostname: hwbcwb
         vip: 172.28.128.74
-        physical-server:
+        physical_server:
           - server2
           - server4
     software:
@@ -125,13 +125,13 @@ hwbc:
         server:
           http_port: 8080
           ajp_port: 8009
-          appBase: webapps
+          app_base: webapps
           name: www.nestfunding.kr
-          Contexts:
+          contexts:
             /:
-              docBase: ozr
+              doc_base: ozr
             test:
-              docBase: test
+              doc_base: test
     apps:
       ozr:
         source:
