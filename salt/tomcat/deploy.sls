@@ -11,6 +11,12 @@ shutdown-tomcat-fordeploy:
   cmd.run:
     - name: kill $(ps -ef | grep java | grep -v grep | awk '{print $2}');sleep 5
 
+{{ t.install.home }}/webapps/petclinic.war:
+  file.managed:
+    - source: https://s3.ap-northeast-2.amazonaws.com/itsbox/apps/{{ t.server.name }}/{{ t.server.deploy_file }}
+    - mode: 755
+    - skip_verify: true
+
 start-tomcat-fordeploy:
   cmd.run:
     - name: {{ t.install.home }}/bin/startup.sh;sleep 5
