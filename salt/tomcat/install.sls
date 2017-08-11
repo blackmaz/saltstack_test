@@ -18,7 +18,7 @@ create_inst_home:
 # 다운로드 및 압축 해제
 # stable 2016.11.3 버전으로 업그래이드 시에 에러가 발생한다.
 # stable 2016.11.2 버전으로 유지 해야 함
-# stable 2016.11.4 버전에서 에러 발생 안함... 
+# stable 2016.11.4 버전에서 에러 발생 안함...
 unpack-tomcat-tar:
   archive.extracted:
     - name: {{ t.install.insthome }}
@@ -30,7 +30,7 @@ unpack-tomcat-tar:
 
 catalina-sh:
   file.managed:
-    - source: salt://tomcat/conf/catalina.sh_ozr
+    - source: salt://tomcat/conf/_catalina.sh
     - name: {{ t.install.insthome }}/{{ tomcat.dirname }}/bin/catalina.sh
     - user: root
     - group: root
@@ -40,6 +40,3 @@ catalina-sh:
         java_opts: {{ t.install.java_opts }}
     - require:
       - file: sever-xml
-
-
-

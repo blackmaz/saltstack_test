@@ -9,9 +9,8 @@ include:
   - tomcat.install
 {%- if t.get('server','null') != 'null' %}
   - tomcat.server
-
 {%- if t.server.get('deploy_file','null') != 'null' %}
-  - tomcat.deploy
+  - tomcat.deploy_{{ t.server.name }}
 {%- endif %}
 
 {%- endif %}

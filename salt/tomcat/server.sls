@@ -6,9 +6,9 @@
 {%- from 'tomcat/map.jinja' import tomcat with context %}
 
 # 설정파일 업데이트
-sever-xml:
+copy-sever-xml:
   file.managed:
-    - source: salt://tomcat/conf/server.xml_ozr
+    - source: salt://tomcat/conf/_server.xml
     - name: {{ t.install.insthome }}/{{ tomcat.dirname }}/conf/server.xml
     - user: root
     - group: root
